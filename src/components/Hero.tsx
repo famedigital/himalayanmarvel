@@ -20,11 +20,17 @@ export default function Hero() {
   const scale = useTransform(scrollYProgress, [0, 0.5], [1, 0.9]);
   const { theme, resolvedTheme } = useTheme();
 
+  const [mounted, setMounted] = useState(false);
   const [currentKeywordIndex, setCurrentKeywordIndex] = useState(0);
   const [displayText, setDisplayText] = useState('');
   const [isDeleting, setIsDeleting] = useState(false);
 
-  const isDark = resolvedTheme === 'dark' || theme === 'dark';
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  // Use dark theme by default during SSR to match server-rendered HTML
+  const isDark = mounted ? (resolvedTheme === 'dark' || theme === 'dark') : true;
 
   useEffect(() => {
     const currentKeyword = keywords[currentKeywordIndex];

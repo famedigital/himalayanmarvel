@@ -67,7 +67,12 @@ export default function Navigation() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [hoveredItem, setHoveredItem] = useState<string | null>(null);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const { theme, resolvedTheme } = useTheme();
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -77,7 +82,9 @@ export default function Navigation() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const isDark = resolvedTheme === 'dark' || theme === 'dark';
+  // Use dark theme by default during SSR to match server-rendered HTML
+  // After mounting, use actual theme from next-themes
+  const isDark = mounted ? (resolvedTheme === 'dark' || theme === 'dark') : true;
 
   return (
     <>
