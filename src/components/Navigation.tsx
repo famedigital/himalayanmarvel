@@ -103,18 +103,15 @@ export default function Navigation() {
                 <ThemeToggle />
               </div>
 
-              {/* Book Now - Bhutanese Red */}
+              {/* Inquire - Subtle Luxury */}
               <motion.a
-                whileHover={{ scale: 1.02 }}
+                whileHover={{ y: -1 }}
                 whileTap={{ scale: 0.98 }}
-                href="#tours"
-                className="relative px-5 py-2 rounded-full text-white text-xs font-semibold tracking-wide hidden sm:block"
-                style={{
-                  backgroundColor: '#8E261A',
-                  boxShadow: '0 2px 8px rgba(142, 38, 26, 0.3)',
-                }}
+                href="#contact"
+                className="relative px-5 py-2 text-xs font-medium tracking-wide hidden sm:block transition-all"
+                style={{ color: isDark ? '#F8F4F0' : '#262626' }}
               >
-                Book Now
+                Inquire
               </motion.a>
 
               {/* Mobile Menu Button */}
@@ -167,15 +164,15 @@ export default function Navigation() {
                 </motion.a>
               ))}
               <motion.a
-                href="#tours"
+                href="#contact"
                 initial={{ opacity: 0, x: -10 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: navItems.length * 0.05 }}
                 onClick={() => setIsMobileMenuOpen(false)}
-                className="block px-4 py-3 rounded-lg text-center text-sm font-semibold text-white"
-                style={{ backgroundColor: '#8E261A' }}
+                className="block px-4 py-3 rounded-lg text-center text-sm font-medium"
+                style={{ color: isDark ? '#F8F4F0' : '#262626' }}
               >
-                Book Now
+                Inquire
               </motion.a>
             </div>
           </motion.div>
