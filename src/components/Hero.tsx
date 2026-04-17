@@ -59,11 +59,11 @@ export default function Hero() {
   }, [displayText, isDeleting, currentKeywordIndex]);
 
   const gradients = [
-    'from-emerald-700 via-amber-600 to-emerald-800',
-    'from-green-800 via-yellow-600 to-green-900',
-    'from-teal-800 via-amber-500 to-teal-900',
-    'from-emerald-900 via-gold-500 to-emerald-800',
-    'from-green-900 via-amber-500 to-green-800',
+    'from-bhutan-red via-bhutan-gold to-bhutan-indigo',
+    'from-bhutan-indigo via-bhutan-gold to-bhutan-red',
+    'from-bhutan-red via-bhutan-indigo to-bhutan-gold',
+    'from-bhutan-gold via-bhutan-red to-bhutan-indigo',
+    'from-bhutan-indigo via-bhutan-red to-bhutan-gold',
   ];
   const currentGradient = gradients[currentKeywordIndex];
 
@@ -93,9 +93,9 @@ export default function Hero() {
         {/* Premium gradient overlays */}
         <div className="absolute inset-0 bg-gradient-to-r dark:from-black/60 dark:via-black/20 dark:to-black/50" style={isDark ? {} : { background: 'linear-gradient(90deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05), rgba(255,255,255,0.1))' }} />
         <motion.div
-          className="absolute inset-0 opacity-40"
+          className="absolute inset-0 opacity-30"
           style={{
-            background: 'radial-gradient(ellipse at 75% 50%, rgba(20, 83, 45, 0.2) 0%, transparent 60%), radial-gradient(ellipse at 25% 50%, rgba(181, 138, 48, 0.15) 0%, transparent 60%)',
+            background: 'radial-gradient(ellipse at 75% 50%, rgba(142, 38, 26, 0.15) 0%, transparent 60%), radial-gradient(ellipse at 25% 50%, rgba(232, 185, 35, 0.1) 0%, transparent 60%)',
           }}
         />
       </div>
@@ -334,9 +334,9 @@ export default function Hero() {
                 whileTap={{ scale: 0.98 }}
                 className="group px-8 py-4 rounded-full text-base font-semibold flex items-center gap-3 shadow-2xl"
                 style={{
-                  backgroundColor: 'rgb(245 242 238)',
-                  color: 'rgb(20 83 45)',
-                  boxShadow: '0 10px 40px rgba(0, 0, 0, 0.3)',
+                  backgroundColor: '#8E261A',
+                  color: 'white',
+                  boxShadow: '0 8px 30px rgba(142, 38, 26, 0.4)',
                 }}
               >
                 <span>Plan Your Journey</span>
@@ -359,7 +359,7 @@ export default function Hero() {
       </motion.div>
 
       {/* Bottom Gradient Fade */}
-      <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-stone-100 to-transparent" />
+      <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-[#F8F4F0] to-transparent" />
 
       {/* Scroll Indicator */}
       <motion.div

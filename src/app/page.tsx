@@ -12,7 +12,7 @@ import Footer from '@/components/Footer';
 
 export default function Home() {
   return (
-    <main className="min-h-screen bg-stone-warm dark:bg-neutral-900">
+    <main className="min-h-screen bg-mineral-white dark:bg-bhutan-indigo">
       <Navigation />
       <Hero />
       <WhyTravelWithUs />

@@ -23,11 +23,11 @@ const features = [
 
 export default function WhyTravelWithUs() {
   return (
-    <section className="section-padding bg-stone-50 relative overflow-hidden">
-      {/* Subtle background texture */}
-      <div className="absolute inset-0 opacity-30">
-        <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-bl from-amber-100/50 to-transparent rounded-full blur-3xl" />
-        <div className="absolute bottom-0 left-0 w-96 h-96 bg-gradient-to-tr from-emerald-100/30 to-transparent rounded-full blur-3xl" />
+    <section className="section-padding relative overflow-hidden" style={{ backgroundColor: '#F8F4F0' }}>
+      {/* Subtle background texture with Bhutanese colors */}
+      <div className="absolute inset-0 opacity-20">
+        <div className="absolute top-0 right-0 w-96 h-96 rounded-full blur-3xl" style={{ background: 'radial-gradient(circle, #E8B923 0%, transparent 70%)' }} />
+        <div className="absolute bottom-0 left-0 w-96 h-96 rounded-full blur-3xl" style={{ background: 'radial-gradient(circle, #8E261A 0%, transparent 70%)' }} />
       </div>
 
       <div className="container-premium relative z-10">
@@ -42,7 +42,7 @@ export default function WhyTravelWithUs() {
           <h2
             className="text-4xl md:text-5xl font-bold mb-6"
             style={{
-              background: 'linear-gradient(135deg, rgb(20 83 45), rgb(181 138 48))',
+              background: 'linear-gradient(135deg, #8E261A, #E8B923)',
               WebkitBackgroundClip: 'text',
               WebkitTextFillColor: 'transparent',
               backgroundClip: 'text',
@@ -56,7 +56,7 @@ export default function WhyTravelWithUs() {
             viewport={{ once: true }}
             transition={{ duration: 0.8, delay: 0.2 }}
             className="text-lg max-w-2xl mx-auto leading-relaxed"
-            style={{ color: 'rgb(71 85 105)' }}
+            style={{ color: '#262626' }}
           >
             We don&apos;t offer tours. We design journeys that transform.
           </motion.p>
@@ -75,17 +75,21 @@ export default function WhyTravelWithUs() {
                 transition={{ duration: 0.6, delay: index * 0.1 }}
                 className="group"
               >
-                <div className="bg-white rounded-2xl p-8 h-full shadow-sm hover:shadow-xl transition-all duration-500 border border-stone-200/50 hover:border-amber-200/50 relative overflow-hidden">
-                  {/* Subtle gradient overlay on hover */}
-                  <div className="absolute inset-0 bg-gradient-to-br from-amber-50/0 via-transparent to-emerald-50/0 group-hover:from-amber-50/30 group-hover:to-emerald-50/20 transition-all duration-700" />
+                <div className="rounded-2xl p-8 h-full transition-all duration-500 relative overflow-hidden border"
+                  style={{
+                    backgroundColor: 'white',
+                    borderColor: 'rgba(232, 185, 35, 0.2)',
+                  }}
+                >
+                  {/* Subtle gold border on hover */}
+                  <div className="absolute inset-0 transition-all duration-700" style={{ border: '1px solid rgba(232, 185, 35, 0)' }} />
+                  <div className="absolute inset-0 transition-all duration-700 group-hover:border group-hover:rounded-2xl" style={{ borderColor: '#E8B923' }} />
 
                   <div className="relative z-10">
-                    {/* Icon */}
+                    {/* Icon - Bhutanese Red */}
                     <motion.div
                       className="w-14 h-14 rounded-xl flex items-center justify-center mb-6"
-                      style={{
-                        background: 'linear-gradient(135deg, rgb(20 83 45), rgb(34 107 57))',
-                      }}
+                      style={{ backgroundColor: '#8E261A' }}
                       whileHover={{ scale: 1.05 }}
                       transition={{ duration: 0.3 }}
                     >
@@ -93,12 +97,12 @@ export default function WhyTravelWithUs() {
                     </motion.div>
 
                     {/* Title */}
-                    <h3 className="text-xl font-semibold mb-4" style={{ color: 'rgb(71 85 105)' }}>
+                    <h3 className="text-xl font-semibold mb-4" style={{ color: '#262626' }}>
                       {feature.title}
                     </h3>
 
                     {/* Description */}
-                    <p className="leading-relaxed" style={{ color: 'rgb(71 85 105 / 0.7)' }}>
+                    <p className="leading-relaxed" style={{ color: 'rgba(38, 38, 38, 0.7)' }}>
                       {feature.description}
                     </p>
                   </div>

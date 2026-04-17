@@ -307,17 +307,34 @@ export default function Footer() {
               initial={{ opacity: 0 }}
               whileInView={{ opacity: 1 }}
               viewport={{ once: true }}
-              className="text-white/30 text-sm flex items-center gap-2"
+              className="text-white/30 text-sm flex flex-col sm:flex-row items-center gap-2"
             >
-              © 2025 Himalayan Marvels. Crafted with{' '}
-              <motion.span
-                animate={{ scale: [1, 1.2, 1] }}
-                transition={{ duration: 1, repeat: Infinity }}
-                className="inline-flex"
+              <span>© 2026 Himalayan Marvels. Crafted with{' '}
+                <motion.span
+                  animate={{ scale: [1, 1.2, 1] }}
+                  transition={{ duration: 1, repeat: Infinity }}
+                  className="inline-flex"
+                >
+                  <Heart className="w-4 h-4 text-rose-500 fill-rose-500" />
+                </motion.span>
+                {' '}in Bhutan.
+              </span>
+              <motion.a
+                href="https://famedigital.netlify.app"
+                target="_blank"
+                rel="noopener noreferrer"
+                animate={{
+                  textShadow: [
+                    '0 0 4px rgba(232, 185, 35, 0.3)',
+                    '0 0 12px rgba(232, 185, 35, 0.8), 0 0 20px rgba(232, 185, 35, 0.4)',
+                    '0 0 4px rgba(232, 185, 35, 0.3)',
+                  ],
+                }}
+                transition={{ duration: 3, repeat: Infinity }}
+                className="text-amber-400 font-medium hover:text-amber-300 transition-colors"
               >
-                <Heart className="w-4 h-4 text-rose-500 fill-rose-500" />
-              </motion.span>
-              {' '}in Bhutan.
+                design by famedigital.netlify.app
+              </motion.a>
             </motion.div>
 
             <motion.div
