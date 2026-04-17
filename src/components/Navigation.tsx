@@ -70,6 +70,7 @@ export default function Navigation() {
   const [mounted, setMounted] = useState(false);
   const { theme, resolvedTheme } = useTheme();
 
+  /* eslint-disable react-hooks/set-state-in-effect */
   useEffect(() => {
     setMounted(true);
   }, []);
@@ -110,11 +111,11 @@ export default function Navigation() {
                 : '0 8px 32px rgba(0, 0, 0, 0.08)',
             }}
           >
-            {/* Animated Gradient Line at Top */}
+            {/* Animated Gradient Line at Top - Forest to Gold */}
             <motion.div
               className="absolute top-0 left-0 right-0 h-[2px]"
               style={{
-                background: 'linear-gradient(90deg, transparent, rgba(249, 115, 22, 0.8), rgba(236, 72, 153, 0.8), rgba(139, 92, 246, 0.8), transparent)',
+                background: 'linear-gradient(90deg, transparent, rgba(20, 83, 45, 0.7), rgba(181, 138, 48, 0.7), rgba(34, 107, 57, 0.7), transparent)',
               }}
               animate={{
                 opacity: isScrolled ? 1 : 0.7,
@@ -124,25 +125,25 @@ export default function Navigation() {
             />
 
             <div className="flex items-center gap-2 px-2 py-2.5 sm:px-4 sm:py-3">
-              {/* Logo - Left */}
+              {/* Logo - Left - Enlarged for Luxury */}
               <MagneticButton>
                 <motion.a
                   href="#"
-                  className="relative flex items-center gap-2 px-4 py-2 rounded-xl"
+                  className="relative flex items-center gap-2.5 px-4 py-2 rounded-xl"
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                 >
                   <motion.div
-                    className="w-8 h-8 rounded-lg flex items-center justify-center"
+                    className="w-11 h-11 rounded-lg flex items-center justify-center"
                     style={{
-                      background: 'linear-gradient(135deg, #f97316 0%, #ec4899 50%, #8b5cf6 100%)',
+                      background: 'linear-gradient(135deg, rgb(20 83 45) 0%, rgb(181 138 48) 50%, rgb(34 107 57) 100%)',
                     }}
                     whileHover={{ rotate: [0, -10, 10, -10, 0] }}
                     transition={{ duration: 0.5 }}
                   >
-                    <Globe className="w-4 h-4 text-white" />
+                    <Globe className="w-5 h-5 text-white" />
                   </motion.div>
-                  <span className="text-sm font-bold gradient-text hidden sm:block dark:text-white text-neutral-900">
+                  <span className="text-base font-bold tracking-wide hidden sm:block text-charcoal dark:text-stone-100">
                     Himalayan Marvels
                   </span>
                 </motion.a>
@@ -178,14 +179,14 @@ export default function Navigation() {
                           )}
                         </AnimatePresence>
 
-                        {/* Active Indicator Dot with Spring */}
+                        {/* Active Indicator Dot with Spring - Forest to Gold */}
                         <AnimatePresence>
                           {hoveredItem === item.name && (
                             <motion.div
                               layoutId="navIndicator"
                               className="absolute -bottom-0.5 left-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full"
                               style={{
-                                background: 'linear-gradient(135deg, #f97316, #ec4899)',
+                                background: 'linear-gradient(135deg, rgb(20 83 45), rgb(181 138 48))',
                               }}
                               initial={{ scale: 0 }}
                               animate={{ scale: 1 }}
@@ -215,7 +216,7 @@ export default function Navigation() {
                   </div>
                 </MagneticButton>
 
-                {/* Book Now CTA with Stronger Magnetic Effect */}
+                {/* Book Now CTA - Forest to Gold Luxury */}
                 <MagneticButton>
                   <motion.a
                     whileHover={{ scale: 1.05 }}
@@ -223,22 +224,22 @@ export default function Navigation() {
                     href="#tours"
                     className="relative px-5 py-2.5 rounded-xl text-white text-sm font-semibold overflow-hidden group hidden sm:block"
                     style={{
-                      background: 'linear-gradient(135deg, #f97316 0%, #ec4899 100%)',
-                      boxShadow: '0 4px 20px rgba(249, 115, 22, 0.3)',
+                      background: 'linear-gradient(135deg, rgb(20 83 45) 0%, rgb(181 138 48) 100%)',
+                      boxShadow: '0 4px 20px rgba(20, 83, 45, 0.3)',
                     }}
                   >
                     <span className="relative z-10 flex items-center gap-2">
                       Book Now
                       <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                     </span>
-                    {/* Shine Effect */}
+                    {/* Subtle Shine Effect */}
                     <motion.div
-                      className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent"
+                      className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent"
                       animate={{
                         x: ['-100%', '200%'],
                       }}
                       transition={{
-                        duration: 2.5,
+                        duration: 3,
                         repeat: Infinity,
                         repeatDelay: 2,
                         ease: 'linear',
@@ -317,7 +318,7 @@ export default function Navigation() {
                   onClick={() => setIsMobileMenuOpen(false)}
                   className="block px-4 py-3 rounded-xl text-center font-semibold text-white"
                   style={{
-                    background: 'linear-gradient(135deg, #f97316 0%, #ec4899 100%)',
+                    background: 'linear-gradient(135deg, rgb(20 83 45) 0%, rgb(181 138 48) 100%)',
                   }}
                 >
                   Book Now

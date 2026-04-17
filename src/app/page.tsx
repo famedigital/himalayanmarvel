@@ -1,23 +1,27 @@
 import Navigation from '@/components/Navigation';
 import Hero from '@/components/Hero';
+import WhyTravelWithUs from '@/components/WhyTravelWithUs';
 import BrandMarquee from '@/components/BrandMarquee';
 import TourPackages from '@/components/TourPackages';
 import Founder from '@/components/Founder';
 import FAQ from '@/components/FAQ';
 import Reviews from '@/components/Reviews';
+import BhutanJournal from '@/components/BhutanJournal';
 import Contact from '@/components/Contact';
 import Footer from '@/components/Footer';
 
 export default function Home() {
   return (
-    <main className="min-h-screen dark:bg-black bg-white">
+    <main className="min-h-screen bg-stone-warm dark:bg-neutral-900">
       <Navigation />
       <Hero />
+      <WhyTravelWithUs />
       <BrandMarquee />
       <TourPackages />
       <Founder />
       <FAQ />
       <Reviews />
+      <BhutanJournal />
       <Contact />
       <Footer />
     </main>

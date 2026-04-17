@@ -1,16 +1,16 @@
 'use client';
 
 import { motion, useScroll, useTransform } from 'framer-motion';
-import { ArrowRight, Play, Download } from 'lucide-react';
+import { ArrowRight, Download } from 'lucide-react';
 import { useRef, useEffect, useState } from 'react';
 import { useTheme } from 'next-themes';
 
 const keywords = [
-  'The Art of Serenity',
-  'Carbon-Negative Paradise',
-  'Quiet Luxury Escapes',
-  'Spiritual Awakening',
-  'Himalayan Wellness',
+  'Sacred Landscapes',
+  'Living Traditions',
+  'Moments of Stillness',
+  'Deeper Clarity',
+  'A Shift in Perspective',
 ];
 
 export default function Hero() {
@@ -25,6 +25,7 @@ export default function Hero() {
   const [displayText, setDisplayText] = useState('');
   const [isDeleting, setIsDeleting] = useState(false);
 
+  /* eslint-disable react-hooks/set-state-in-effect */
   useEffect(() => {
     setMounted(true);
   }, []);
@@ -58,18 +59,18 @@ export default function Hero() {
   }, [displayText, isDeleting, currentKeywordIndex]);
 
   const gradients = [
-    'from-orange-400 via-amber-500 to-yellow-400',
-    'from-rose-400 via-pink-500 to-fuchsia-500',
-    'from-emerald-400 via-teal-500 to-cyan-400',
-    'from-violet-400 via-purple-500 to-indigo-500',
-    'from-blue-400 via-indigo-500 to-violet-500',
+    'from-emerald-700 via-amber-600 to-emerald-800',
+    'from-green-800 via-yellow-600 to-green-900',
+    'from-teal-800 via-amber-500 to-teal-900',
+    'from-emerald-900 via-gold-500 to-emerald-800',
+    'from-green-900 via-amber-500 to-green-800',
   ];
   const currentGradient = gradients[currentKeywordIndex];
 
   return (
     <section
       ref={ref}
-      className="relative h-screen w-full overflow-hidden dark:bg-black bg-white"
+      className="relative h-screen w-full overflow-hidden bg-stone-950"
     >
       {/* Video Background */}
       <div className="absolute inset-0">
@@ -92,9 +93,9 @@ export default function Hero() {
         {/* Premium gradient overlays */}
         <div className="absolute inset-0 bg-gradient-to-r dark:from-black/60 dark:via-black/20 dark:to-black/50" style={isDark ? {} : { background: 'linear-gradient(90deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05), rgba(255,255,255,0.1))' }} />
         <motion.div
-          className="absolute inset-0 opacity-60"
+          className="absolute inset-0 opacity-40"
           style={{
-            background: 'radial-gradient(ellipse at 75% 50%, rgba(249, 115, 22, 0.25) 0%, transparent 60%), radial-gradient(ellipse at 25% 50%, rgba(139, 92, 246, 0.2) 0%, transparent 60%)',
+            background: 'radial-gradient(ellipse at 75% 50%, rgba(20, 83, 45, 0.2) 0%, transparent 60%), radial-gradient(ellipse at 25% 50%, rgba(181, 138, 48, 0.15) 0%, transparent 60%)',
           }}
         />
       </div>
@@ -120,7 +121,7 @@ export default function Hero() {
               className="flex justify-center"
             >
               <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium backdrop-blur-xl border transition-all text-white" style={{ backgroundColor: 'rgba(0,0,0,0.3)', borderColor: 'rgba(255,255,255,0.3)', textShadow: '0 1px 10px rgba(0,0,0,0.5)' }}>
-                <span className="w-2 h-2 rounded-full bg-gradient-to-r from-orange-400 to-rose-500 animate-pulse" />
+                <span className="w-2 h-2 rounded-full bg-gradient-to-r from-emerald-700 to-amber-600 animate-pulse" />
                 <span className="text-xs uppercase tracking-wider">New for 2025</span>
               </span>
             </motion.div>
@@ -143,7 +144,7 @@ export default function Hero() {
             >
               {/* Subtle Glow on Hover */}
               <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-                <div className="absolute inset-0 bg-gradient-to-r from-orange-500/20 via-transparent to-purple-500/20" />
+                <div className="absolute inset-0 bg-gradient-to-r from-emerald-700/20 via-transparent to-amber-600/20" />
               </div>
 
               {/* Price */}
@@ -154,7 +155,7 @@ export default function Hero() {
                   animate={{ backgroundPosition: ['0%', '100%', '0%'] }}
                   transition={{ duration: 3, repeat: Infinity }}
                   style={{
-                    background: 'linear-gradient(135deg, #f97316, #ec4899, #8b5cf6)',
+                    background: 'linear-gradient(135deg, rgb(181 138 48), rgb(20 83 45), rgb(34 107 57))',
                     backgroundSize: '200% 100%',
                     WebkitBackgroundClip: 'text',
                     WebkitTextFillColor: 'transparent',
@@ -175,9 +176,9 @@ export default function Hero() {
                   className="text-sm font-semibold tracking-widest text-white"
                   animate={{
                     textShadow: [
-                      '0 0 8px rgba(249, 115, 22, 0.6)',
-                      '0 0 12px rgba(139, 92, 246, 0.6)',
-                      '0 0 8px rgba(249, 115, 22, 0.6)',
+                      '0 0 8px rgba(20, 83, 45, 0.6)',
+                      '0 0 12px rgba(181, 138, 48, 0.6)',
+                      '0 0 8px rgba(20, 83, 45, 0.6)',
                     ],
                   }}
                   transition={{ duration: 3, repeat: Infinity }}
@@ -207,18 +208,18 @@ export default function Hero() {
               whileTap={{ scale: 0.98 }}
               className="flex items-center gap-2 px-3 py-2.5 rounded-lg backdrop-blur-xl transition-all relative overflow-hidden group"
               style={{
-                background: 'linear-gradient(135deg, #f97316, #ec4899, #8b5cf6)',
+                background: 'linear-gradient(135deg, rgb(20 83 45), rgb(181 138 48), rgb(34 107 57))',
                 backgroundSize: '200% 100%',
               }}
             >
               {/* Animated Shine Effect */}
               <motion.div
-                className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent"
+                className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent"
                 animate={{
                   x: ['-100%', '200%'],
                 }}
                 transition={{
-                  duration: 2.5,
+                  duration: 3,
                   repeat: Infinity,
                   repeatDelay: 2,
                   ease: 'linear',
@@ -305,11 +306,20 @@ export default function Hero() {
               initial={{ opacity: 0, x: 50 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8, delay: 0.5 }}
-              className="text-base md:text-lg mb-10 max-w-lg leading-relaxed font-light text-white"
+              className="text-base md:text-lg mb-3 max-w-lg leading-loose font-light text-stone-100"
               style={{ textShadow: '0 2px 15px rgba(0,0,0,0.5)' }}
             >
-              Embark on a transformative journey through the mystical Kingdom of Bhutan—
-              where ancient traditions meet pristine Himalayan landscapes.
+              Bhutan is not a destination. It&apos;s a shift in perspective.
+            </motion.p>
+
+            <motion.p
+              initial={{ opacity: 0, x: 50 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8, delay: 0.55 }}
+              className="text-base md:text-lg mb-10 max-w-lg leading-loose font-light text-stone-200"
+              style={{ textShadow: '0 2px 15px rgba(0,0,0,0.5)' }}
+            >
+              Experience sacred landscapes, living traditions, and moments of stillness designed for deeper clarity.
             </motion.p>
 
             {/* CTA Buttons */}
@@ -317,42 +327,39 @@ export default function Hero() {
               initial={{ opacity: 0, x: 50 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8, delay: 0.6 }}
-              className="flex flex-col sm:flex-row items-center gap-4"
+              className="flex flex-col items-center sm:items-start gap-3"
             >
               <motion.button
                 whileHover={{ scale: 1.02, x: 4 }}
                 whileTap={{ scale: 0.98 }}
                 className="group px-8 py-4 rounded-full text-base font-semibold flex items-center gap-3 shadow-2xl"
                 style={{
-                  backgroundColor: 'white',
-                  color: 'black',
+                  backgroundColor: 'rgb(245 242 238)',
+                  color: 'rgb(20 83 45)',
                   boxShadow: '0 10px 40px rgba(0, 0, 0, 0.3)',
                 }}
               >
-                <span>Begin Your Journey</span>
+                <span>Plan Your Journey</span>
                 <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
               </motion.button>
 
-              <motion.button
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                className="px-8 py-4 rounded-full font-medium flex items-center gap-3 transition-all text-white"
-                style={{
-                  backgroundColor: 'rgba(0,0,0,0.4)',
-                  border: '1px solid rgba(255,255,255,0.3)',
-                  textShadow: '0 1px 10px rgba(0,0,0,0.5)',
-                }}
+              {/* Supporting Line */}
+              <motion.p
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.8, delay: 0.7 }}
+                className="text-sm text-stone-200 font-light tracking-wide"
+                style={{ textShadow: '0 1px 10px rgba(0,0,0,0.5)' }}
               >
-                <Play className="w-5 h-5" style={{ color: 'white', fill: 'white' }} />
-                <span>Watch Film</span>
-              </motion.button>
+                Private, thoughtfully designed journeys through Bhutan.
+              </motion.p>
             </motion.div>
           </div>
         </div>
       </motion.div>
 
       {/* Bottom Gradient Fade */}
-      <div className="absolute bottom-0 left-0 right-0 h-32 dark:bg-gradient-to-t bg-gradient-to-t dark:from-black from-white to-transparent" />
+      <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-stone-100 to-transparent" />
 
       {/* Scroll Indicator */}
       <motion.div

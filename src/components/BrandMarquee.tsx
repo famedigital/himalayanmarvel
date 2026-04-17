@@ -26,8 +26,8 @@ export default function BrandMarquee() {
             Our Trusted Partners
           </span>
           <h2 className="text-3xl md:text-4xl font-bold dark:text-white text-neutral-900 mt-4">
-            Licensed & Certified by{' '}
-            <span className="gradient-text">Bhutan's finest</span>
+            Licensed &amp; Certified by{' '}
+            <span className="gradient-text">Bhutan&apos;s finest</span>
           </h2>
         </motion.div>
 

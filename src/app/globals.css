@@ -1,46 +1,78 @@
 @import "tailwindcss";
 
 /* ============================================
-   TAILWIND CONFIGURATION
-   Enable dark mode with class strategy
-   ============================================ */
-
-/* ============================================
-   TAILWIND CONFIGURATION
-   Enable dark mode with class strategy
+   TAILWIND CONFIGURATION - Luxury Color Palette
+   Soft charcoal, warm beige, forest green, gold accents
    ============================================ */
 
 @theme {
-  --color-background: 255 255 255;
-  --color-foreground: 15 23 42;
-  --color-card: 249 250 251;
-  --color-muted: 243 244 246;
-  --color-muted-foreground: 100 116 139;
-  --color-border: 226 232 240;
-  --color-primary: 249 115 22;
+  /* Warm off-white / cream background */
+  --color-background: 250 248 245;
+
+  /* Soft charcoal instead of harsh black */
+  --color-foreground: 71 85 105;
+
+  /* Warm stone cards */
+  --color-card: 245 242 238;
+
+  /* Subtle muted backgrounds */
+  --color-muted: 241 238 233;
+  --color-muted-foreground: 115 129 141;
+
+  /* Soft borders */
+  --color-border: 228 223 217;
+
+  /* Forest green - primary accent */
+  --color-forest: 20 83 45;
+  --color-forest-light: 34 107 57;
+
+  /* Subtle gold - luxury accent */
+  --color-gold: 181 138 48;
+  --color-gold-light: 217 185 119;
+
+  /* Legacy primary for compatibility */
+  --color-primary: 20 83 45;
   --color-primary-foreground: 255 255 255;
 }
 
-/* Dark mode colors */
+/* Dark mode colors - refined */
 @media (prefers-color-scheme: dark) {
   :root {
-    --color-background: 0 0 0;
-    --color-foreground: 255 255 255;
-    --color-card: 17 24 39;
-    --color-muted: 24 24 27;
+    /* Soft charcoal background */
+    --color-background: 30 30 35;
+
+    /* Warm off-white text */
+    --color-foreground: 245 242 238;
+
+    /* Darker stone cards */
+    --color-card: 41 41 46;
+
+    /* Muted dark */
+    --color-muted: 35 35 40;
     --color-muted-foreground: 163 163 163;
-    --color-border: 39 39 42;
+
+    /* Subtle borders */
+    --color-border: 55 55 60;
   }
 }
 
-/* Manual dark mode class override */
+/* Manual dark mode class override - refined */
 .dark {
-  --color-background: 0 0 0;
-  --color-foreground: 255 255 255;
-  --color-card: 17 24 39;
-  --color-muted: 24 24 27;
+  /* Soft charcoal background */
+  --color-background: 30 30 35;
+
+  /* Warm off-white text */
+  --color-foreground: 245 242 238;
+
+  /* Darker stone cards */
+  --color-card: 41 41 46;
+
+  /* Muted dark */
+  --color-muted: 35 35 40;
   --color-muted-foreground: 163 163 163;
-  --color-border: 39 39 42;
+
+  /* Subtle borders */
+  --color-border: 55 55 60;
 }
 
 /* ============================================
@@ -77,13 +109,60 @@
     }
   }
 
-  /* Gradient Text */
+  /* Gradient Text - Forest to Gold Luxury Gradient */
   .gradient-text {
-    background: linear-gradient(135deg, #f97316 0%, #ec4899 50%, #8b5cf6 100%);
+    background: linear-gradient(135deg, rgb(20 83 45) 0%, rgb(181 138 48) 50%, rgb(34 107 57) 100%);
     background-size: 200% 100%;
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
+  }
+
+  /* Subtle Gold Accent */
+  .text-gold {
+    color: rgb(181 138 48);
+  }
+
+  .bg-gold {
+    background-color: rgb(181 138 48);
+  }
+
+  /* Forest Green Accent */
+  .text-forest {
+    color: rgb(20 83 45);
+  }
+
+  .bg-forest {
+    background-color: rgb(20 83 45);
+  }
+
+  /* Warm Stone Background */
+  .bg-stone-warm {
+    background-color: rgb(250 248 245);
+  }
+
+  .bg-stone-warm-dark {
+    background-color: rgb(245 242 238);
+  }
+
+  /* Soft Charcoal Text */
+  .text-charcoal {
+    color: rgb(71 85 105);
+  }
+
+  /* Line Clamp Utilities */
+  .line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .line-clamp-3 {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
   }
 }
 

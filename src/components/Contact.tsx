@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Mail, Phone, MapPin, Send, ArrowRight } from 'lucide-react';
+import { Mail, Phone, MapPin, Send } from 'lucide-react';
 import { useState } from 'react';
 
 export default function Contact() {
@@ -51,7 +51,7 @@ export default function Contact() {
             className="space-y-6"
           >
             <h3 className="text-2xl font-semibold dark:text-white text-neutral-900 mb-8">
-              Let's plan your adventure
+              Let&apos;s plan your adventure
             </h3>
 
             {[

@@ -73,7 +73,7 @@ export default function Founder() {
 
             {/* Bio */}
             <p className="dark:text-white/70 text-neutral-700 text-lg leading-relaxed mb-6 max-w-md">
-              A hospitality visionary whose professional DNA was forged in the world's most demanding luxury environments. After elite training at <strong>Les Roches (Spain)</strong> and <strong>International College of Hotel Management (Australia)</strong>, Bivatsu honed his craft within the leadership circles of global icons.
+              A hospitality visionary whose professional DNA was forged in the world&apos;s most demanding luxury environments. After elite training at <strong>Les Roches (Spain)</strong> and <strong>International College of Hotel Management (Australia)</strong>, Bivatsu honed his craft within the leadership circles of global icons.
             </p>
 
             <p className="dark:text-white/70 text-neutral-700 text-lg leading-relaxed mb-8 max-w-md">
