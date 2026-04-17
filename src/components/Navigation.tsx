@@ -63,11 +63,11 @@ export default function Navigation() {
             {/* Logo - Left */}
             <Link href="#">
               <motion.div
-                className="flex items-center gap-2"
+                className="flex items-center gap-3"
                 whileHover={{ scale: 1.02 }}
                 transition={{ duration: 0.2 }}
               >
-                <div className="relative w-8 h-8">
+                <div className="relative w-11 h-11">
                   <Image
                     src="https://res.cloudinary.com/dxztrqjft/image/upload/v1776332482/HMT_Logo_New_1_fwgpfy.png"
                     alt="Himalayan Marvels"
@@ -75,7 +75,7 @@ export default function Navigation() {
                     className="object-contain"
                   />
                 </div>
-                <span className="text-sm font-semibold tracking-wide hidden sm:block" style={{ color: '#262626' }}>
+                <span className="text-base font-semibold tracking-wide hidden sm:block" style={{ color: '#262626' }}>
                   Himalayan Marvels
                 </span>
               </motion.div>
@@ -102,6 +102,17 @@ export default function Navigation() {
               <div className="scale-90">
                 <ThemeToggle />
               </div>
+
+              {/* Login - Admin Access */}
+              <motion.a
+                whileHover={{ y: -1 }}
+                whileTap={{ scale: 0.98 }}
+                href="/hmterp/admin/login"
+                className="relative px-4 py-2 text-xs font-medium tracking-wide hidden sm:block transition-all"
+                style={{ color: isDark ? '#F8F4F0' : '#262626' }}
+              >
+                Login
+              </motion.a>
 
               {/* Inquire - Subtle Luxury */}
               <motion.a

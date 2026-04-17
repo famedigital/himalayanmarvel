@@ -1,6 +1,7 @@
 import Navigation from '@/components/Navigation';
 import Hero from '@/components/Hero';
 import WhyTravelWithUs from '@/components/WhyTravelWithUs';
+import InstagramFeed from '@/components/InstagramFeed';
 import BrandMarquee from '@/components/BrandMarquee';
 import TourPackages from '@/components/TourPackages';
 import Founder from '@/components/Founder';
@@ -16,6 +17,7 @@ export default function Home() {
       <Navigation />
       <Hero />
       <WhyTravelWithUs />
+      <InstagramFeed />
       <BrandMarquee />
       <TourPackages />
       <Founder />

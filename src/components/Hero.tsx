@@ -4,6 +4,7 @@ import { motion, useScroll, useTransform } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
 import { useRef, useEffect, useState } from 'react';
 import { useTheme } from 'next-themes';
+import Image from 'next/image';
 
 const keywords = [
   'Sacred Landscapes',
@@ -93,15 +94,30 @@ export default function Hero() {
           {/* Right Side - Main Content */}
           <div className="max-w-[680px] ml-auto">
             {/* Main Headlines */}
-            <motion.h1
-              initial={{ opacity: 0, x: 50 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 1, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
-              className="text-6xl sm:text-7xl md:text-8xl font-semibold tracking-tight leading-none text-white mb-6"
-              style={{ textShadow: '0 2px 40px rgba(0,0,0,0.6)' }}
-            >
-              Himalayan Marvels
-            </motion.h1>
+            <div className="flex items-baseline gap-4 mb-6">
+              <motion.h1
+                initial={{ opacity: 0, x: 50 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 1, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
+                className="text-5xl sm:text-6xl md:text-7xl font-semibold tracking-tight leading-none text-white"
+                style={{ textShadow: '0 2px 40px rgba(0,0,0,0.6)' }}
+              >
+                Himalayan Marvels
+              </motion.h1>
+              <motion.div
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 1, ease: [0.16, 1, 0.3, 1], delay: 0.2 }}
+                className="relative w-16 h-16 flex-shrink-0"
+              >
+                <Image
+                  src="https://res.cloudinary.com/dxztrqjft/image/upload/v1776332482/HMT_Logo_New_1_fwgpfy.png"
+                  alt="Himalayan Marvels"
+                  fill
+                  className="object-contain"
+                />
+              </motion.div>
+            </div>
 
             {/* Tagline with Typewriter */}
             <motion.p
