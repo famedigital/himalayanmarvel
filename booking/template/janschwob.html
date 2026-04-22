@@ -1,0 +1,1648 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bhutan Photography Tour | Jan Schwob | November 2026</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&family=Open+Sans:wght@400;500;600;700;800&family=Playfair+Display:wght@400;500;600;700;800;900&display=swap');
+
+        /* EARTH TONE COLOR PALETTE */
+        :root {
+            --forest-green: #2d5a3d;
+            --warm-brown: #8b7355;
+            --tan: #a0826d;
+            --cream: #faf8f5;
+            --beige: #f5f1e8;
+            --dark-brown: #4a3728;
+            --sage: #7a8b7a;
+            --gold: #c9a961;
+            --burgundy: #8b1538;
+            --navy: #1a2a4a;
+        }
+
+        @page {
+            size: A4 portrait;
+            margin: 0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Open Sans', sans-serif;
+            background: var(--cream);
+            color: #000000;
+            line-height: 1.6;
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+        }
+
+        .page {
+            width: 210mm;
+            height: 297mm;
+            margin: 0 auto;
+            background: var(--beige);
+            position: relative;
+            page-break-after: always;
+            break-after: page;
+            overflow: hidden;
+        }
+
+        /* ========== RUNNING HEADER ========== */
+        .running-header {
+            position: absolute;
+            top: 18px;
+            left: 35px;
+            right: 35px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 9px;
+            letter-spacing: 2px;
+            color: var(--forest-green);
+            text-transform: uppercase;
+            z-index: 10;
+            font-weight: 700;
+        }
+
+        .running-footer {
+            position: absolute;
+            bottom: 20px;
+            left: 35px;
+            right: 35px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-family: 'Open Sans', sans-serif;
+            font-size: 8px;
+            color: var(--warm-brown);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            z-index: 10;
+            padding-top: 10px;
+            border-top: 1px solid var(--tan);
+        }
+
+        .page-number {
+            width: 26px;
+            height: 26px;
+            background: var(--navy);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 10px;
+            color: #fff;
+            font-weight: 700;
+        }
+
+        /* ========== COVER PAGE ========== */
+        .cover-page {
+            width: 210mm;
+            height: 297mm;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cover-bg {
+            position: absolute;
+            inset: 0;
+            background: url('https://images.unsplash.com/photo-1626621341517-bbf3d9990a23?w=1600') center/cover;
+        }
+
+        .cover-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg,
+                rgba(26,42,74,0.70) 0%,
+                rgba(45,90,61,0.50) 40%,
+                rgba(74,55,40,0.60) 100%);
+        }
+
+        .cover-content {
+            position: relative;
+            z-index: 2;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 60px;
+        }
+
+        .cover-logo {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 10px;
+            letter-spacing: 6px;
+            color: var(--gold);
+            margin-bottom: 80px;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        .cover-title {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 68px;
+            color: #fff;
+            font-weight: 900;
+            letter-spacing: 4px;
+            line-height: 1;
+            text-shadow: 2px 2px 30px rgba(0,0,0,0.5);
+            margin-bottom: 25px;
+        }
+
+        .cover-subtitle {
+            font-family: 'Playfair Display', serif;
+            font-size: 24px;
+            color: rgba(255,255,255,0.95);
+            font-weight: 500;
+            font-style: italic;
+            letter-spacing: 2px;
+            margin-bottom: 60px;
+        }
+
+        .cover-divider {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin: 40px 0 60px;
+        }
+
+        .cover-divider-line {
+            width: 100px;
+            height: 1px;
+            background: linear-gradient(to right, transparent, var(--gold), transparent);
+        }
+
+        .cover-divider-diamond {
+            width: 12px;
+            height: 12px;
+            background: var(--gold);
+            transform: rotate(45deg);
+        }
+
+        .cover-guest {
+            font-family: 'Playfair Display', serif;
+            font-size: 28px;
+            color: #fff;
+            font-weight: 600;
+            letter-spacing: 2px;
+            margin-bottom: 15px;
+        }
+
+        .cover-dates {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 12px;
+            color: var(--gold);
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        /* ========== INNER PAGE ========== */
+        .inner-page {
+            padding: 50px 40px 95px;
+            min-height: 297mm;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ========== LETTER PAGE ========== */
+        .letter-page {
+            padding: 50px 55px 95px;
+        }
+
+        .letter-header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .letter-logo {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 18px;
+            letter-spacing: 4px;
+            color: var(--navy);
+            margin-bottom: 8px;
+            font-weight: 700;
+        }
+
+        .letter-date {
+            font-family: 'Open Sans', sans-serif;
+            font-size: 14px;
+            color: var(--warm-brown);
+            font-style: italic;
+            font-weight: 600;
+        }
+
+        .letter-salutation {
+            font-family: 'Playfair Display', serif;
+            font-size: 20px;
+            color: var(--navy);
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .letter-body {
+            font-family: 'Open Sans', sans-serif;
+            font-size: 14px;
+            color: #000000;
+            line-height: 1.6;
+            margin-bottom: 10px;
+            text-align: justify;
+            font-weight: 500;
+        }
+
+        .letter-signature {
+            margin-top: 25px;
+        }
+
+        .letter-sign-name {
+            font-family: 'Playfair Display', serif;
+            font-size: 20px;
+            color: var(--burgundy);
+            font-weight: 700;
+        }
+
+        .letter-sign-title {
+            font-size: 14px;
+            color: #888;
+            margin-top: 5px;
+        }
+
+        /* ========== OPTION CARDS ========== */
+        .option-card {
+            background: #fff;
+            border: 2px solid var(--tan);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .option-badge {
+            display: inline-block;
+            background: var(--navy);
+            color: #fff;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 10px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        .option-title {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 18px;
+            color: var(--navy);
+            font-weight: 800;
+            margin-bottom: 10px;
+        }
+
+        .option-subtitle {
+            font-family: 'Open Sans', sans-serif;
+            font-size: 13px;
+            color: var(--warm-brown);
+            margin-bottom: 15px;
+            font-style: italic;
+        }
+
+        .option-highlights {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .option-highlight-item {
+            font-size: 12px;
+            color: #000;
+            padding-left: 18px;
+            position: relative;
+            font-weight: 600;
+        }
+
+        .option-highlight-item::before {
+            content: '◆';
+            position: absolute;
+            left: 0;
+            color: var(--gold);
+            font-size: 8px;
+            top: 5px;
+        }
+
+        /* ========== DAY STYLES ========== */
+        .day-section {
+            margin-bottom: 12px;
+            page-break-inside: avoid;
+        }
+
+        .day-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .day-number-circle {
+            width: 45px;
+            height: 45px;
+            background: var(--navy);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            margin-right: 12px;
+        }
+
+        .day-number-circle span {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 20px;
+            color: #fff;
+            font-weight: 800;
+        }
+
+        .day-title-block {
+            flex: 1;
+        }
+
+        .day-title {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 15px;
+            color: var(--navy);
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+        }
+
+        .day-meta {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .day-meta-item {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 9px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: var(--warm-brown);
+            font-weight: 600;
+        }
+
+        .day-meta-item strong {
+            color: var(--navy);
+            font-weight: 700;
+        }
+
+        .day-content {
+            font-family: 'Open Sans', sans-serif;
+            font-size: 12px;
+            color: #000;
+            line-height: 1.5;
+            padding-left: 57px;
+        }
+
+        .day-highlights {
+            background: linear-gradient(135deg, rgba(26,42,74,0.06), rgba(160,130,109,0.04));
+            padding: 8px 12px;
+            border-radius: 6px;
+            margin-top: 8px;
+        }
+
+        .day-highlights-title {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 9px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--navy);
+            margin-bottom: 6px;
+            font-weight: 700;
+        }
+
+        .day-highlights-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px 12px;
+        }
+
+        .day-highlights-list span {
+            font-size: 11px;
+            color: #000;
+            font-weight: 600;
+        }
+
+        /* ========== PRICING PAGE ========== */
+        .pricing-page {
+            padding: 50px 45px 95px;
+        }
+
+        .pricing-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .pricing-label {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 10px;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: var(--navy);
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .pricing-title {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 28px;
+            color: var(--navy);
+            font-weight: 800;
+            letter-spacing: 1px;
+        }
+
+        .pricing-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            border: 1px solid #e0e0e0;
+        }
+
+        .pricing-table thead {
+            background: var(--navy);
+        }
+
+        .pricing-table th {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 9px;
+            color: #fff;
+            padding: 10px 15px;
+            text-align: left;
+            letter-spacing: 1px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .pricing-table th:last-child {
+            text-align: right;
+        }
+
+        .pricing-table td {
+            font-family: 'Open Sans', sans-serif;
+            font-size: 13px;
+            color: #000;
+            padding: 10px 15px;
+            border-bottom: 1px solid #e8e0d5;
+            font-weight: 600;
+        }
+
+        .pricing-table td:last-child {
+            text-align: right;
+            font-family: 'Montserrat', sans-serif;
+            color: var(--navy);
+            font-weight: 700;
+        }
+
+        .total-box {
+            background: linear-gradient(135deg, var(--navy) 0%, var(--forest-green) 100%);
+            color: #fff;
+            padding: 20px;
+            text-align: center;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        .total-label {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 10px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--gold);
+            margin-bottom: 8px;
+        }
+
+        .total-amount {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 42px;
+            color: var(--gold);
+            font-weight: 900;
+            letter-spacing: 2px;
+        }
+
+        .total-sub {
+            font-size: 12px;
+            color: rgba(255,255,255,0.8);
+            margin-top: 8px;
+        }
+
+        /* ========== TERMS ========== */
+        .terms-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin: 15px 0;
+        }
+
+        .terms-card {
+            background: #fff;
+            padding: 14px;
+            border-radius: 6px;
+            border: 1px solid var(--tan);
+        }
+
+        .terms-title {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 13px;
+            color: var(--navy);
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .terms-text {
+            font-family: 'Open Sans', sans-serif;
+            font-size: 11px;
+            color: #000;
+            line-height: 1.5;
+        }
+
+        /* ========== BACK COVER ========== */
+        .back-cover {
+            width: 210mm;
+            height: 297mm;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .back-cover-bg {
+            position: absolute;
+            inset: 0;
+            background: var(--navy) url('https://images.unsplash.com/photo-1626621341517-bbf3d9990a23?w=1600') center/cover;
+        }
+
+        .back-cover-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg,
+                rgba(26,42,74,0.92) 0%,
+                rgba(45,90,61,0.88) 100%);
+        }
+
+        .back-cover-content {
+            position: relative;
+            z-index: 2;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 60px;
+        }
+
+        .back-cover-logo {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 18px;
+            letter-spacing: 6px;
+            color: var(--gold);
+            margin-bottom: 50px;
+            font-weight: 600;
+        }
+
+        .back-cover-title {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 52px;
+            color: #fff;
+            font-weight: 900;
+            letter-spacing: 3px;
+            margin-bottom: 60px;
+        }
+
+        .contact-info {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+
+        .contact-item {
+            font-family: 'Open Sans', sans-serif;
+            font-size: 20px;
+            color: rgba(255,255,255,0.95);
+            font-weight: 600;
+        }
+
+        .contact-item strong {
+            color: var(--gold);
+            font-weight: 700;
+        }
+
+        /* ========== PHOTOGRAPHY TIP BOX ========== */
+        .photo-tip-box {
+            background: linear-gradient(135deg, rgba(26,42,74,0.08), rgba(201,169,97,0.06));
+            border-left: 4px solid var(--gold);
+            padding: 10px 14px;
+            margin: 10px 0;
+            border-radius: 0 6px 6px 0;
+        }
+
+        .photo-tip-title {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 11px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--navy);
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .photo-tip-text {
+            font-family: 'Open Sans', sans-serif;
+            font-size: 12px;
+            color: #000;
+            line-height: 1.5;
+        }
+
+        /* ========== COMPARISON TABLE ========== */
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+            border: 2px solid var(--navy);
+        }
+
+        .comparison-table th {
+            background: var(--navy);
+            color: #fff;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 10px;
+            padding: 10px;
+            text-align: center;
+            letter-spacing: 1px;
+            font-weight: 700;
+        }
+
+        .comparison-table td {
+            padding: 10px;
+            border-bottom: 1px solid #e0e0e0;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .comparison-table .option-col {
+            background: linear-gradient(135deg, rgba(26,42,74,0.05), rgba(45,90,61,0.03));
+            font-weight: 700;
+            color: var(--navy);
+        }
+
+        .comparison-table .check {
+            color: var(--forest-green);
+            font-size: 16px;
+        }
+
+        @media print {
+            .page { box-shadow: none !important; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- PAGE 1: COVER -->
+    <div class="page cover-page">
+        <div class="cover-bg"></div>
+        <div class="cover-overlay"></div>
+        <div class="cover-content">
+            <div class="cover-logo">Silverpine Bhutan</div>
+            <div class="cover-title">BHUTAN<br>PHOTOGRAPHY TOUR</div>
+            <div class="cover-subtitle">Where Sacred Mountains Meet Ancient Kingdoms</div>
+            <div class="cover-divider">
+                <div class="cover-divider-line"></div>
+                <div class="cover-divider-diamond"></div>
+                <div class="cover-divider-line"></div>
+            </div>
+            <div class="cover-guest">Jan Schwob</div>
+            <div class="cover-dates">November 20–25, 2026</div>
+        </div>
+    </div>
+
+    <!-- PAGE 2: WELCOME LETTER -->
+    <div class="page inner-page letter-page">
+        <div class="running-header">
+            <span>Silverpine Bhutan</span>
+            <span>Photography Tour 2026</span>
+        </div>
+
+        <div class="letter-header">
+            <div class="letter-logo">SILVERPINE BHUTAN</div>
+            <p class="letter-date">April 2026</p>
+        </div>
+
+        <p class="letter-salutation">Dear Jan,</p>
+
+        <p class="letter-body">
+            Thank you for your inquiry and for considering Silverpine Bhutan for your private photography journey this November. We appreciate your detailed request, and I'm delighted to prepare a budget-conscious quotation that aligns perfectly with your interests in wildlife and nature photography.
+        </p>
+
+        <p class="letter-body">
+            Your timing is impeccable. As you mentioned, November is when the majestic Black-necked Cranes return from their summer breeding grounds in Tibet to the Phobjikha Valley. These sacred birds, considered heavenly beings in Bhutanese folklore, gather in the glacial valley precisely during your travel window—making it an extraordinary opportunity for wildlife photography.
+        </p>
+
+        <div class="option-card" style="background: linear-gradient(135deg, rgba(26,42,74,0.06), rgba(45,90,61,0.04)); border-color: var(--navy);">
+            <div class="photo-tip-title">✈️ Your Route Confirmed</div>
+            <div style="font-family: 'Open Sans', sans-serif; font-size: 12px; color: #000; line-height: 1.5;">
+                <strong>Arrival:</strong> Kathmandu (KTM) → Paro (PBH)<br>
+                <strong>Departure:</strong> Paro (PBH) → Guwahati (GAU)<br>
+                <strong>Dates:</strong> November 20–25, 2026 (6 Days / 5 Nights)<br>
+                <strong>Accommodation:</strong> 3-star hotels (clean & comfortable)<br>
+                <strong>Party:</strong> 2 Adults • Private Vehicle • Licensed Guide
+            </div>
+        </div>
+
+        <p class="letter-body">
+            Understanding your budget-conscious approach and specific interest in the Black-necked Cranes, we have prepared <strong>two options</strong> for your consideration. <strong>Option 1</strong> includes Phobjikha Valley for the crane experience you mentioned would be "nice"—we've made it a centerpiece of this itinerary. <strong>Option 2</strong> offers a more budget-friendly alternative focusing on the cultural heartlands, with a relaxed pace perfect for photography.
+        </p>
+
+        <p class="letter-body">
+            Both packages are <strong>all-inclusive at $300 per person per night</strong> (accommodation, all meals, licensed guide, private SUV, monument entry fees). The government-mandated SDF fee of $100/night and the $40 one-time visa fee are billed separately as you requested. Our quotation provides complete transparency with a detailed breakdown.
+        </p>
+
+        <p class="letter-body">
+            We've designed both itineraries with photography in mind—early starts for golden hour lighting, flexible timing at key sites, and guidance on the best vantage points. The legendary Tiger's Nest trek is included in both options, and we'll schedule it for early morning to capture the monastery in the softest light.
+        </p>
+
+        <div class="letter-signature" style="margin-top: 30px; text-align: center;">
+            <p style="font-size: 11px; letter-spacing: 3px; color: var(--navy); text-transform: uppercase; margin-bottom: 8px;">Silverpine Bhutan</p>
+            <p class="letter-sign-name">Tshering Lhamo</p>
+            <p class="letter-sign-title">COO | Photography Tour Specialist</p>
+        </div>
+
+        <div class="running-footer">
+            <span>Silverpine Bhutan</span>
+            <span>www.silverpinebhutan.com | +975 77773737</span>
+            <div class="page-number">2</div>
+        </div>
+    </div>
+
+    <!-- PAGE 3: TOUR OPTIONS -->
+    <div class="page inner-page" style="padding: 45px 40px 95px;">
+        <div class="running-header">
+            <span>Silverpine Bhutan</span>
+            <span>Photography Tour 2026</span>
+        </div>
+
+        <div class="letter-header" style="margin-bottom: 15px;">
+            <div class="pricing-label">Your Journey Awaits</div>
+            <div class="pricing-title">Choose Your Path</div>
+        </div>
+
+        <!-- OPTION 1 -->
+        <div class="option-card" style="margin-bottom: 12px; padding: 16px;">
+            <div class="option-badge">Option 1</div>
+            <div class="option-title">The Classic Bhutan Tour</div>
+            <div class="option-subtitle">Nov 20–25, 2026 • With Phobjikha Valley</div>
+            <p style="font-size: 12px; color: #000; line-height: 1.4; margin-bottom: 10px;">
+                The definitive route balancing iconic cultural landmarks with wildlife photography. Includes Thimphu, Punakha, Paro, and dedicated time for Black-necked Cranes in Phobjikha Valley.
+            </p>
+            <div class="option-highlights">
+                <div class="option-highlight-item">Black-necked Crane Photography</div>
+                <div class="option-highlight-item">Tiger's Nest Trek</div>
+                <div class="option-highlight-item">Punakha Dzong</div>
+                <div class="option-highlight-item">Dochula Pass (108 Stupas)</div>
+                <div class="option-highlight-item">Phobjikha Valley</div>
+            </div>
+        </div>
+
+        <!-- OPTION 2 -->
+        <div class="option-card" style="margin-bottom: 12px; padding: 16px;">
+            <div class="option-badge">Option 2</div>
+            <div class="option-title">The Cultural Classic</div>
+            <div class="option-subtitle">Nov 20–25, 2026 • Relaxed Pace</div>
+            <p style="font-size: 12px; color: #000; line-height: 1.4; margin-bottom: 10px;">
+                A more relaxed pace focusing on cultural heartlands. Extended time at Thimphu, Punakha, and Paro for high-quality architecture and landscape photography.
+            </p>
+            <div class="option-highlights">
+                <div class="option-highlight-item">Extended Tiger's Nest Time</div>
+                <div class="option-highlight-item">Dochula Pass Golden Hour</div>
+                <div class="option-highlight-item">Buddha Dordenma</div>
+                <div class="option-highlight-item">Punakha Dzong Twilight</div>
+                <div class="option-highlight-item">Relaxed Photography Pace</div>
+            </div>
+        </div>
+
+        <!-- COMPARISON TABLE -->
+        <div style="margin-top: 8px;">
+            <div class="pricing-label" style="text-align: center; margin-bottom: 8px;">Quick Comparison</div>
+            <table class="comparison-table" style="margin: 0;">
+                <thead>
+                    <tr>
+                        <th>Feature</th>
+                        <th>Option 1</th>
+                        <th>Option 2</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="option-col">Tiger's Nest</td>
+                        <td><span class="check">✓</span> Day 5</td>
+                        <td><span class="check">✓</span> Extended</td>
+                    </tr>
+                    <tr>
+                        <td class="option-col">Black-necked Cranes</td>
+                        <td><span class="check">✓</span> Phobjikha Valley</td>
+                        <td>—</td>
+                    </tr>
+                    <tr>
+                        <td class="option-col">Photography Pace</td>
+                        <td>Moderate</td>
+                        <td>Relaxed</td>
+                    </tr>
+                    <tr>
+                        <td class="option-col">Total Cost (2 Pax)</td>
+                        <td><strong>$3,080</strong></td>
+                        <td><strong>$3,080</strong></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="running-footer">
+            <span>Silverpine Bhutan</span>
+            <span>www.silverpinebhutan.com</span>
+            <div class="page-number">3</div>
+        </div>
+    </div>
+
+    <!-- PAGE 4: SECTION OPENER OPTION 1 -->
+    <div class="page cover-page" style="height: 297mm;">
+        <div class="cover-bg" style="background: url('https://www.heavenlybhutan.com/wp-content/uploads/2020/08/Phobjikha-Valley.jpg') center/cover;"></div>
+        <div class="cover-overlay" style="background: linear-gradient(180deg, rgba(26,42,74,0.60) 0%, rgba(45,90,61,0.50) 100%);"></div>
+        <div class="cover-content">
+            <div style="font-family: 'Montserrat', sans-serif; font-size: 10px; letter-spacing: 4px; color: var(--gold); text-transform: uppercase; margin-bottom: 30px;">Option 1</div>
+            <div class="cover-title" style="font-size: 56px;">THE CLASSIC<br>BHUTAN TOUR</div>
+            <div class="cover-subtitle">With Black-necked Cranes of Phobjikha Valley</div>
+            <div style="margin-top: 40px;">
+                <div style="font-family: 'Montserrat', sans-serif; font-size: 14px; color: rgba(255,255,255,0.9); letter-spacing: 2px; text-transform: uppercase;">November 20–25, 2026</div>
+                <div style="font-family: 'Open Sans', sans-serif; font-size: 11px; color: var(--gold); margin-top: 10px;">6 Days / 5 Nights • 2 Adults</div>
+            </div>
+        </div>
+        <div style="position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%); width: 50px; height: 50px; background: var(--navy); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+            <span style="font-family: 'Montserrat', sans-serif; font-size: 22px; color: #fff; font-weight: 700;">4</span>
+        </div>
+    </div>
+
+    <!-- PAGE 5: OPTION 1 ITINERARY DAYS 1-3 -->
+    <div class="page inner-page">
+        <div class="running-header">
+            <span>Silverpine Bhutan</span>
+            <span>Option 1: Classic Bhutan Tour</span>
+        </div>
+
+        <div class="letter-header" style="margin-bottom: 20px;">
+            <div class="pricing-label">Option 1</div>
+            <div class="pricing-title" style="font-size: 22px;">The Classic Bhutan Tour</div>
+            <div style="font-size: 12px; color: var(--warm-brown); font-style: italic;">With Phobjikha Valley & Black-necked Cranes</div>
+        </div>
+
+        <!-- DAY 1 -->
+        <div class="day-section">
+            <div class="day-header">
+                <div class="day-number-circle"><span>01</span></div>
+                <div class="day-title-block">
+                    <div class="day-title">Paro → Thimphu • The Capital Welcome</div>
+                    <div class="day-meta">
+                        <div class="day-meta-item"><strong>Drive:</strong> ~1 hour</div>
+                        <div class="day-meta-item"><strong>Altitude:</strong> 2,320m</div>
+                        <div class="day-meta-item"><strong>Night:</strong> Thimphu</div>
+                    </div>
+                </div>
+            </div>
+            <div class="day-content">
+                Arrive at Paro International Airport, greeted by our representative with a traditional khadar welcome. Scenic drive to Thimphu, Bhutan's capital city. Afternoon check-in at your hotel. Visit Tashichho Dzong at dusk for architectural photography—the fortress glows beautifully in the golden hour light. Evening explore Thimphu's vibrant streets.
+                <div class="day-highlights">
+                    <div class="day-highlights-title">Photography Opportunities</div>
+                    <div class="day-highlights-list">
+                        <span>Paro Valley aerial views</span>
+                        <span>Tashichho Dzong at twilight</span>
+                        <span>Thimphu street scenes</span>
+                        <span>Traditional architecture</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- DAY 2 -->
+        <div class="day-section">
+            <div class="day-header">
+                <div class="day-number-circle"><span>02</span></div>
+                <div class="day-title-block">
+                    <div class="day-title">Thimphu → Punakha • Mountain Pass Journey</div>
+                    <div class="day-meta">
+                        <div class="day-meta-item"><strong>Drive:</strong> ~3 hours</div>
+                        <div class="day-meta-item"><strong>High Point:</strong> Dochula La 3,150m</div>
+                        <div class="day-meta-item"><strong>Night:</strong> Punakha</div>
+                    </div>
+                </div>
+            </div>
+            <div class="day-content">
+                Morning drive over Dochula Pass—a mountain saddle adorned with 108 chortens (stupas). On clear days, capture panoramic views of the entire eastern Himalayan range. This is one of Bhutan's best landscape photography locations. Descend into the warmer Punakha Valley and visit the magnificent Punakha Dzong, arguably Bhutan's most beautiful fortress, situated at the confluence of two rivers.
+                <div class="day-highlights">
+                    <div class="day-highlights-title">Photography Opportunities</div>
+                    <div class="day-highlights-list">
+                        <span>Dochula 108 Stupas + Himalayas</span>
+                        <span>Punakha Dzong architecture</span>
+                        <span>River confluence views</span>
+                        <span>Mountain road landscapes</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- DAY 3 -->
+        <div class="day-section">
+            <div class="day-header">
+                <div class="day-number-circle"><span>03</span></div>
+                <div class="day-title-block">
+                    <div class="day-title">Punakha → Phobjikha • Crane Valley</div>
+                    <div class="day-meta">
+                        <div class="day-meta-item"><strong>Drive:</strong> ~3 hours</div>
+                        <div class="day-meta-item"><strong>Altitude:</strong> 3,000m</div>
+                        <div class="day-meta-item"><strong>Night:</strong> Phobjikha</div>
+                    </div>
+                </div>
+            </div>
+            <div class="day-content">
+                Drive into the high-altitude glacial valley of Phobjikha—a protected wetland and winter home to the endangered Black-necked Cranes. These sacred birds arrive from Tibet in late October and stay until March. Evening photography session focused on the cranes as they return to roost. Visit the Gangtey Monastery overlooking the valley.
+                <div class="photo-tip-box">
+                    <div class="photo-tip-title">📷 Black-necked Crane Photography Tips</div>
+                    <div class="photo-tip-text">
+                        Cranes are best photographed in early morning (sunrise) or late afternoon (sunset). Use a telephoto lens (200mm+). The cranes perform their famous mating dances—be patient and ready!
+                    </div>
+                </div>
+                <div class="day-highlights">
+                    <div class="day-highlights-title">Photography Opportunities</div>
+                    <div class="day-highlights-list">
+                        <span>Black-necked Cranes at sunset</span>
+                        <span>Gangtey Dzong panorama</span>
+                        <span>Glacial valley landscapes</span>
+                        <span>Traditional village life</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="running-footer">
+            <span>Silverpine Bhutan</span>
+            <span>www.silverpinebhutan.com</span>
+            <div class="page-number">5</div>
+        </div>
+    </div>
+
+    <!-- PAGE 6: OPTION 1 ITINERARY DAYS 4-6 -->
+    <div class="page inner-page">
+        <div class="running-header">
+            <span>Silverpine Bhutan</span>
+            <span>Option 1: Classic Bhutan Tour</span>
+        </div>
+
+        <!-- DAY 4 -->
+        <div class="day-section">
+            <div class="day-header">
+                <div class="day-number-circle"><span>04</span></div>
+                <div class="day-title-block">
+                    <div class="day-title">Phobjikha → Paro • Valley of Beauty</div>
+                    <div class="day-meta">
+                        <div class="day-meta-item"><strong>Drive:</strong> ~5 hours</div>
+                        <div class="day-meta-item"><strong>Night:</strong> Paro</div>
+                        <div class="day-meta-item"><strong>Altitude:</strong> 2,250m</div>
+                    </div>
+                </div>
+            </div>
+            <div class="day-content">
+                Early morning photography session in Phobjikha Valley—catch the cranes at sunrise in the misty valley. After breakfast, begin the scenic drive back to Paro through the lush western valleys of Wangdue and Thimphu. En route stops at scenic viewpoints and traditional villages. Arrive in Paro by afternoon. Visit Ta Dzong (National Museum) and Rinpung Dzong. Evening at leisure to explore Paro's charming town.
+                <div class="day-highlights">
+                    <div class="day-highlights-title">Photography Opportunities</div>
+                    <div class="day-highlights-list">
+                        <span>Cranes at sunrise (optional)</span>
+                        <span>Valley-to-valley landscapes</span>
+                        <span>Rinpung Dzong architecture</span>
+                        <span>Paro town street scenes</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- DAY 5 -->
+        <div class="day-section">
+            <div class="day-header">
+                <div class="day-number-circle"><span>05</span></div>
+                <div class="day-title-block">
+                    <div class="day-title">Paro • Tiger's Nest Trek ★</div>
+                    <div class="day-meta">
+                        <div class="day-meta-item"><strong>Hike:</strong> 4-5 hours</div>
+                        <div class="day-meta-item"><strong>Altitude:</strong> 3,120m</div>
+                        <div class="day-meta-item"><strong>Night:</strong> Paro</div>
+                    </div>
+                </div>
+            </div>
+            <div class="day-content">
+                The big day! Trek to Bhutan's most iconic landmark—Taktsang Palphug Monastery (Tiger's Nest), perched dramatically on a cliff 900 meters above the valley floor. Legend says Guru Rinpoche flew here on the back of a tigress. For photography, we recommend starting early (7:30 AM) to capture the best morning light on the monastery walls before harsh midday sun. Visit the main temple, photograph breathtaking views, and enjoy lunch at the cafeteria. Afternoon free for souvenir shopping.
+                <div class="photo-tip-box">
+                    <div class="photo-tip-title">📷 Tiger's Nest Photography Tips</div>
+                    <div class="photo-tip-text">
+                        Start early to avoid crowds and capture soft morning light. Best viewpoints are at the cafeteria (mid-way) and from the main temple. Use wide-angle for the monastery, telephoto for details. Prayer flags add beautiful foreground elements.
+                    </div>
+                </div>
+                <div class="day-highlights">
+                    <div class="day-highlights-title">Photography Opportunities</div>
+                    <div class="day-highlights-list">
+                        <span>Tiger's Nest viewpoints</span>
+                        <span>Cliff-side monastery details</span>
+                        <span>Prayer flags & panoramas</span>
+                        <span>Valley floor views</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- DAY 6 -->
+        <div class="day-section">
+            <div class="day-header">
+                <div class="day-number-circle"><span>06</span></div>
+                <div class="day-title-block">
+                    <div class="day-title">Departure • Farewell</div>
+                    <div class="day-meta">
+                        <div class="day-meta-item"><strong>To:</strong> Paro Airport (PBH)</div>
+                        <div class="day-meta-item"><strong>Flight:</strong> To Guwahati (GAU)</div>
+                    </div>
+                </div>
+            </div>
+            <div class="day-content">
+                Morning at leisure for final photography or shopping. Transfer to Paro International Airport for your flight to Guwahati. Reflect on the incredible images and memories captured—sacred monasteries, majestic dzongs, Himalayan vistas, and the elegant Black-necked Cranes of Phobjikha. Tashi Delek!
+                <div class="day-highlights">
+                    <div class="day-highlights-title">Journey Complete</div>
+                    <div class="day-highlights-list">
+                        <span>Final morning photography</span>
+                        <span>Airport transfer</span>
+                        <span>Lifelong memories</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="running-footer">
+            <span>Silverpine Bhutan</span>
+            <span>www.silverpinebhutan.com</span>
+            <div class="page-number">6</div>
+        </div>
+    </div>
+
+    <!-- PAGE 7: SECTION OPENER OPTION 2 -->
+    <div class="page cover-page" style="height: 297mm;">
+        <div class="cover-bg" style="background: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT5T9-ni40eaQZR-ISP8iq4tzQa5hJek2LK0g&s') center/cover;"></div>
+        <div class="cover-overlay" style="background: linear-gradient(180deg, rgba(26,42,74,0.65) 0%, rgba(45,90,61,0.55) 100%);"></div>
+        <div class="cover-content">
+            <div style="font-family: 'Montserrat', sans-serif; font-size: 10px; letter-spacing: 4px; color: var(--gold); text-transform: uppercase; margin-bottom: 30px;">Option 2</div>
+            <div class="cover-title" style="font-size: 56px;">THE CULTURAL<br>CLASSIC</div>
+            <div class="cover-subtitle">Relaxed Pace for Cultural & Landscape Photography</div>
+            <div style="margin-top: 40px;">
+                <div style="font-family: 'Montserrat', sans-serif; font-size: 14px; color: rgba(255,255,255,0.9); letter-spacing: 2px; text-transform: uppercase;">November 20–25, 2026</div>
+                <div style="font-family: 'Open Sans', sans-serif; font-size: 11px; color: var(--gold); margin-top: 10px;">6 Days / 5 Nights • 2 Adults</div>
+            </div>
+        </div>
+        <div style="position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%); width: 50px; height: 50px; background: var(--navy); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+            <span style="font-family: 'Montserrat', sans-serif; font-size: 22px; color: #fff; font-weight: 700;">7</span>
+        </div>
+    </div>
+
+    <!-- PAGE 8: OPTION 2 ITINERARY DAYS 1-3 -->
+    <div class="page inner-page">
+        <div class="running-header">
+            <span>Silverpine Bhutan</span>
+            <span>Option 2: Cultural Classic</span>
+        </div>
+
+        <div class="letter-header" style="margin-bottom: 20px;">
+            <div class="pricing-label">Option 2</div>
+            <div class="pricing-title" style="font-size: 22px;">The Cultural Classic</div>
+            <div style="font-size: 12px; color: var(--warm-brown); font-style: italic;">Relaxed Pace • Maximum Golden Hour Time</div>
+        </div>
+
+        <!-- DAY 1 -->
+        <div class="day-section">
+            <div class="day-header">
+                <div class="day-number-circle"><span>01</span></div>
+                <div class="day-title-block">
+                    <div class="day-title">Paro → Thimphu • Buddha at Sunset</div>
+                    <div class="day-meta">
+                        <div class="day-meta-item"><strong>Drive:</strong> ~1 hour</div>
+                        <div class="day-meta-item"><strong>Night:</strong> Thimphu</div>
+                        <div class="day-meta-item"><strong>Altitude:</strong> 2,320m</div>
+                    </div>
+                </div>
+            </div>
+            <div class="day-content">
+                Arrive at Paro International Airport with traditional welcome. Scenic drive to Thimphu. Afternoon visit to Buddha Dordenma (Kuensel Phodrang)—the massive Golden Buddha statue overlooking the valley. This is an incredible location for sunset photography as the golden light bathes the statue and valley below. Evening explore Thimphu's main street and capture the city's vibrant atmosphere.
+                <div class="day-highlights">
+                    <div class="day-highlights-title">Photography Opportunities</div>
+                    <div class="day-highlights-list">
+                        <span>Buddha Dordenma at sunset</span>
+                        <span>Thimphu Valley panoramic views</span>
+                        <span>City street photography</span>
+                        <span>Traditional architecture</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- DAY 2 -->
+        <div class="day-section">
+            <div class="day-header">
+                <div class="day-number-circle"><span>02</span></div>
+                <div class="day-title-block">
+                    <div class="day-title">Thimphu • Cultural Immersion</div>
+                    <div class="day-meta">
+                        <div class="day-meta-item"><strong>Activity:</strong> Full Day</div>
+                        <div class="day-meta-item"><strong>Night:</strong> Thimphu</div>
+                    </div>
+                </div>
+            </div>
+            <div class="day-content">
+                Morning at the National Memorial Chorten—photograph devotees circumambulating and spinning prayer wheels. Visit the vibrant Thimphu Weekend Market (if available) for colorful cultural documentation. Afternoon session at Tashichho Dzong at twilight—the fortress illuminated against the darkening sky creates dramatic images. More time here ensures you capture both afternoon and twilight moods.
+                <div class="day-highlights">
+                    <div class="day-highlights-title">Photography Opportunities</div>
+                    <div class="day-highlights-list">
+                        <span>Chorten prayer wheels & devotees</span>
+                        <span>Weekend Market colors</span>
+                        <span>Tashichho Dzong at twilight</span>
+                        <span>Street & cultural moments</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- DAY 3 -->
+        <div class="day-section">
+            <div class="day-header">
+                <div class="day-number-circle"><span>03</span></div>
+                <div class="day-title-block">
+                    <div class="day-title">Thimphu → Punakha • Mountain Pass</div>
+                    <div class="day-meta">
+                        <div class="day-meta-item"><strong>Drive:</strong> ~3 hours</div>
+                        <div class="day-meta-item"><strong>High Point:</strong> Dochula La 3,150m</div>
+                        <div class="day-meta-item"><strong>Night:</strong> Punakha</div>
+                    </div>
+                </div>
+            </div>
+            <div class="day-content">
+                Drive over Dochula Pass for a dedicated photography session. In November's crisp air, this is one of the best locations for Himalayan landscape photography. The 108 stupas with snow-capped peaks create iconic compositions. Afternoon at Punakha Dzong with extended time—capture the fortress both in bright afternoon light and soft twilight. Walk across the dramatic suspension bridge for unique angles.
+                <div class="photo-tip-box">
+                    <div class="photo-tip-title">📷 Dochula Pass Photography Tips</div>
+                    <div class="photo-tip-text">
+                        November offers the highest probability of clear Himalayan views. Use a wide-angle for the full stupa array. Sunrise/sunset provides the most dramatic lighting. Don't forget telephoto shots of individual stupas against peaks.
+                    </div>
+                </div>
+                <div class="day-highlights">
+                    <div class="day-highlights-title">Photography Opportunities</div>
+                    <div class="day-highlights-list">
+                        <span>Dochula 108 Stupas + Himalayas</span>
+                        <span>Punakha Dzong (afternoon + twilight)</span>
+                        <span>Suspension bridge perspectives</span>
+                        <span>River confluence reflections</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="running-footer">
+            <span>Silverpine Bhutan</span>
+            <span>www.silverpinebhutan.com</span>
+            <div class="page-number">8</div>
+        </div>
+    </div>
+
+    <!-- PAGE 9: OPTION 2 ITINERARY DAYS 4-6 -->
+    <div class="page inner-page">
+        <div class="running-header">
+            <span>Silverpine Bhutan</span>
+            <span>Option 2: Cultural Classic</span>
+        </div>
+
+        <!-- DAY 4 -->
+        <div class="day-section">
+            <div class="day-header">
+                <div class="day-number-circle"><span>04</span></div>
+                <div class="day-title-block">
+                    <div class="day-title">Punakha → Paro • Temple of Fertility</div>
+                    <div class="day-meta">
+                        <div class="day-meta-item"><strong>Drive:</strong> ~4 hours</div>
+                        <div class="day-meta-item"><strong>Night:</strong> Paro</div>
+                        <div class="day-meta-item"><strong>Altitude:</strong> 2,250m</div>
+                    </div>
+                </div>
+            </div>
+            <div class="day-content">
+                Morning hike/photography at Chimi Lhakhang (Temple of Fertility)—a charming temple dedicated to the Divine Madman. The walk through rice fields and traditional villages offers wonderful cultural photography opportunities. Afternoon return to Paro via the scenic river route. Visit Ta Dzong (National Museum) for insights into Bhutanese culture. Evening photography at Rinpung Dzong and the traditional cantilever bridge.
+                <div class="day-highlights">
+                    <div class="day-highlights-title">Photography Opportunities</div>
+                    <div class="day-highlights-list">
+                        <span>Chimi Lhakhang & village walk</span>
+                        <span>Rice field landscapes</span>
+                        <span>Rinpung Dzong architecture</span>
+                        <span>Cantilever bridge views</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- DAY 5 -->
+        <div class="day-section">
+            <div class="day-header">
+                <div class="day-number-circle"><span>05</span></div>
+                <div class="day-title-block">
+                    <div class="day-title">Paro • Tiger's Nest ★ Extended</div>
+                    <div class="day-meta">
+                        <div class="day-meta-item"><strong>Hike:</strong> 4-5 hours</div>
+                        <div class="day-meta-item"><strong>Altitude:</strong> 3,120m</div>
+                        <div class="day-meta-item"><strong>Night:</strong> Paro</div>
+                    </div>
+                </div>
+            </div>
+            <div class="day-content">
+                Full day for the Tiger's Nest (Taktsang) hike. Without Phobjikha, you have a more relaxed morning to ascend—crucial for photography. Starting early avoids midday crowds and captures the best soft light on the monastery cliffs. More time at the top allows for multiple angles and compositions. Afternoon/evening return with time to rest and review images. Optional evening photography session in Paro town.
+                <div class="photo-tip-box">
+                    <div class="photo-tip-title">📷 Extended Tiger's Nest Photography</div>
+                    <div class="photo-tip-text">
+                        With extra time, photograph from multiple viewpoints: the cafeteria (classic wide shot), the main temple (close-up details), and the return trail (backlit monastery). Capture prayer flags framing the sacred site.
+                    </div>
+                </div>
+                <div class="day-highlights">
+                    <div class="day-highlights-title">Photography Opportunities</div>
+                    <div class="day-highlights-list">
+                        <span>Multiple Tiger's Nest viewpoints</span>
+                        <span>Cliff-face monastery details</span>
+                        <span>Prayer flag compositions</span>
+                        <span>Evening Paro town</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- DAY 6 -->
+        <div class="day-section">
+            <div class="day-header">
+                <div class="day-number-circle"><span>06</span></div>
+                <div class="day-title-block">
+                    <div class="day-title">Departure • Farewell</div>
+                    <div class="day-meta">
+                        <div class="day-meta-item"><strong>To:</strong> Paro Airport (PBH)</div>
+                        <div class="day-meta-item"><strong>Flight:</strong> To Guwahati (GAU)</div>
+                    </div>
+                </div>
+            </div>
+            <div class="day-content">
+                Morning at leisure for final photography, souvenir shopping, or simply relaxing. Transfer to Paro International Airport for your flight to Guwahati. Reflect on the incredible cultural and landscape images captured—from the golden Buddha of Thimphu to the majestic Tiger's Nest. You've experienced Bhutan's quintessential highlights at a photographer's perfect pace. Tashi Delek!
+                <div class="day-highlights">
+                    <div class="day-highlights-title">Journey Complete</div>
+                    <div class="day-highlights-list">
+                        <span>Final morning shots</span>
+                        <span>Souvenir shopping</span>
+                        <span>Lifelong memories</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="running-footer">
+            <span>Silverpine Bhutan</span>
+            <span>www.silverpinebhutan.com</span>
+            <div class="page-number">9</div>
+        </div>
+    </div>
+
+    <!-- PAGE 10: PRICING -->
+    <div class="page pricing-page" style="padding: 35px 45px 100px;">
+        <div class="running-header">
+            <span>Silverpine Bhutan</span>
+            <span>Photography Tour 2026</span>
+        </div>
+
+        <div class="pricing-header" style="margin-bottom: 10px;">
+            <div class="pricing-label">Investment</div>
+            <div class="pricing-title">Package Pricing</div>
+            <div style="font-size: 9px; color: var(--warm-brown); font-style: italic;">Both Options: Same Price</div>
+        </div>
+
+        <div class="total-box" style="padding: 10px; margin-bottom: 8px;">
+            <div class="total-label" style="font-size: 8px;">Total Package Cost (2 Adults)</div>
+            <div class="total-amount" style="font-size: 32px;">$3,080</div>
+            <div class="total-sub" style="font-size: 8px;">6 Days / 5 Nights • $300 USD per person per day</div>
+        </div>
+
+        <table class="pricing-table" style="margin-bottom: 6px;">
+            <thead>
+                <tr>
+                    <th style="font-size: 9px;">Cost Component</th>
+                    <th style="font-size: 9px;">For 2 Adults</th>
+                </tr>
+            </thead>
+            <tbody style="font-size: 9px;">
+                <tr>
+                    <td><strong>SDF Fee</strong><br><small>Government mandated</small></td>
+                    <td style="text-align: right; font-weight: 700;">$1,000</td>
+                </tr>
+                <tr>
+                    <td><strong>Land Cost</strong><br><small>Hotels, meals, transport, guide</small></td>
+                    <td style="text-align: right; font-weight: 700;">$2,000</td>
+                </tr>
+                <tr style="border-top: 2px solid var(--navy);">
+                    <td><strong>Total</strong></td>
+                    <td style="text-align: right; font-weight: 700; color: var(--gold); font-size: 11px;">$3,000</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div style="background: #fff; border: 2px solid var(--navy); border-radius: 6px; padding: 8px; margin-top: 5px; margin-bottom: 6px;">
+            <div style="font-family: 'Montserrat', sans-serif; font-size: 8px; color: var(--navy); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 5px; font-weight: 700; text-align: center;">Plus</div>
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                    <div style="font-family: 'Montserrat', sans-serif; font-size: 9px; color: var(--navy); font-weight: 700;">Visa Fee</div>
+                    <div style="font-size: 7px; color: #666;">One-time for 2 persons</div>
+                </div>
+                <div style="font-family: 'Montserrat', sans-serif; font-size: 12px; color: var(--dark-brown); font-weight: 700;">$80</div>
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: center; padding: 5px 0; border-top: 2px solid var(--navy); margin-top: 5px;">
+                <div>
+                    <div style="font-family: 'Montserrat', sans-serif; font-size: 10px; color: var(--navy); font-weight: 800;">GRAND TOTAL</div>
+                </div>
+                <div style="font-family: 'Montserrat', sans-serif; font-size: 18px; color: var(--gold); font-weight: 900;">$3,080</div>
+            </div>
+        </div>
+
+        <div style="margin-top: 5px; padding-top: 6px; border-top: 2px solid var(--navy);">
+            <div style="font-family: 'Montserrat', sans-serif; font-size: 8px; color: var(--navy); margin-bottom: 4px; text-transform: uppercase; letter-spacing: 1px; font-weight: 700;">What's Included</div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1px;">
+                <div style="font-size: 8px; color: #000; font-weight: 600;">✓ 3-Star Hotel Accommodation</div>
+                <div style="font-size: 8px; color: #000; font-weight: 600;">✓ Full Board (All Meals)</div>
+                <div style="font-size: 8px; color: #000; font-weight: 600;">✓ Private SUV Transport</div>
+                <div style="font-size: 8px; color: #000; font-weight: 600;">✓ Licensed English-Speaking Guide</div>
+                <div style="font-size: 8px; color: #000; font-weight: 600;">✓ All Monument Entry Fees</div>
+                <div style="font-size: 8px; color: #000; font-weight: 600;">✓ Park Permits (Phobjikha)</div>
+                <div style="font-size: 8px; color: #000; font-weight: 600;">✓ SDF Fee ($100/night)</div>
+                <div style="font-size: 8px; color: #000; font-weight: 600;">✓ Tiger's Nest Permit</div>
+            </div>
+        </div>
+
+        <div style="margin-top: 5px; padding: 5px; background: linear-gradient(135deg, rgba(139,21,56,0.08), rgba(139,21,56,0.03)); border-left: 3px solid var(--burgundy); border-radius: 0 6px 6px 0;">
+            <div style="font-family: 'Montserrat', sans-serif; font-size: 8px; color: var(--burgundy); font-weight: 700; margin-bottom: 2px;">Exclusions</div>
+            <div style="font-size: 7px; color: #000; font-weight: 600; line-height: 1.1;">
+                International flights • Personal expenses, tips • Travel insurance • Beverages
+            </div>
+        </div>
+
+        <div class="running-footer">
+            <span>Silverpine Bhutan</span>
+            <span>www.silverpinebhutan.com</span>
+            <div class="page-number">10</div>
+        </div>
+    </div>
+
+    <!-- PAGE 11: TERMS & CONDITIONS -->
+    <div class="page inner-page">
+        <div class="running-header">
+            <span>Silverpine Bhutan</span>
+            <span>Photography Tour 2026</span>
+        </div>
+
+        <div class="pricing-header">
+            <div class="pricing-label">Important Information</div>
+            <div class="pricing-title">Terms & Conditions</div>
+        </div>
+
+        <div class="terms-grid">
+            <div class="terms-card">
+                <div class="terms-title">Booking & Payment</div>
+                <p class="terms-text">A 30% non-refundable deposit is required to confirm your booking. The remaining balance must be paid 30 days before your arrival date. We accept wire transfers and all major credit cards.</p>
+            </div>
+            <div class="terms-card">
+                <div class="terms-title">Cancellation Policy</div>
+                <p class="terms-text">Full refund (minus deposit) for cancellations made 60+ days before departure. 50% refund for cancellations 30-60 days before. No refund within 30 days of departure unless covered by travel insurance.</p>
+            </div>
+        </div>
+
+        <div class="terms-grid">
+            <div class="terms-card">
+                <div class="terms-title">Visa & SDF</div>
+                <p class="terms-text">The SDF ($100/night) and Visa fee ($40) are government-mandated. These are paid directly during the booking process. We ensure all paperwork is submitted once your deposit is confirmed. SDF is included in the package rate.</p>
+            </div>
+            <div class="terms-card">
+                <div class="terms-title">Travel Documents</div>
+                <p class="terms-text">Valid passports (minimum 6 months validity) are required for all travelers. We will process your Bhutan visa upon booking confirmation. Ensure you have the necessary permits for photography in restricted areas.</p>
+            </div>
+        </div>
+
+        <div class="terms-grid">
+            <div class="terms-card">
+                <div class="terms-title">Health & Fitness</div>
+                <p class="terms-text">The Tiger's Nest trek is moderate to strenuous. A reasonable level of fitness is required. We recommend consulting your doctor before undertaking high-altitude trekking. Inform us of any medical conditions in advance.</p>
+            </div>
+            <div class="terms-card">
+                <div class="terms-title">Liability</div>
+                <p class="terms-text">Silverpine Bhutan acts as an agent for hotels, transport, and service providers. We shall not be liable for any injury, damage, loss, delay, or irregularity caused by defects in services or acts of God.</p>
+            </div>
+        </div>
+
+        <div class="terms-grid">
+            <div class="terms-card">
+                <div class="terms-title">Photography Guidelines</div>
+                <p class="terms-text">Photography is prohibited inside most temples and dzongs. Always ask permission before photographing people, especially monks and religious practitioners. Drone photography requires special permits—please inform us in advance if you plan to bring a drone.</p>
+            </div>
+            <div class="terms-card">
+                <div class="terms-title">Weather Considerations</div>
+                <p class="terms-text">November offers the clearest skies and best visibility. Daytime temperatures range from 15-20°C in valleys, nights can be cooler. Pack layers. We maintain flexibility for golden hour photography sessions.</p>
+            </div>
+        </div>
+
+        <div style="margin-top: 15px; padding: 12px; background: linear-gradient(135deg, rgba(26,42,74,0.08), rgba(201,169,97,0.06)); border-radius: 6px;">
+            <div style="font-family: 'Montserrat', sans-serif; font-size: 12px; color: var(--navy); font-weight: 700; margin-bottom: 8px;">Photography-Specific Notes</div>
+            <div style="font-size: 11px; color: #000; line-height: 1.5;">
+                • Our guides are photography-aware and will accommodate golden hour requests<br>
+                • Vehicle storage for camera equipment available<br>
+                • Tripods welcome (please carry your own)<br>
+                • Power outlets in hotels for charging equipment<br>
+                • We recommend carrying backup batteries and memory cards
+            </div>
+        </div>
+
+        <div class="running-footer">
+            <span>Silverpine Bhutan</span>
+            <span>www.silverpinebhutan.com</span>
+            <div class="page-number">11</div>
+        </div>
+    </div>
+
+    <!-- PAGE 13: PACKING CHECKLIST -->
+    <div class="page inner-page">
+        <div class="running-header">
+            <span>Silverpine Bhutan</span>
+            <span>Photography Tour 2026</span>
+        </div>
+
+        <div class="pricing-header">
+            <div class="pricing-label">Be Prepared</div>
+            <div class="pricing-title">Photography Packing Checklist</div>
+        </div>
+
+        <div style="background: #fff; border: 2px solid var(--navy); border-radius: 6px; padding: 15px; margin-bottom: 15px;">
+            <div style="font-family: 'Montserrat', sans-serif; font-size: 14px; color: var(--navy); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 15px; font-weight: 700; text-align: center;">📷 Camera Equipment</div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                <div style="font-size: 12px; color: #000; padding-left: 18px; position: relative; font-weight: 600;">
+                    <span style="position: absolute; left: 0; color: var(--gold);">☐</span> Camera body (backup recommended)
+                </div>
+                <div style="font-size: 12px; color: #000; padding-left: 18px; position: relative; font-weight: 600;">
+                    <span style="position: absolute; left: 0; color: var(--gold);">☐</span> Wide-angle lens (16-35mm)
+                </div>
+                <div style="font-size: 12px; color: #000; padding-left: 18px; position: relative; font-weight: 600;">
+                    <span style="position: absolute; left: 0; color: var(--gold);">☐</span> Telephoto lens (70-200mm+)
+                </div>
+                <div style="font-size: 12px; color: #000; padding-left: 18px; position: relative; font-weight: 600;">
+                    <span style="position: absolute; left: 0; color: var(--gold);">☐</span> Prime lens (optional)
+                </div>
+                <div style="font-size: 12px; color: #000; padding-left: 18px; position: relative; font-weight: 600;">
+                    <span style="position: absolute; left: 0; color: var(--gold);">☐</span> Tripod (travel-friendly)
+                </div>
+                <div style="font-size: 12px; color: #000; padding-left: 18px; position: relative; font-weight: 600;">
+                    <span style="position: absolute; left: 0; color: var(--gold);">☐</span> Memory cards (backup)
+                </div>
+                <div style="font-size: 12px; color: #000; padding-left: 18px; position: relative; font-weight: 600;">
+                    <span style="position: absolute; left: 0; color: var(--gold);">☐</span> Extra batteries (cold drains them)
+                </div>
+                <div style="font-size: 12px; color: #000; padding-left: 18px; position: relative; font-weight: 600;">
+                    <span style="position: absolute; left: 0; color: var(--gold);">☐</span> Battery charger
+                </div>
+                <div style="font-size: 12px; color: #000; padding-left: 18px; position: relative; font-weight: 600;">
+                    <span style="position: absolute; left: 0; color: var(--gold);">☐</span> Lens cleaning kit
+                </div>
+                <div style="font-size: 12px; color: #000; padding-left: 18px; position: relative; font-weight: 600;">
+                    <span style="position: absolute; left: 0; color: var(--gold);">☐</span> Camera bag (daypack)
+                </div>
+                <div style="font-size: 12px; color: #000; padding-left: 18px; position: relative; font-weight: 600;">
+                    <span style="position: absolute; left: 0; color: var(--gold);">☐</span> Rain cover for camera
+                </div>
+                <div style="font-size: 12px; color: #000; padding-left: 18px; position: relative; font-weight: 600;">
+                    <span style="position: absolute; left: 0; color: var(--gold);">☐</span> Power bank
+                </div>
+            </div>
+        </div>
+
+        <div style="background: #fff; border: 2px solid var(--tan); border-radius: 6px; padding: 15px; margin-bottom: 15px;">
+            <div style="font-family: 'Montserrat', sans-serif; font-size: 14px; color: var(--navy); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 15px; font-weight: 700; text-align: center;">👕 Clothing & Gear</div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px;">
+                <div style="font-size: 12px; color: #000; padding-left: 18px; position: relative; font-weight: 600;">
+                    <span style="position: absolute; left: 0; color: var(--gold);">☐</span> Hiking boots (broken in)
+                </div>
+                <div style="font-size: 12px; color: #000; padding-left: 18px; position: relative; font-weight: 600;">
+                    <span style="position: absolute; left: 0; color: var(--gold);">☐</span> Warm jacket/fleece
+                </div>
+                <div style="font-size: 12px; color: #000; padding-left: 18px; position: relative; font-weight: 600;">
+                    <span style="position: absolute; left: 0; color: var(--gold);">☐</span> Windproof jacket
+                </div>
+                <div style="font-size: 12px; color: #000; padding-left: 18px; position: relative; font-weight: 600;">
+                    <span style="position: absolute; left: 0; color: var(--gold);">☐</span> Thermal underwear
+                </div>
+                <div style="font-size: 12px; color: #000; padding-left: 18px; position: relative; font-weight: 600;">
+                    <span style="position: absolute; left: 0; color: var(--gold);">☐</span> Comfortable pants
+                </div>
+                <div style="font-size: 12px; color: #000; padding-left: 18px; position: relative; font-weight: 600;">
+                    <span style="position: absolute; left: 0; color: var(--gold);">☐</span> Sun hat/cap
+                </div>
+                <div style="font-size: 12px; color: #000; padding-left: 18px; position: relative; font-weight: 600;">
+                    <span style="position: absolute; left: 0; color: var(--gold);">☐</span> Sunglasses (UV rated)
+                </div>
+                <div style="font-size: 12px; color: #000; padding-left: 18px; position: relative; font-weight: 600;">
+                    <span style="position: absolute; left: 0; color: var(--gold);">☐</span> Sunscreen SPF 50+
+                </div>
+                <div style="font-size: 12px; color: #000; padding-left: 18px; position: relative; font-weight: 600;">
+                    <span style="position: absolute; left: 0; color: var(--gold);">☐</span> Lip balm
+                </div>
+                <div style="font-size: 12px; color: #000; padding-left: 18px; position: relative; font-weight: 600;">
+                    <span style="position: absolute; left: 0; color: var(--gold);">☐</span> Water bottle
+                </div>
+                <div style="font-size: 12px; color: #000; padding-left: 18px; position: relative; font-weight: 600;">
+                    <span style="position: absolute; left: 0; color: var(--gold);">☐</span> Day backpack
+                </div>
+                <div style="font-size: 12px; color: #000; padding-left: 18px; position: relative; font-weight: 600;">
+                    <span style="position: absolute; left: 0; color: var(--gold);">☐</span> Wet wipes
+                </div>
+            </div>
+        </div>
+
+        <div style="background: #fff; border: 2px solid var(--tan); border-radius: 6px; padding: 15px; margin-bottom: 15px;">
+            <div style="font-family: 'Montserrat', sans-serif; font-size: 14px; color: var(--navy); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 15px; font-weight: 700; text-align: center;">📄 Essential Documents</div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                <div style="font-size: 12px; color: #000; padding-left: 18px; position: relative; font-weight: 600;">
+                    <span style="position: absolute; left: 0; color: var(--gold);">☐</span> Valid passport (6 months+)
+                </div>
+                <div style="font-size: 12px; color: #000; padding-left: 18px; position: relative; font-weight: 600;">
+                    <span style="position: absolute; left: 0; color: var(--gold);">☐</span> Travel insurance
+                </div>
+                <div style="font-size: 12px; color: #000; padding-left: 18px; position: relative; font-weight: 600;">
+                    <span style="position: absolute; left: 0; color: var(--gold);">☐</span> Booking confirmation
+                </div>
+                <div style="font-size: 12px; color: #000; padding-left: 18px; position: relative; font-weight: 600;">
+                    <span style="position: absolute; left: 0; color: var(--gold);">☐</span> Emergency contacts
+                </div>
+                <div style="font-size: 12px; color: #000; padding-left: 18px; position: relative; font-weight: 600;">
+                    <span style="position: absolute; left: 0; color: var(--gold);">☐</span> Passport photos (4 copies)
+                </div>
+                <div style="font-size: 12px; color: #000; padding-left: 18px; position: relative; font-weight: 600;">
+                    <span style="position: absolute; left: 0; color: var(--gold);">☐</span> Flight tickets
+                </div>
+            </div>
+        </div>
+
+        <div style="margin-top: 15px; padding: 12px; background: linear-gradient(135deg, rgba(26,42,74,0.08), rgba(45,90,61,0.05)); border-radius: 6px;">
+            <div style="font-family: 'Montserrat', sans-serif; font-size: 12px; color: var(--navy); font-weight: 700; margin-bottom: 8px;">Photography Tips for Bhutan</div>
+            <div style="font-size: 11px; color: #000; line-height: 1.5;">
+                • Carry extra batteries—cold drains them faster<br>
+                • Start early for Tiger's Nest to beat crowds and capture soft light<br>
+                • Always ask permission before photographing people<br>
+                • Temples/dzongs: no photography inside—respect the rules<br>
+                • November air is crisp—great for sharp landscape shots<br>
+                • Phobjikha cranes are most active at sunrise/sunset
+            </div>
+        </div>
+
+        <div class="running-footer">
+            <span>Silverpine Bhutan</span>
+            <span>www.silverpinebhutan.com</span>
+            <div class="page-number">12</div>
+        </div>
+    </div>
+
+    <!-- PAGE 14: BACK COVER -->
+    <div class="page back-cover">
+        <div class="back-cover-bg"></div>
+        <div class="back-cover-overlay"></div>
+        <div class="back-cover-content">
+            <div class="back-cover-logo">SILVERPINE BHUTAN</div>
+            <div class="back-cover-title">JOURNEY AWAITS</div>
+            <div class="contact-info">
+                <div class="contact-item"><strong>Contact:</strong> +975 77773737</div>
+                <div class="contact-item"><strong>Alternate:</strong> +975 17649720</div>
+                <div class="contact-item"><strong>Email:</strong> info@silverpinebhutan.com</div>
+                <div class="contact-item"><strong>Website:</strong> www.silverpinebhutan.com</div>
+            </div>
+            <div style="margin-top: 50px; padding-top: 20px; border-top: 1px solid rgba(201,169,97,0.3);">
+                <p style="font-family: 'Playfair Display', serif; font-size: 16px; color: rgba(255,255,255,0.9); font-style: italic;">"In Bhutan, every photograph tells a story of sacred mountains, ancient wisdom, and timeless beauty."</p>
+                <p style="font-family: 'Montserrat', sans-serif; font-size: 11px; color: var(--gold); margin-top: 15px; letter-spacing: 3px; text-transform: uppercase;">TASHI DELEK</p>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

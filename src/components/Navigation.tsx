@@ -4,16 +4,15 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useState, useEffect } from 'react';
 import { ThemeToggle } from './ThemeToggle';
 import { useTheme } from 'next-themes';
-import { Menu, X, ArrowRight } from 'lucide-react';
+import { Menu, X } from 'lucide-react';
 import Link from 'next/link';
-import Image from 'next/image';
 
 const navItems = [
-  { name: 'Home', href: '#' },
-  { name: 'Tours', href: '#tours' },
-  { name: 'About', href: '#about' },
-  { name: 'FAQ', href: '#faq' },
-  { name: 'Contact', href: '#contact' },
+  { name: 'Home', href: '/' },
+  { name: 'Tours', href: '/tours' },
+  { name: 'Blog', href: '/blog' },
+  { name: 'About', href: '/#about' },
+  { name: 'Contact', href: '/#contact' },
 ];
 
 export default function Navigation() {
@@ -39,98 +38,102 @@ export default function Navigation() {
 
   return (
     <>
-      {/* Elegant Thin Navigation - Bhutanese Luxury */}
+      {/* Ultra Premium Navigation */}
       <motion.nav
         initial={{ y: -100, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+        transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
         className="fixed top-0 left-0 right-0 z-50"
         style={{
-          backgroundColor: isDark ? 'rgba(38, 38, 38, 0.9)' : 'rgba(248, 244, 240, 0.95)',
+          backgroundColor: isDark
+            ? isScrolled ? 'rgba(10, 10, 10, 0.95)' : 'rgba(10, 10, 10, 0.85)'
+            : isScrolled ? 'rgba(248, 244, 240, 0.98)' : 'rgba(248, 244, 240, 0.9)',
           backdropFilter: 'blur(20px)',
         }}
       >
-        {/* Bhutanese Gold Top Border - Sacred accent */}
-        <div
-          className="h-[1px]"
-          style={{
-            background: 'linear-gradient(90deg, transparent, #E8B923, transparent)',
-          }}
-        />
+        {/* Gold Accent Line - Subtle */}
+        <div className="h-[0.5px]" style={{ background: 'linear-gradient(90deg, transparent, rgba(232, 185, 35, 0.4), transparent)' }} />
 
         <div className="container-premium">
-          <div className="flex items-center justify-between h-16">
+          <div className="flex items-center justify-between h-20">
             {/* Logo - Left */}
             <Link href="#">
               <motion.div
-                className="flex items-center gap-3"
-                whileHover={{ scale: 1.02 }}
-                transition={{ duration: 0.2 }}
+                className="flex items-center"
+                whileHover={{ scale: 1.01 }}
+                transition={{ duration: 0.3 }}
               >
-                <div className="relative w-11 h-11">
-                  <Image
-                    src="https://res.cloudinary.com/dxztrqjft/image/upload/v1776332482/HMT_Logo_New_1_fwgpfy.png"
-                    alt="Himalayan Marvels"
-                    fill
-                    className="object-contain"
-                  />
-                </div>
-                <span className="text-base font-semibold tracking-wide hidden sm:block" style={{ color: '#262626' }}>
-                  Himalayan Marvels
-                </span>
+                <motion.span
+                  className="text-lg font-light tracking-[0.15em] hidden sm:block"
+                  style={{ color: isDark ? '#FFFFFF' : '#1A1A1A' }}
+                >
+                  HIMALAYAN MARVELS
+                </motion.span>
               </motion.div>
             </Link>
 
             {/* Navigation Links - Center */}
-            <div className="hidden md:flex items-center gap-8">
+            <div className="hidden md:flex items-center gap-10">
               {navItems.map((item) => (
                 <Link key={item.name} href={item.href}>
-                  <motion.span
-                    whileHover={{ y: -2 }}
+                  <motion.div
+                    whileHover={{ y: -1 }}
                     transition={{ duration: 0.2 }}
-                    className="text-sm font-medium tracking-wide relative py-1"
-                    style={{ color: isDark ? '#F8F4F0' : '#262626' }}
+                    className="relative group"
                   >
-                    {item.name}
-                  </motion.span>
+                    <span
+                      className="text-xs font-light tracking-[0.2em] uppercase py-2 inline-block"
+                      style={{ color: isDark ? 'rgba(255, 255, 255, 0.7)' : 'rgba(26, 26, 26, 0.7)' }}
+                    >
+                      {item.name}
+                    </span>
+                    {/* Underline animation */}
+                    <motion.span
+                      className="absolute bottom-0 left-0 right-0 h-[1px]"
+                      style={{ backgroundColor: '#E8B923', scaleX: 0, transformOrigin: 'left' }}
+                      whileHover={{ scaleX: 1 }}
+                      transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+                    />
+                  </motion.div>
                 </Link>
               ))}
             </div>
 
             {/* Right Actions */}
-            <div className="flex items-center gap-3">
-              <div className="scale-90">
-                <ThemeToggle />
-              </div>
+            <div className="flex items-center gap-4">
+              <ThemeToggle />
 
-              {/* Login - Admin Access */}
+              {/* Login */}
               <motion.a
                 whileHover={{ y: -1 }}
                 whileTap={{ scale: 0.98 }}
-                href="/hmterp/admin/login"
-                className="relative px-4 py-2 text-xs font-medium tracking-wide hidden sm:block transition-all"
-                style={{ color: isDark ? '#F8F4F0' : '#262626' }}
+                href="/admin/login"
+                className="text-xs font-light tracking-[0.15em] hidden sm:block transition-colors"
+                style={{ color: isDark ? 'rgba(255, 255, 255, 0.6)' : 'rgba(26, 26, 26, 0.6)' }}
               >
-                Login
+                LOGIN
               </motion.a>
 
-              {/* Inquire - Subtle Luxury */}
+              {/* Inquire Button - Premium */}
               <motion.a
                 whileHover={{ y: -1 }}
                 whileTap={{ scale: 0.98 }}
                 href="#contact"
-                className="relative px-5 py-2 text-xs font-medium tracking-wide hidden sm:block transition-all"
-                style={{ color: isDark ? '#F8F4F0' : '#262626' }}
+                className="px-6 py-2.5 text-xs font-medium tracking-[0.15em] hidden sm:block transition-all rounded-sm"
+                style={{
+                  color: '#FFFFFF',
+                  backgroundColor: '#8E261A',
+                }}
               >
-                Inquire
+                INQUIRE
               </motion.a>
 
               {/* Mobile Menu Button */}
               <motion.button
                 whileTap={{ scale: 0.95 }}
                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                className="md:hidden w-8 h-8 flex items-center justify-center"
-                style={{ color: isDark ? '#F8F4F0' : '#262626' }}
+                className="md:hidden"
+                style={{ color: isDark ? '#FFFFFF' : '#1A1A1A' }}
               >
                 {isMobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
               </motion.button>
@@ -146,44 +149,38 @@ export default function Navigation() {
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
-            transition={{ duration: 0.2 }}
-            className="fixed top-16 left-0 right-0 z-40 md:hidden"
+            transition={{ duration: 0.3 }}
+            className="fixed top-20 left-0 right-0 z-40 md:hidden"
             style={{
-              backgroundColor: isDark ? 'rgba(38, 38, 38, 0.98)' : 'rgba(248, 244, 240, 0.98)',
+              backgroundColor: isDark ? 'rgba(10, 10, 10, 0.98)' : 'rgba(248, 244, 240, 0.98)',
               backdropFilter: 'blur(20px)',
             }}
           >
-            {/* Bhutanese Gold Border Top */}
-            <div
-              className="h-[1px]"
-              style={{ background: 'linear-gradient(90deg, transparent, #E8B923, transparent)' }}
-            />
-
-            <div className="container-premium py-4 space-y-1">
+            <div className="container-premium py-8">
               {navItems.map((item, index) => (
                 <motion.a
                   key={item.name}
                   href={item.href}
-                  initial={{ opacity: 0, x: -10 }}
+                  initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: index * 0.05 }}
+                  transition={{ delay: index * 0.05, duration: 0.3 }}
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="block px-4 py-3 rounded-lg text-sm font-medium"
-                  style={{ color: isDark ? '#F8F4F0' : '#262626' }}
+                  className="block py-3 text-xs font-light tracking-[0.2em] uppercase"
+                  style={{ color: isDark ? 'rgba(255, 255, 255, 0.8)' : 'rgba(26, 26, 26, 0.8)' }}
                 >
                   {item.name}
                 </motion.a>
               ))}
               <motion.a
-                href="#contact"
-                initial={{ opacity: 0, x: -10 }}
+                href="/admin/login"
+                initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: navItems.length * 0.05 }}
+                transition={{ delay: navItems.length * 0.05, duration: 0.3 }}
                 onClick={() => setIsMobileMenuOpen(false)}
-                className="block px-4 py-3 rounded-lg text-center text-sm font-medium"
-                style={{ color: isDark ? '#F8F4F0' : '#262626' }}
+                className="block py-3 mt-4 text-xs font-light tracking-[0.15em] uppercase"
+                style={{ color: isDark ? 'rgba(255, 255, 255, 0.6)' : 'rgba(26, 26, 26, 0.6)' }}
               >
-                Inquire
+                Login
               </motion.a>
             </div>
           </motion.div>

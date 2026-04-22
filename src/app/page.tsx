@@ -2,9 +2,8 @@ import Navigation from '@/components/Navigation';
 import Hero from '@/components/Hero';
 import WhyTravelWithUs from '@/components/WhyTravelWithUs';
 import InstagramFeed from '@/components/InstagramFeed';
-import BrandMarquee from '@/components/BrandMarquee';
 import TourPackages from '@/components/TourPackages';
-import Founder from '@/components/Founder';
+import FounderDynamic from '@/components/FounderDynamic';
 import FAQ from '@/components/FAQ';
 import Reviews from '@/components/Reviews';
 import BhutanJournal from '@/components/BhutanJournal';
@@ -18,9 +17,8 @@ export default function Home() {
       <Hero />
       <WhyTravelWithUs />
       <InstagramFeed />
-      <BrandMarquee />
       <TourPackages />
-      <Founder />
+      <FounderDynamic />
       <FAQ />
       <Reviews />
       <BhutanJournal />

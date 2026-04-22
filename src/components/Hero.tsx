@@ -87,52 +87,34 @@ export default function Hero() {
         style={{ opacity, scale }}
         className="relative h-full flex items-center px-6 md:px-12 lg:px-20"
       >
-        <div className="flex-1 flex items-center justify-end">
-          {/* Left Side - Empty for breathability */}
-          <div className="hidden lg:block flex-1" />
-
-          {/* Right Side - Main Content */}
-          <div className="max-w-[680px] ml-auto">
+        <div className="flex-1 grid lg:grid-cols-2 gap-12 items-center">
+          {/* Left Side - Text Content */}
+          <div className="max-w-xl">
             {/* Main Headlines */}
-            <div className="flex items-baseline gap-4 mb-6">
-              <motion.h1
-                initial={{ opacity: 0, x: 50 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 1, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
-                className="text-5xl sm:text-6xl md:text-7xl font-semibold tracking-tight leading-none text-white"
-                style={{ textShadow: '0 2px 40px rgba(0,0,0,0.6)' }}
-              >
-                Himalayan Marvels
-              </motion.h1>
-              <motion.div
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 1, ease: [0.16, 1, 0.3, 1], delay: 0.2 }}
-                className="relative w-16 h-16 flex-shrink-0"
-              >
-                <Image
-                  src="https://res.cloudinary.com/dxztrqjft/image/upload/v1776332482/HMT_Logo_New_1_fwgpfy.png"
-                  alt="Himalayan Marvels"
-                  fill
-                  className="object-contain"
-                />
-              </motion.div>
-            </div>
+            <motion.h1
+              initial={{ opacity: 0, x: -50 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 1, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
+              className="text-5xl sm:text-6xl md:text-7xl font-semibold tracking-tight leading-none text-white mb-6"
+              style={{ textShadow: '0 2px 40px rgba(0,0,0,0.6)' }}
+            >
+              Himalayan Marvels
+            </motion.h1>
 
             {/* Tagline with Typewriter */}
             <motion.p
-              initial={{ opacity: 0, x: 50 }}
+              initial={{ opacity: 0, x: -50 }}
               animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 1, ease: [0.16, 1, 0.3, 1], delay: 0.25 }}
+              transition={{ duration: 1, ease: [0.16, 1, 0.3, 1], delay: 0.2 }}
               className="text-xl md:text-2xl mb-4 font-light text-stone-200"
             >
               Experience
             </motion.p>
 
             <motion.div
-              initial={{ opacity: 0, x: 50 }}
+              initial={{ opacity: 0, x: -50 }}
               animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 1, ease: [0.16, 1, 0.3, 1], delay: 0.35 }}
+              transition={{ duration: 1, ease: [0.16, 1, 0.3, 1], delay: 0.3 }}
               className="h-16 mb-10"
             >
               <span className="text-4xl md:text-5xl lg:text-6xl font-semibold text-stone-100">
@@ -147,18 +129,18 @@ export default function Hero() {
 
             {/* Description */}
             <motion.p
-              initial={{ opacity: 0, x: 50 }}
+              initial={{ opacity: 0, x: -50 }}
               animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 1, ease: [0.16, 1, 0.3, 1], delay: 0.45 }}
+              transition={{ duration: 1, ease: [0.16, 1, 0.3, 1], delay: 0.4 }}
               className="text-lg md:text-xl mb-4 max-w-xl leading-relaxed font-light text-stone-200"
             >
               Bhutan is not a destination. It&apos;s a shift in perspective.
             </motion.p>
 
             <motion.p
-              initial={{ opacity: 0, x: 50 }}
+              initial={{ opacity: 0, x: -50 }}
               animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 1, ease: [0.16, 1, 0.3, 1], delay: 0.55 }}
+              transition={{ duration: 1, ease: [0.16, 1, 0.3, 1], delay: 0.5 }}
               className="text-base md:text-lg mb-12 max-w-lg leading-relaxed text-stone-400"
             >
               Experience sacred landscapes, living traditions, and moments of stillness designed for deeper clarity.
@@ -166,9 +148,9 @@ export default function Hero() {
 
             {/* CTA */}
             <motion.div
-              initial={{ opacity: 0, x: 50 }}
+              initial={{ opacity: 0, x: -50 }}
               animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 1, ease: [0.16, 1, 0.3, 1], delay: 0.65 }}
+              transition={{ duration: 1, ease: [0.16, 1, 0.3, 1], delay: 0.6 }}
             >
               <motion.button
                 whileHover={{ x: 4 }}
@@ -181,6 +163,24 @@ export default function Hero() {
               </motion.button>
             </motion.div>
           </div>
+
+          {/* Right Side - Large Logo */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9, x: 50 }}
+            animate={{ opacity: 1, scale: 1, x: 0 }}
+            transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1], delay: 0.3 }}
+            className="flex items-center justify-center lg:justify-end"
+          >
+            <div className="relative w-64 h-64 md:w-80 md:h-80 lg:w-96 lg:h-96">
+              <Image
+                src="https://res.cloudinary.com/dxztrqjft/image/upload/v1776332482/HMT_Logo_New_1_fwgpfy.png"
+                alt="Himalayan Marvels"
+                fill
+                className="object-contain drop-shadow-2xl"
+                style={{ filter: 'drop-shadow(0 0 60px rgba(232, 185, 35, 0.3))' }}
+              />
+            </div>
+          </motion.div>
         </div>
       </motion.div>
 

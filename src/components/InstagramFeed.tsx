@@ -237,7 +237,7 @@ export default function InstagramFeed() {
             </p>
           </motion.div>
           <h2 className="text-4xl md:text-5xl font-semibold mb-6" style={{ color: '#262626' }}>
-            @himalayanmarvels
+            @himalayanmarvels.travel
           </h2>
           <p className="text-lg max-w-2xl mx-auto leading-relaxed" style={{ color: 'rgba(38, 38, 38, 0.65)' }}>
             Glimpses of Bhutan through our lens. Follow us for daily inspiration from the Kingdom.
@@ -260,7 +260,7 @@ export default function InstagramFeed() {
           className="text-center mt-12"
         >
           <a
-            href="https://www.instagram.com/himalayanmarvels"
+            href="https://www.instagram.com/himalayanmarvels.travel/"
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2 px-8 py-3 rounded-full text-sm font-medium transition-all hover:gap-3"

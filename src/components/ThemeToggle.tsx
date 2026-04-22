@@ -12,10 +12,7 @@ export function ThemeToggle() {
   /* eslint-disable react-hooks/set-state-in-effect */
   useEffect(() => {
     setMounted(true);
-    // Force theme check
-    const isDark = document.documentElement.classList.contains('dark');
-    console.log('Current theme state:', { theme, resolvedTheme, isDark });
-  }, [theme, resolvedTheme]);
+  }, []);
 
   if (!mounted) {
     return (
@@ -27,7 +24,6 @@ export function ThemeToggle() {
 
   const toggleTheme = () => {
     const newTheme = isDark ? 'light' : 'dark';
-    console.log('Switching theme from', theme, 'to', newTheme);
     setTheme(newTheme);
   };
 

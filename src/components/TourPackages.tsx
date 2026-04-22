@@ -6,27 +6,27 @@ import { ArrowUpRight } from 'lucide-react';
 const tours = [
   {
     id: 1,
-    title: 'Cultural Heartland',
-    subtitle: '7 Days',
-    description: 'Ancient monasteries and sacred festivals.',
+    title: 'Cultural Tour',
+    subtitle: '7-14 Days',
+    description: 'Discover ancient monasteries, sacred festivals, and timeless Bhutanese traditions in comfort.',
     image: 'https://res.cloudinary.com/dxztrqjft/image/upload/v1776291902/buddha-point-view_skbl41.jpg',
-    price: '$2,499',
+    price: 'From $2,499',
   },
   {
     id: 2,
-    title: 'Trekking Adventure',
-    subtitle: '12 Days',
-    description: 'Pristine Himalayan landscapes.',
+    title: 'Moderate Trek',
+    subtitle: '8-12 Days',
+    description: 'Scenic trails through valleys and passes, suitable for most fitness levels.',
     image: 'https://res.cloudinary.com/dxztrqjft/image/upload/v1776291877/dochula_r3uler.jpg',
-    price: '$3,999',
+    price: 'From $3,199',
   },
   {
     id: 3,
-    title: 'Photography Expedition',
-    subtitle: '10 Days',
-    description: 'Capturing Bhutan\'s hidden gems.',
+    title: 'High-Altitude Treks',
+    subtitle: '12-21 Days',
+    description: 'Challenge yourself on legendary routes like Snowman Trek through remote Himalayan wilderness.',
     image: 'https://res.cloudinary.com/dxztrqjft/image/upload/v1776291879/tiger-nest-close_rm2bee.jpg',
-    price: '$3,499',
+    price: 'From $4,499',
   },
 ];
 
@@ -43,11 +43,11 @@ export default function TourPackages() {
           className="text-center mb-16"
         >
           <span className="text-xs dark:text-white/30 text-neutral-500 uppercase tracking-[0.25em]">
-            Our Experiences
+            Tour Categories
           </span>
           <h2 className="text-4xl md:text-5xl font-bold dark:text-white text-neutral-900 mt-4">
-            Which tour is{' '}
-            <span className="gradient-text">right for you?</span>
+            Choose Your{' '}
+            <span className="gradient-text">Adventure Style</span>
           </h2>
         </motion.div>
 
