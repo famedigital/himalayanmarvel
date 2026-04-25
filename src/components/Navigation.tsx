@@ -83,7 +83,7 @@ export default function Navigation() {
                   >
                     <span
                       className="text-xs font-light tracking-[0.2em] uppercase py-2 inline-block"
-                      style={{ color: isDark ? 'rgba(255, 255, 255, 0.7)' : 'rgba(26, 26, 26, 0.7)' }}
+                      style={{ color: isDark ? 'rgba(255, 255, 255, 0.9)' : 'rgba(26, 26, 26, 0.88)' }}
                     >
                       {item.name}
                     </span>
@@ -109,7 +109,7 @@ export default function Navigation() {
                 whileTap={{ scale: 0.98 }}
                 href="/admin/login"
                 className="text-xs font-light tracking-[0.15em] hidden sm:block transition-colors"
-                style={{ color: isDark ? 'rgba(255, 255, 255, 0.6)' : 'rgba(26, 26, 26, 0.6)' }}
+                style={{ color: isDark ? 'rgba(255, 255, 255, 0.82)' : 'rgba(26, 26, 26, 0.82)' }}
               >
                 LOGIN
               </motion.a>
@@ -166,7 +166,7 @@ export default function Navigation() {
                   transition={{ delay: index * 0.05, duration: 0.3 }}
                   onClick={() => setIsMobileMenuOpen(false)}
                   className="block py-3 text-xs font-light tracking-[0.2em] uppercase"
-                  style={{ color: isDark ? 'rgba(255, 255, 255, 0.8)' : 'rgba(26, 26, 26, 0.8)' }}
+                style={{ color: isDark ? 'rgba(255, 255, 255, 0.92)' : 'rgba(26, 26, 26, 0.92)' }}
                 >
                   {item.name}
                 </motion.a>
@@ -178,7 +178,7 @@ export default function Navigation() {
                 transition={{ delay: navItems.length * 0.05, duration: 0.3 }}
                 onClick={() => setIsMobileMenuOpen(false)}
                 className="block py-3 mt-4 text-xs font-light tracking-[0.15em] uppercase"
-                style={{ color: isDark ? 'rgba(255, 255, 255, 0.6)' : 'rgba(26, 26, 26, 0.6)' }}
+                style={{ color: isDark ? 'rgba(255, 255, 255, 0.82)' : 'rgba(26, 26, 26, 0.82)' }}
               >
                 Login
               </motion.a>

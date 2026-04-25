@@ -37,9 +37,9 @@ export default function Header({
         sidebarCollapsed ? 'lg:ml-16' : 'lg:ml-64'
       )}
     >
-      <div className="flex h-16 items-center justify-between px-4 lg:px-6">
+      <div className="relative flex h-16 w-full items-center gap-4 px-4 lg:px-6">
         {/* Left: Mobile menu trigger + Breadcrumbs */}
-        <div className="flex items-center gap-4 flex-1">
+        <div className="flex items-center gap-4 min-w-0 pr-4">
           {/* Mobile menu button - shown on all screens for consistency */}
           <button
             onClick={onMobileMenuToggle}
@@ -49,26 +49,26 @@ export default function Header({
             <Menu className="w-5 h-5 text-gray-600 dark:text-gray-400" />
           </button>
 
-          {/* Breadcrumbs - hidden on mobile */}
-          <div className="hidden md:block">
+          {/* Breadcrumbs */}
+          <div className="hidden md:block min-w-0">
             <Breadcrumbs pathname={pathname} />
           </div>
         </div>
 
-        {/* Center: Search (hidden on mobile) */}
-        <div className="hidden md:flex flex-1 justify-center px-8">
-          <div className="relative w-full max-w-md">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-            <input
-              type="search"
-              placeholder="Search..."
-              className="w-full pl-10 pr-4 py-2 rounded-xl bg-gray-100 dark:bg-white/5 border border-transparent focus:border-orange-500/50 focus:bg-white dark:focus:bg-white/10 focus:ring-2 focus:ring-orange-500/20 transition-all outline-none text-sm text-gray-900 dark:text-white placeholder-gray-500"
-            />
+        {/* Right: Search + Actions */}
+        <div className="absolute right-4 lg:right-6 top-1/2 -translate-y-1/2 flex items-center gap-2 lg:gap-3">
+          {/* Search (desktop/tablet) */}
+          <div className="hidden md:block">
+            <div className="relative w-72 lg:w-80">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+              <input
+                type="search"
+                placeholder="Search..."
+                className="w-full pl-10 pr-4 py-2 rounded-xl bg-gray-100 dark:bg-white/5 border border-transparent focus:border-orange-500/50 focus:bg-white dark:focus:bg-white/10 focus:ring-2 focus:ring-orange-500/20 transition-all outline-none text-sm text-gray-900 dark:text-white placeholder-gray-500"
+              />
+            </div>
           </div>
-        </div>
 
-        {/* Right: Actions */}
-        <div className="flex items-center gap-2 lg:gap-3">
           {/* Theme Toggle */}
           <ThemeToggle />
 

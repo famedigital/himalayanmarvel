@@ -3,6 +3,8 @@ import { Inter, Playfair_Display, Geist } from 'next/font/google';
 import './globals.css';
 import { ThemeProvider } from '@/components/ThemeProvider';
 import { LayoutWrapper } from '@/components/LayoutWrapper';
+import { QueryProvider } from '@/components/QueryProvider';
+import { NuqsAdapter } from 'nuqs/adapters/next/app';
 import { cn } from "@/lib/utils";
 
 const geist = Geist({subsets:['latin'],variable:'--font-sans'});
@@ -61,9 +63,13 @@ export default function RootLayout({
           disableTransitionOnChange={false}
           storageKey="himalayan-theme"
         >
-          <LayoutWrapper>
-            {children}
-          </LayoutWrapper>
+          <NuqsAdapter>
+            <QueryProvider>
+              <LayoutWrapper>
+                {children}
+              </LayoutWrapper>
+            </QueryProvider>
+          </NuqsAdapter>
         </ThemeProvider>
       </body>
     </html>

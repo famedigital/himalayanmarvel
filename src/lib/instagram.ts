@@ -15,14 +15,16 @@ export async function fetchInstagramPosts(): Promise<InstagramPost[]> {
     });
 
     if (!response.ok) {
-      console.error('Failed to fetch Instagram posts');
+      // API failure should quietly fall back to static placeholders in the UI.
       return [];
     }
 
     const data = await response.json();
     return data.posts || [];
   } catch (error) {
-    console.error('Error fetching Instagram posts:', error);
+    if (process.env.NODE_ENV === 'development') {
+      console.warn('Instagram posts unavailable, using fallback content.', error);
+    }
     return [];
   }
 }

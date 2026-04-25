@@ -672,17 +672,27 @@ export function DataTable<TData, TValue>({
               className="bg-white border border-gray-200 rounded-xl overflow-hidden"
             >
               {row.getVisibleCells().map((cell) => (
-                <div
-                  key={cell.id}
-                  className="flex justify-between px-4 py-3 border-b border-gray-100 last:border-b-0"
-                >
-                  <span className="text-sm text-gray-900/50 font-medium">
-                    {flexRender(cell.column.columnDef.header, cell.getContext())}
-                  </span>
-                  <span className="text-sm text-gray-900">
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </span>
-                </div>
+                (() => {
+                  const header = table
+                    .getFlatHeaders()
+                    .find((candidate) => candidate.column.id === cell.column.id);
+
+                  return (
+                    <div
+                      key={cell.id}
+                      className="flex justify-between px-4 py-3 border-b border-gray-100 last:border-b-0"
+                    >
+                      <span className="text-sm text-gray-900/50 font-medium">
+                        {header
+                          ? flexRender(header.column.columnDef.header, header.getContext())
+                          : cell.column.id}
+                      </span>
+                      <span className="text-sm text-gray-900">
+                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                      </span>
+                    </div>
+                  );
+                })()
               ))}
             </div>
           ))
@@ -743,7 +753,7 @@ const statusVariants = {
 };
 
 export function StatusBadge({ status, variant = 'default' }: StatusBadgeProps) {
-  const getVariant = (): StatusBadgeProps['variant'] => {
+  const getVariant = (): NonNullable<StatusBadgeProps['variant']> => {
     if (variant !== 'default') return variant;
 
     const s = status.toLowerCase();

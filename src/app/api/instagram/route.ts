@@ -1,6 +1,5 @@
 import { NextResponse } from 'next/server';
 
-const INSTAGRAM_USER_ID = '17841421454792167';
 const INSTAGRAM_ACCESS_TOKEN = process.env.INSTAGRAM_ACCESS_TOKEN;
 
 export async function GET() {
@@ -12,9 +11,9 @@ export async function GET() {
       );
     }
 
-    // Fetch user's media from Instagram Graph API
+    // Instagram Basic Display API: use "me/media" with a valid user token.
     const response = await fetch(
-      `https://graph.instagram.com/${INSTAGRAM_USER_ID}/media?fields=id,caption,media_type,media_url,permalink,thumbnail_url,timestamp&access_token=${INSTAGRAM_ACCESS_TOKEN}&limit=12`
+      `https://graph.instagram.com/me/media?fields=id,caption,media_type,media_url,permalink,thumbnail_url,timestamp&access_token=${INSTAGRAM_ACCESS_TOKEN}&limit=12`
     );
 
     if (!response.ok) {

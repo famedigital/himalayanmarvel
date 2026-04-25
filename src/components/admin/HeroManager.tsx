@@ -10,7 +10,7 @@ interface HeroSlide {
   type: 'image' | 'video';
   url: string;
   thumbnail?: string;
-  title?: string;
+  logo?: string;
   subtitle?: string;
   link?: string;
   description?: string;
@@ -22,10 +22,12 @@ interface HeroSlide {
 
 interface HeroManagerProps {
   initialSlides: HeroSlide[];
+  initialSettingId?: string | null;
 }
 
-export default function HeroManager({ initialSlides }: HeroManagerProps) {
+export default function HeroManager({ initialSlides, initialSettingId = null }: HeroManagerProps) {
   const [slides, setSlides] = useState<HeroSlide[]>(initialSlides);
+  const [settingId, setSettingId] = useState<string | null>(initialSettingId);
   const [saving, setSaving] = useState(false);
   const [editingSlide, setEditingSlide] = useState<string | null>(null);
   const supabase = createClient();
@@ -72,13 +74,34 @@ export default function HeroManager({ initialSlides }: HeroManagerProps) {
   const handleSave = async () => {
     setSaving(true);
     try {
-      await supabase
-        .from('settings')
-        .upsert({
-          key: 'hero_slides',
-          value: slides,
-          updated_at: new Date().toISOString(),
-        });
+      const timestamp = new Date().toISOString();
+
+      if (settingId) {
+        const { error: updateError } = await supabase
+          .from('settings')
+          .update({
+            value: slides,
+            updated_at: timestamp,
+          })
+          .eq('id', settingId);
+
+        if (updateError) throw updateError;
+      } else {
+        const { data: insertedRow, error: insertError } = await supabase
+          .from('settings')
+          .insert({
+            key: 'hero_slides',
+            value: slides,
+            updated_at: timestamp,
+          })
+          .select('id')
+          .single();
+
+        if (insertError) throw insertError;
+        if (insertedRow?.id) {
+          setSettingId(insertedRow.id);
+        }
+      }
 
       alert('Hero slides saved successfully!');
     } catch (error) {
@@ -232,17 +255,19 @@ export default function HeroManager({ initialSlides }: HeroManagerProps) {
                 </div>
               )}
 
-              {/* Title */}
+              {/* Logo */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Title (optional)
+                  Logo
                 </label>
-                <input
-                  type="text"
-                  value={slide.title || ''}
-                  onChange={(e) => updateSlide(slide.id, { title: e.target.value })}
-                  placeholder="Discover the Land of the Thunder Dragon"
-                  className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm"
+                <CloudinaryUpload
+                  onUploadComplete={(logo) => updateSlide(slide.id, { logo })}
+                  onRemove={() => updateSlide(slide.id, { logo: '' })}
+                  value={slide.logo}
+                  label="Upload hero logo"
+                  folder="himalayanmarvel/hero/logo"
+                  aspect="square"
+                  size="md"
                 />
               </div>
 

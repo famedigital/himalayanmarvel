@@ -16,6 +16,7 @@ interface AboutContent {
 
 export default function SettingsPage() {
   const supabase = createClient();
+  const [aboutContentId, setAboutContentId] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
 
@@ -33,9 +34,13 @@ export default function SettingsPage() {
     const fetchContent = async () => {
       const { data } = await supabase
         .from('settings')
-        .select('value')
+        .select('id, value')
         .eq('key', 'about_content')
         .single();
+
+      if (data?.id) {
+        setAboutContentId(data.id);
+      }
 
       if (data?.value) {
         setContent(data.value);
@@ -49,17 +54,35 @@ export default function SettingsPage() {
   const handleSave = async () => {
     setSaving(true);
     try {
-      const { error } = await supabase
-        .from('settings')
-        .upsert({
-          key: 'about_content',
-          value: content,
-          updated_at: new Date().toISOString(),
-        }, {
-          onConflict: 'key',
-        });
+      const timestamp = new Date().toISOString();
 
-      if (error) throw error;
+      if (aboutContentId) {
+        const { error: updateError } = await supabase
+          .from('settings')
+          .update({
+            value: content,
+            updated_at: timestamp,
+          })
+          .eq('id', aboutContentId);
+
+        if (updateError) throw updateError;
+      } else {
+        const { data: insertedRow, error: insertError } = await supabase
+          .from('settings')
+          .insert({
+            key: 'about_content',
+            value: content,
+            updated_at: timestamp,
+          })
+          .select('id')
+          .single();
+
+        if (insertError) throw insertError;
+        if (insertedRow?.id) {
+          setAboutContentId(insertedRow.id);
+        }
+      }
+
       alert('About page content saved successfully!');
     } catch (error) {
       console.error('Error saving:', error);

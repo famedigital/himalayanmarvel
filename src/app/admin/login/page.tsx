@@ -1,9 +1,10 @@
 'use client';
 
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
 import { Lock, Mail, Loader2 } from 'lucide-react';
+import { ThemeToggle } from '@/components/ThemeToggle';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
@@ -11,7 +12,7 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const router = useRouter();
-  const supabase = createClient();
+  const supabase = useMemo(() => createClient(), []);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -19,38 +20,40 @@ export default function LoginPage() {
     setLoading(true);
 
     try {
-      console.log('Attempting login with:', { email, passwordLength: password.length });
-
-      const { data, error } = await supabase.auth.signInWithPassword({
+      const signInPromise = supabase.auth.signInWithPassword({
         email,
         password,
       });
+      const timeoutPromise = new Promise<never>((_, reject) => {
+        setTimeout(() => reject(new Error('Login request timed out. Please try again.')), 15000);
+      });
 
-      console.log('Login response:', { data, error });
+      const { error } = await Promise.race([signInPromise, timeoutPromise]);
 
       if (error) {
-        console.error('Login error details:', {
-          message: error.message,
-          status: error.status,
-          name: error.name
-        });
         setError(error.message);
-        setLoading(false);
         return;
       }
 
-      console.log('Login successful, redirecting...');
-      router.push('/admin/dashboard');
+      router.replace('/admin/dashboard');
+      // Fallback for cases where client navigation stalls in dev mode.
+      setTimeout(() => {
+        window.location.href = '/admin/dashboard';
+      }, 500);
       router.refresh();
     } catch (err) {
-      console.error('Unexpected error:', err);
-      setError('An unexpected error occurred');
+      setError(err instanceof Error ? err.message : 'An unexpected error occurred');
+    } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-950 flex items-center justify-center p-4">
+      <div className="fixed top-4 right-4 z-50">
+        <ThemeToggle />
+      </div>
+
       {/* Background gradient */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute -top-40 -right-40 w-[500px] h-[500px] rounded-full blur-[150px] bg-gradient-to-br from-orange-500/20 to-pink-500/20" />
@@ -59,7 +62,7 @@ export default function LoginPage() {
 
       {/* Login Card */}
       <div className="relative w-full max-w-md">
-        <div className="bg-white backdrop-blur-xl border border-gray-200 rounded-2xl p-8">
+        <div className="bg-white dark:bg-gray-900 backdrop-blur-xl border border-gray-200 dark:border-gray-800 rounded-2xl p-8">
           {/* Logo */}
           <div className="flex justify-center mb-8">
             <div className="relative w-16 h-16">
@@ -73,8 +76,8 @@ export default function LoginPage() {
 
           {/* Header */}
           <div className="text-center mb-8">
-            <h1 className="text-2xl font-bold text-white mb-2">Admin Panel</h1>
-            <p className="text-gray-500">Sign in to manage your website</p>
+            <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2">Admin Panel</h1>
+            <p className="text-gray-500 dark:text-gray-400">Sign in to manage your website</p>
           </div>
 
           {/* Error Message */}
@@ -87,7 +90,7 @@ export default function LoginPage() {
           {/* Login Form */}
           <form onSubmit={handleLogin} className="space-y-4">
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
+              <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 Email
               </label>
               <div className="relative">
@@ -97,7 +100,7 @@ export default function LoginPage() {
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full pl-12 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-500/50 focus:border-transparent transition-all"
+                  className="w-full pl-12 pr-4 py-3 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl text-gray-900 dark:text-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-orange-500/50 focus:border-transparent transition-all"
                   placeholder="admin@himalayanmarvels.com"
                   required
                 />
@@ -105,7 +108,7 @@ export default function LoginPage() {
             </div>
 
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
+              <label htmlFor="password" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 Password
               </label>
               <div className="relative">
@@ -115,7 +118,7 @@ export default function LoginPage() {
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full pl-12 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-500/50 focus:border-transparent transition-all"
+                  className="w-full pl-12 pr-4 py-3 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl text-gray-900 dark:text-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-orange-500/50 focus:border-transparent transition-all"
                   placeholder="••••••••"
                   required
                 />
@@ -142,7 +145,7 @@ export default function LoginPage() {
           <div className="mt-8 text-center">
             <a
               href="/"
-              className="text-gray-500 hover:text-white text-sm transition-colors"
+              className="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 text-sm transition-colors"
             >
               ← Back to website
             </a>

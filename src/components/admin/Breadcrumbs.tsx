@@ -72,8 +72,11 @@ export default function Breadcrumbs({
     ];
 
     let href = '/admin';
+    const seenHrefs = new Set<string>(['/admin/dashboard']);
     for (const segment of filteredSegments) {
       href += `/${segment}`;
+      if (seenHrefs.has(href)) continue;
+      seenHrefs.add(href);
       breadcrumbs.push({
         label: getLabel(segment),
         href,
