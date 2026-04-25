@@ -17,8 +17,14 @@ import {
   Plus,
   X,
   Loader2,
+  Building2,
+  Car,
+  IdCard,
+  Download,
+  Copy,
 } from 'lucide-react';
 import { Booking, Tour, Itinerary } from '@/lib/supabase/types';
+import { getBankDetails, getPaymentInstructions, bankDetails as defaultBankDetails, paymentInstructions as defaultPaymentInstructions } from '@/lib/bank-details';
 
 interface BookingFormProps {
   booking?: Booking;
@@ -35,10 +41,13 @@ export default function BookingForm({ booking, isEdit = false }: BookingFormProp
 
   // Form state
   const [itineraryId, setItineraryId] = useState(booking?.itinerary_id || '');
+  const [selectedItinerary, setSelectedItinerary] = useState<Itinerary | null>(null);
   const [clientName, setClientName] = useState(booking?.client_name || '');
   const [email, setEmail] = useState(booking?.email || '');
   const [phone, setPhone] = useState(booking?.phone || '');
   const [noOfPax, setNoOfPax] = useState(booking?.no_of_pax || 1);
+  const [entryPoint, setEntryPoint] = useState(booking?.entry_point || '');
+  const [exitPoint, setExitPoint] = useState(booking?.exit_point || '');
   const [passportOrigin, setPassportOrigin] = useState(booking?.passport_origin || '');
   const [passportPhoto, setPassportPhoto] = useState(booking?.passport_photo || '');
   const [amount, setAmount] = useState(booking?.amount || 0);
@@ -51,6 +60,14 @@ export default function BookingForm({ booking, isEdit = false }: BookingFormProp
   );
   const [notes, setNotes] = useState(booking?.notes || '');
 
+  // Travel logistics
+  const [guideDetails, setGuideDetails] = useState(booking?.guide_details || '');
+  const [carDetails, setCarDetails] = useState(booking?.car_details || '');
+  const [hotelDetails, setHotelDetails] = useState(booking?.hotel_details || '');
+
+  // Documents
+  const [visaPdfUrl, setVisaPdfUrl] = useState(booking?.visa_pdf_url || '');
+
   // Payment receipts
   const [paymentReceipts, setPaymentReceipts] = useState<any[]>(
     booking?.payment_receipts || []
@@ -58,23 +75,97 @@ export default function BookingForm({ booking, isEdit = false }: BookingFormProp
   const [newReceiptAmount, setNewReceiptAmount] = useState('');
   const [newReceiptUrl, setNewReceiptUrl] = useState('');
 
-  // Fetch itineraries on mount
+  // Bank details from settings
+  const [bankDetailsText, setBankDetailsText] = useState('');
+  const [paymentInstructionsText, setPaymentInstructionsText] = useState('');
+  const [displayBankDetails, setDisplayBankDetails] = useState<any>(defaultBankDetails);
+  const [displayPaymentInstructions, setDisplayPaymentInstructions] = useState<any>(defaultPaymentInstructions);
+
+  // Fetch itineraries and bank details on mount
   useEffect(() => {
-    const fetchItineraries = async () => {
+    const fetchData = async () => {
+      // Fetch itineraries
       const { data } = await supabase
         .from('itineraries')
         .select('*')
-        .eq('status', 'final')
         .order('created_at', { ascending: false });
 
       if (data) {
         setItineraries(data);
       }
       setLoadingItineraries(false);
+
+      // Fetch bank details from settings
+      const { data: bankData } = await supabase
+        .from('settings')
+        .select('value')
+        .eq('key', 'bank_details')
+        .single();
+
+      if (bankData?.value) {
+        // If it's plain text, display as-is
+        if (typeof bankData.value === 'string') {
+          setBankDetailsText(bankData.value);
+        } else {
+          setDisplayBankDetails(bankData.value);
+        }
+      }
+
+      // Fetch payment instructions
+      const { data: instructionsData } = await supabase
+        .from('settings')
+        .select('value')
+        .eq('key', 'payment_instructions')
+        .single();
+
+      if (instructionsData?.value) {
+        setDisplayPaymentInstructions(instructionsData.value);
+      }
     };
 
-    fetchItineraries();
+    fetchData();
   }, []);
+
+  // Auto-fill form when itinerary is selected
+  const handleItineraryChange = async (id: string) => {
+    setItineraryId(id);
+
+    if (!id) {
+      setSelectedItinerary(null);
+      return;
+    }
+
+    // Fetch full itinerary details
+    const { data } = await supabase
+      .from('itineraries')
+      .select('*')
+      .eq('id', id)
+      .single();
+
+    if (data) {
+      setSelectedItinerary(data);
+
+      // Auto-fill form fields from itinerary
+      if (data.guest_names) {
+        setClientName(data.guest_names);
+      }
+      if (data.start_date) {
+        setTravelDate(new Date(data.start_date).toISOString().split('T')[0]);
+      }
+      if (data.no_of_pax) {
+        setNoOfPax(data.no_of_pax);
+      }
+      if (data.entry_point) {
+        setEntryPoint(data.entry_point);
+      }
+      if (data.exit_point) {
+        setExitPoint(data.exit_point);
+      }
+      if (data.pricing?.total) {
+        setAmount(Number(data.pricing.total));
+      }
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -89,12 +180,18 @@ export default function BookingForm({ booking, isEdit = false }: BookingFormProp
         no_of_pax: noOfPax,
         passport_origin: passportOrigin,
         passport_photo: passportPhoto,
+        entry_point: entryPoint,
+        exit_point: exitPoint,
         amount,
         status,
         booking_date: bookingDate || null,
         travel_date: travelDate || null,
         notes,
         payment_receipts: paymentReceipts,
+        guide_details: guideDetails,
+        car_details: carDetails,
+        hotel_details: hotelDetails,
+        visa_pdf_url: visaPdfUrl,
         updated_at: new Date().toISOString(),
       };
 
@@ -173,7 +270,7 @@ export default function BookingForm({ booking, isEdit = false }: BookingFormProp
               <select
                 id="itinerary"
                 value={itineraryId}
-                onChange={(e) => setItineraryId(e.target.value)}
+                onChange={(e) => handleItineraryChange(e.target.value)}
                 className="w-full pl-12 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 focus:outline-none focus:ring-2 focus:ring-orange-500/50 focus:border-transparent transition-all appearance-none cursor-pointer"
               >
                 <option value="" className="bg-white">Select an itinerary</option>
@@ -281,6 +378,42 @@ export default function BookingForm({ booking, isEdit = false }: BookingFormProp
               className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 placeholder:text-gray-900/30 focus:outline-none focus:ring-2 focus:ring-orange-500/50 focus:border-transparent transition-all"
               placeholder="United States"
             />
+          </div>
+
+          {/* Entry Point */}
+          <div>
+            <label htmlFor="entryPoint" className="block text-sm font-medium text-gray-900/70 mb-2">
+              Entry Point
+            </label>
+            <div className="relative">
+              <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-900/30" />
+              <input
+                id="entryPoint"
+                type="text"
+                value={entryPoint}
+                onChange={(e) => setEntryPoint(e.target.value)}
+                className="w-full pl-12 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 placeholder:text-gray-900/30 focus:outline-none focus:ring-2 focus:ring-orange-500/50 focus:border-transparent transition-all"
+                placeholder="Paro Airport"
+              />
+            </div>
+          </div>
+
+          {/* Exit Point */}
+          <div>
+            <label htmlFor="exitPoint" className="block text-sm font-medium text-gray-900/70 mb-2">
+              Exit Point
+            </label>
+            <div className="relative">
+              <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-900/30" />
+              <input
+                id="exitPoint"
+                type="text"
+                value={exitPoint}
+                onChange={(e) => setExitPoint(e.target.value)}
+                className="w-full pl-12 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 placeholder:text-gray-900/30 focus:outline-none focus:ring-2 focus:ring-orange-500/50 focus:border-transparent transition-all"
+                placeholder="Paro Airport"
+              />
+            </div>
           </div>
 
           {/* Passport Photo */}
@@ -471,6 +604,168 @@ export default function BookingForm({ booking, isEdit = false }: BookingFormProp
           className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 placeholder:text-gray-900/30 focus:outline-none focus:ring-2 focus:ring-orange-500/50 focus:border-transparent transition-all resize-none"
           placeholder="Additional notes about this booking..."
         />
+      </div>
+
+      {/* Bank Details for Wire Transfer */}
+      <div className="bg-gradient-to-br from-orange-50 to-pink-50 dark:from-orange-950/20 dark:to-pink-950/20 border-2 border-orange-200 dark:border-orange-800 rounded-2xl p-6">
+        <div className="flex items-center gap-3 mb-6">
+          <Building2 className="w-6 h-6 text-orange-500" />
+          <div>
+            <h2 className="text-xl font-semibold text-gray-900 dark:text-white">{displayPaymentInstructions.title}</h2>
+            <p className="text-sm text-gray-600 dark:text-gray-400">{displayPaymentInstructions.note}</p>
+          </div>
+        </div>
+
+        {/* Display bank details - either free-form text or structured */}
+        {bankDetailsText ? (
+          <div className="bg-white/50 rounded-xl p-4 whitespace-pre-wrap text-sm text-gray-900">
+            {bankDetailsText}
+          </div>
+        ) : (
+          <div className="grid md:grid-cols-2 gap-6">
+            <div>
+              <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">Bank Name</p>
+              <p className="font-semibold text-gray-900 dark:text-white">{displayBankDetails.bank_name}</p>
+            </div>
+            <div>
+              <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">Account Name</p>
+              <div className="flex items-center justify-between">
+                <p className="font-semibold text-gray-900 dark:text-white">{displayBankDetails.account_name}</p>
+              </div>
+            </div>
+            <div>
+              <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">Account Number</p>
+              <div className="flex items-center justify-between">
+                <p className="font-semibold text-gray-900 dark:text-white">{displayBankDetails.account_number}</p>
+                <button
+                  type="button"
+                  onClick={() => navigator.clipboard.writeText(displayBankDetails.account_number)}
+                  className="p-1 rounded hover:bg-white/50"
+                >
+                  <Copy className="w-4 h-4 text-gray-500" />
+                </button>
+              </div>
+            </div>
+            <div>
+              <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">SWIFT Code</p>
+              <div className="flex items-center justify-between">
+                <p className="font-semibold text-gray-900 dark:text-white">{displayBankDetails.swift_code}</p>
+                <button
+                  type="button"
+                  onClick={() => navigator.clipboard.writeText(displayBankDetails.swift_code)}
+                  className="p-1 rounded hover:bg-white/50"
+                >
+                  <Copy className="w-4 h-4 text-gray-500" />
+                </button>
+              </div>
+            </div>
+            <div className="md:col-span-2">
+              <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">Bank Address</p>
+              <p className="font-semibold text-gray-900 dark:text-white">{displayBankDetails.bank_address}</p>
+            </div>
+            <div className="md:col-span-2">
+              <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">Currency</p>
+              <p className="font-semibold text-gray-900 dark:text-white">{displayBankDetails.currency}</p>
+            </div>
+          </div>
+        )}
+        <p className="text-xs text-gray-500 dark:text-gray-500 mt-4">{displayPaymentInstructions.note2}</p>
+      </div>
+
+      {/* Travel Logistics */}
+      <div className="bg-white dark:bg-gray-800 backdrop-blur-xl border border-gray-200 dark:border-gray-700 rounded-2xl p-6">
+        <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-6">Travel Logistics</h2>
+
+        <div className="grid md:grid-cols-3 gap-6">
+          {/* Guide Details */}
+          <div>
+            <label htmlFor="guideDetails" className="block text-sm font-medium text-gray-900/70 dark:text-gray-300 mb-2">
+              <span className="flex items-center gap-2">
+                <IdCard className="w-4 h-4" />
+                Guide Details
+              </span>
+            </label>
+            <textarea
+              id="guideDetails"
+              value={guideDetails}
+              onChange={(e) => setGuideDetails(e.target.value)}
+              rows={3}
+              className="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white placeholder:text-gray-900/30 dark:placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-orange-500/50 focus:border-transparent transition-all resize-none"
+              placeholder="e.g., Dorji, +975 17223123, License #1231213"
+            />
+          </div>
+
+          {/* Car Details */}
+          <div>
+            <label htmlFor="carDetails" className="block text-sm font-medium text-gray-900/70 dark:text-gray-300 mb-2">
+              <span className="flex items-center gap-2">
+                <Car className="w-4 h-4" />
+                Car Details
+              </span>
+            </label>
+            <textarea
+              id="carDetails"
+              value={carDetails}
+              onChange={(e) => setCarDetails(e.target.value)}
+              rows={3}
+              className="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white placeholder:text-gray-900/30 dark:placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-orange-500/50 focus:border-transparent transition-all resize-none"
+              placeholder="e.g., Creata, Driver: Tenzin +975 1231231, Plate: PB-1-1234"
+            />
+          </div>
+
+          {/* Hotel Details */}
+          <div>
+            <label htmlFor="hotelDetails" className="block text-sm font-medium text-gray-900/70 dark:text-gray-300 mb-2">
+              <span className="flex items-center gap-2">
+                <Building2 className="w-4 h-4" />
+                Hotel Details
+              </span>
+            </label>
+            <textarea
+              id="hotelDetails"
+              value={hotelDetails}
+              onChange={(e) => setHotelDetails(e.target.value)}
+              rows={3}
+              className="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white placeholder:text-gray-900/30 dark:placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-orange-500/50 focus:border-transparent transition-all resize-none"
+              placeholder="e.g., Taj Tashi, Thimphu, +975 17772222"
+            />
+          </div>
+        </div>
+      </div>
+
+      {/* Documents */}
+      <div className="bg-white dark:bg-gray-800 backdrop-blur-xl border border-gray-200 dark:border-gray-700 rounded-2xl p-6">
+        <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-6">Documents</h2>
+
+        <div className="space-y-6">
+          {/* Visa PDF Upload */}
+          <div>
+            <label className="block text-sm font-medium text-gray-900/70 dark:text-gray-300 mb-2">
+              SDF e-Visa PDF
+            </label>
+            <CloudinaryUpload
+              onUploadComplete={setVisaPdfUrl}
+              onRemove={() => setVisaPdfUrl('')}
+              value={visaPdfUrl}
+              label="Upload e-Visa PDF"
+              folder="himalayanmarvel/visas"
+              size="md"
+            />
+            {visaPdfUrl && (
+              <div className="mt-2 flex items-center gap-2">
+                <a
+                  href={visaPdfUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-sm text-orange-500 hover:text-orange-600 flex items-center gap-1"
+                >
+                  <Download className="w-3 h-3" />
+                  View Visa
+                </a>
+              </div>
+            )}
+          </div>
+        </div>
       </div>
 
       {/* Actions */}

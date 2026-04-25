@@ -3,17 +3,16 @@
 import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
 import { useState, useEffect } from 'react';
 import {
-  Mail, Phone, Globe, Instagram, Facebook, Twitter,
-  Linkedin, Youtube, MessageCircle, Send, MapPin,
+  Mail, Phone, Globe, MessageCircle, Send, MapPin,
   Clock, Sparkles
 } from 'lucide-react';
 
 const socialLinks = [
-  { icon: Instagram, href: 'https://www.instagram.com/himalayanmarvels.travel/', label: 'Instagram' },
-  { icon: Facebook, href: 'https://facebook.com/himalayanmarvels', label: 'Facebook' },
-  { icon: Twitter, href: '#', label: 'Twitter' },
-  { icon: Linkedin, href: '#', label: 'LinkedIn' },
-  { icon: Youtube, href: '#', label: 'YouTube' },
+  { icon: MessageCircle, href: 'https://www.instagram.com/himalayanmarvels.travel/', label: 'Instagram' },
+  { icon: MessageCircle, href: 'https://facebook.com/himalayanmarvels', label: 'Facebook' },
+  { icon: MessageCircle, href: '#', label: 'Twitter' },
+  { icon: MessageCircle, href: '#', label: 'LinkedIn' },
+  { icon: MessageCircle, href: '#', label: 'YouTube' },
   { icon: MessageCircle, href: '#', label: 'WhatsApp' },
   { icon: Send, href: 'mailto:info@himalayanmarvels.com', label: 'Email' },
   { icon: Phone, href: 'tel:+97577270465', label: 'Call' },
@@ -120,7 +119,7 @@ export default function TopBar() {
                   }}
                 >
                   <div className="flex gap-1.5">
-                    {[Instagram, Facebook, Mail].map((Icon, i) => (
+                    {[MessageCircle, MessageCircle, Mail].map((Icon, i) => (
                       <Icon key={i} className="w-4 h-4 text-amber-400" />
                     ))}
                   </div>

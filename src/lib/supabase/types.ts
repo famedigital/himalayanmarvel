@@ -61,6 +61,15 @@ export interface Booking {
   booking_date: string | null;
   travel_date: string | null;
   notes: string | null;
+  // Travel logistics
+  guide_details: string | null;
+  car_details: string | null;
+  hotel_details: string | null;
+  // Documents
+  visa_pdf_url: string | null;
+  money_receipt_url: string | null;
+  entry_point: string | null;
+  exit_point: string | null;
   created_at: string;
   updated_at: string;
   // Joined relations

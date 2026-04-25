@@ -22,7 +22,7 @@ CREATE TABLE IF NOT EXISTS itineraries (
 
   -- Metadata
   created_by UUID REFERENCES auth.users(id),
-  booking_id UUID REFERENCES bookings(id) ON DELETE SET NULL,
+  booking_id UUID, -- Removed FK to bookings table (doesn't exist yet)
   status TEXT DEFAULT 'draft' CHECK (status IN ('draft', 'final')),
 
   -- Pricing (stored as JSONB for flexibility)
@@ -118,15 +118,15 @@ ALTER TABLE itineraries ENABLE ROW LEVEL SECURITY;
 ALTER TABLE itinerary_days ENABLE ROW LEVEL SECURITY;
 ALTER TABLE itinerary_section_openers ENABLE ROW LEVEL SECURITY;
 
--- RLS Policies: admins can do everything, others read-only
+-- RLS Policies: admins can do everything (check by email)
 CREATE POLICY "Itineraries: admins full access" ON itineraries
-  FOR ALL USING (auth.jwt() ->> 'role' = 'admin');
+  FOR ALL USING (auth.jwt() ->> 'email' = 'admin@himalayanmarvels.com');
 
 CREATE POLICY "Itinerary Days: admins full access" ON itinerary_days
-  FOR ALL USING (auth.jwt() ->> 'role' = 'admin');
+  FOR ALL USING (auth.jwt() ->> 'email' = 'admin@himalayanmarvels.com');
 
 CREATE POLICY "Section Openers: admins full access" ON itinerary_section_openers
-  FOR ALL USING (auth.jwt() ->> 'role' = 'admin');
+  FOR ALL USING (auth.jwt() ->> 'email' = 'admin@himalayanmarvels.com');
 
 -- Indexes for better performance
 CREATE INDEX idx_itineraries_created_by ON itineraries(created_by);

@@ -2,8 +2,9 @@ import { Itinerary, ItineraryDay, SectionOpener } from '@/lib/supabase/itinerary
 
 export function generateItineraryHTML(data: any): string {
   const itinerary: Itinerary = data;
-  const days: ItineraryDay[] = itinerary.itinerary_days || [];
-  const sectionOpeners: SectionOpener[] = itinerary.section_openers || [];
+  // Days and openers come from Supabase join, not part of Itinerary type
+  const days: ItineraryDay[] = (data as any).itinerary_days || [];
+  const sectionOpeners: SectionOpener[] = (data as any).itinerary_section_openers || [];
 
   // Format date range
   const formatDateRange = () => {
@@ -748,7 +749,7 @@ export function generateItineraryHTML(data: any): string {
     <div class="page inner-page letter-page">
         <div class="running-header">
             <span>${escapeHtml(itinerary.logo || 'Silverpine Bhutan')}</span>
-            <span>${escapeHtml(itinerary.title)}</span>
+            <span>${escapeHtml(itinerary.title || 'Itinerary')}</span>
         </div>
 
         <div class="letter-header">
@@ -776,9 +777,9 @@ export function generateItineraryHTML(data: any): string {
 
     ${generateSectionOpener(sectionOpeners[0], 3)}
 
-    ${generateDaysPages(days, itinerary.logo || 'Silverpine Bhutan')}
+    ${generateDaysPages(days, itinerary.logo || 'Silverpine Bhutan', undefined)}
 
-    ${generatePricingPage(itinerary)}
+    ${generatePricingPage(itinerary, itinerary.logo || 'Silverpine Bhutan', undefined)}
 
     <!-- BACK COVER -->
     <div class="page back-cover">
@@ -788,10 +789,10 @@ export function generateItineraryHTML(data: any): string {
             <div class="back-cover-logo">${escapeHtml((itinerary.logo || 'Silverpine Bhutan').toUpperCase())}</div>
             <div class="back-cover-title">JOURNEY AWAITS</div>
             <div class="contact-info">
-                <div class="contact-item"><strong>Email:</strong> info@silverpinebhutan.com</div>
-                <div class="contact-item"><strong>Phone:</strong> +975 77773737</div>
-                <div class="contact-item"><strong>Website:</strong> www.silverpinebhutan.com</div>
-                <div class="contact-item"><strong>Location:</strong> Thimphu, Bhutan</div>
+                <div class="contact-item"><strong>Email:</strong> info@himalayanmarvels.com</div>
+                <div class="contact-item"><strong>Phone:</strong> +975 77 270 465</div>
+                <div class="contact-item"><strong>Website:</strong> www.himalayanmarvels.com</div>
+                <div class="contact-item"><strong>Location:</strong> Bhutan</div>
             </div>
         </div>
     </div>
@@ -818,7 +819,7 @@ function generateSectionOpener(opener: SectionOpener | undefined, pageNum: numbe
     </div>`;
 }
 
-function generateDaysPages(days: ItineraryDay[], logo: string): string {
+function generateDaysPages(days: ItineraryDay[], logo: string, headerFooter?: any): string {
   if (days.length === 0) return '';
 
   let pages = '';
@@ -831,15 +832,15 @@ function generateDaysPages(days: ItineraryDay[], logo: string): string {
     pages += `
     <div class="page inner-page">
         <div class="running-header">
-            <span>${escapeHtml(logo)}</span>
-            <span>Itinerary</span>
+            <span>${escapeHtml(headerFooter?.header_left || logo)}</span>
+            <span>${escapeHtml(headerFooter?.header_right_title || 'Itinerary')}</span>
         </div>
 
         ${pageDays.map(day => generateDayHTML(day)).join('<div class="royal-divider"><div class="royal-divider-line"></div><div class="royal-divider-diamond"></div><div class="royal-divider-line"></div></div>')}
 
         <div class="running-footer">
-            <span>${escapeHtml(logo)}</span>
-            <span>www.silverpinebhutan.com</span>
+            <span>${escapeHtml(headerFooter?.footer_left || logo)}</span>
+            <span>${escapeHtml(headerFooter?.footer_center || 'www.silverpinebhutan.com')}</span>
             <div class="page-number">${currentPageNum}</div>
         </div>
     </div>`;
@@ -903,7 +904,7 @@ function generateDayHTML(day: ItineraryDay): string {
     </div>`;
 }
 
-function generatePricingPage(itinerary: Itinerary): string {
+function generatePricingPage(itinerary: Itinerary, logo: string, headerFooter?: any): string {
   const pricing = itinerary.pricing;
   const items = pricing?.items || [];
   const inclusions = pricing?.inclusions || [];
@@ -913,8 +914,8 @@ function generatePricingPage(itinerary: Itinerary): string {
     <!-- PRICING PAGE -->
     <div class="page pricing-page">
         <div class="running-header">
-            <span>${escapeHtml(itinerary.logo || 'Silverpine Bhutan')}</span>
-            <span>${escapeHtml(itinerary.title)}</span>
+            <span>${escapeHtml(headerFooter?.header_left || logo)}</span>
+            <span>${escapeHtml(headerFooter?.header_right_title || itinerary.title)}</span>
         </div>
 
         <div class="pricing-header">
@@ -967,8 +968,8 @@ function generatePricingPage(itinerary: Itinerary): string {
         </div>` : ''}
 
         <div class="running-footer">
-            <span>${escapeHtml(itinerary.logo || 'Silverpine Bhutan')}</span>
-            <span>www.silverpinebhutan.com</span>
+            <span>${escapeHtml(headerFooter?.footer_left || logo)}</span>
+            <span>${escapeHtml(headerFooter?.footer_center || 'www.silverpinebhutan.com')}</span>
             <div class="page-number">${999}</div>
         </div>
     </div>`;

@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import CloudinaryUpload from './CloudinaryUpload';
-import { Plus, X, GripVertical, Image as ImageIcon, Video, Save, Loader2 } from 'lucide-react';
+import { Plus, X, GripVertical, Image as ImageIcon, Video, Save, Loader2, Copy } from 'lucide-react';
 
 interface HeroSlide {
   id: string;
@@ -13,6 +13,11 @@ interface HeroSlide {
   title?: string;
   subtitle?: string;
   link?: string;
+  description?: string;
+  keywords?: string[];
+  experienceLabel?: string;
+  ctaText?: string;
+  isPrimary?: boolean;
 }
 
 interface HeroManagerProps {
@@ -39,6 +44,25 @@ export default function HeroManager({ initialSlides }: HeroManagerProps) {
   const removeSlide = (id: string) => {
     setSlides(slides.filter(s => s.id !== id));
     if (editingSlide === id) setEditingSlide(null);
+  };
+
+  const duplicateSlide = (id: string) => {
+    const slideToDuplicate = slides.find(s => s.id === id);
+    if (!slideToDuplicate) return;
+
+    const newSlide: HeroSlide = {
+      ...slideToDuplicate,
+      id: Date.now().toString(),
+      isPrimary: false, // Duplicates are never primary by default
+    };
+    setSlides([...slides, newSlide]);
+  };
+
+  const setPrimarySlide = (id: string) => {
+    setSlides(slides.map(s => ({
+      ...s,
+      isPrimary: s.id === id
+    })));
   };
 
   const updateSlide = (id: string, updates: Partial<HeroSlide>) => {
@@ -117,16 +141,40 @@ export default function HeroManager({ initialSlides }: HeroManagerProps) {
             <div className="flex items-center justify-between p-4 border-b border-gray-200">
               <div className="flex items-center gap-3">
                 <GripVertical className="w-5 h-5 text-gray-400 cursor-move" />
-                <span className="font-medium text-gray-900">
+                <span className={`font-medium ${slide.isPrimary ? 'text-orange-600' : 'text-gray-900'}`}>
+                  {slide.isPrimary && '★ '}
                   Slide {index + 1} ({slide.type})
                 </span>
               </div>
-              <button
-                onClick={() => removeSlide(slide.id)}
-                className="p-2 rounded-lg hover:bg-red-500/10 text-gray-400 hover:text-red-500 transition-colors"
-              >
-                <X className="w-4 h-4" />
-              </button>
+              <div className="flex items-center gap-2">
+                {/* Primary Toggle */}
+                <button
+                  onClick={() => setPrimarySlide(slide.id)}
+                  className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
+                    slide.isPrimary
+                      ? 'bg-orange-500 text-white'
+                      : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                  }`}
+                >
+                  {slide.isPrimary ? 'Primary' : 'Make Primary'}
+                </button>
+                {/* Duplicate Button */}
+                <button
+                  onClick={() => duplicateSlide(slide.id)}
+                  className="p-2 rounded-lg hover:bg-blue-500/10 text-gray-400 hover:text-blue-500 transition-colors"
+                  title="Duplicate slide"
+                >
+                  <Copy className="w-4 h-4" />
+                </button>
+                {/* Delete Button */}
+                <button
+                  onClick={() => removeSlide(slide.id)}
+                  className="p-2 rounded-lg hover:bg-red-500/10 text-gray-400 hover:text-red-500 transition-colors"
+                  title="Delete slide"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
             </div>
 
             {/* Slide Content */}
@@ -224,6 +272,63 @@ export default function HeroManager({ initialSlides }: HeroManagerProps) {
                   placeholder="/tours"
                   className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm"
                 />
+              </div>
+
+              {/* CTA Button Text */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Button Text (optional)
+                </label>
+                <input
+                  type="text"
+                  value={slide.ctaText || ''}
+                  onChange={(e) => updateSlide(slide.id, { ctaText: e.target.value })}
+                  placeholder="Begin a conversation"
+                  className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm"
+                />
+              </div>
+
+              {/* Experience Label */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Experience Label (optional)
+                </label>
+                <input
+                  type="text"
+                  value={slide.experienceLabel || ''}
+                  onChange={(e) => updateSlide(slide.id, { experienceLabel: e.target.value })}
+                  placeholder="Experience"
+                  className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm"
+                />
+              </div>
+
+              {/* Description */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Description (optional)
+                </label>
+                <textarea
+                  value={slide.description || ''}
+                  onChange={(e) => updateSlide(slide.id, { description: e.target.value })}
+                  placeholder="Bhutan is not a destination. It's a shift in perspective."
+                  rows={2}
+                  className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm"
+                />
+              </div>
+
+              {/* Keywords (comma separated) */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Typewriter Keywords (comma separated)
+                </label>
+                <input
+                  type="text"
+                  value={slide.keywords?.join(', ') || ''}
+                  onChange={(e) => updateSlide(slide.id, { keywords: e.target.value.split(',').map(k => k.trim()).filter(Boolean) })}
+                  placeholder="Sacred Landscapes, Living Traditions, Moments of Stillness"
+                  className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm"
+                />
+                <p className="text-xs text-gray-500 mt-1">These words will cycle with the typewriter effect</p>
               </div>
             </div>
           </div>

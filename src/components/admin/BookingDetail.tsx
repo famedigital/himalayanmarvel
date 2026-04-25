@@ -18,9 +18,18 @@ import {
   Loader2,
   Check,
   X,
+  Building2,
+  Car,
+  IdCard,
+  File,
+  Copy,
+  Receipt,
 } from 'lucide-react';
 import { jsPDF } from 'jspdf';
 import html2canvas from 'html2canvas';
+import { sanitizeElementColors } from '@/lib/color-utils';
+import { bankDetails, paymentInstructions, getBankDetails, getPaymentInstructions } from '@/lib/bank-details';
+import { downloadAllDocuments } from '@/lib/zip-documents';
 
 export default function BookingDetail() {
   const params = useParams();
@@ -28,7 +37,11 @@ export default function BookingDetail() {
   const supabase = createClient();
 
   const [loading, setLoading] = useState(true);
+  const [generatingReceipt, setGeneratingReceipt] = useState(false);
   const [booking, setBooking] = useState<(Booking & { tour?: Tour }) | null>(null);
+  const [bankDetailsText, setBankDetailsText] = useState('');
+  const [displayBankDetails, setDisplayBankDetails] = useState<any>(bankDetails);
+  const [displayPaymentInstructions, setDisplayPaymentInstructions] = useState<any>(paymentInstructions);
 
   useEffect(() => {
     const fetchBooking = async () => {
@@ -44,7 +57,34 @@ export default function BookingDetail() {
       setLoading(false);
     };
 
+    const fetchBankDetails = async () => {
+      const { data: bankData } = await supabase
+        .from('settings')
+        .select('value')
+        .eq('key', 'bank_details')
+        .single();
+
+      if (bankData?.value) {
+        if (typeof bankData.value === 'string') {
+          setBankDetailsText(bankData.value);
+        } else {
+          setDisplayBankDetails(bankData.value);
+        }
+      }
+
+      const { data: instructionsData } = await supabase
+        .from('settings')
+        .select('value')
+        .eq('key', 'payment_instructions')
+        .single();
+
+      if (instructionsData?.value) {
+        setDisplayPaymentInstructions(instructionsData.value);
+      }
+    };
+
     fetchBooking();
+    fetchBankDetails();
   }, [params.id]);
 
   const downloadPDF = async () => {
@@ -54,11 +94,44 @@ export default function BookingDetail() {
     if (!element) return;
 
     try {
-      const canvas = await html2canvas(element, {
+      // Clone the element for PDF rendering
+      const clone = element.cloneNode(true) as HTMLElement;
+      clone.style.width = '800px';
+      clone.style.background = '#ffffff';
+      clone.style.color = '#111827';
+
+      // Create container for rendering (off-screen)
+      const container = document.createElement('div');
+      container.style.position = 'absolute';
+      container.style.left = '-9999px';
+      container.style.width = '800px';
+      container.style.background = '#ffffff';
+      container.appendChild(clone);
+      document.body.appendChild(container);
+
+      // Generate PDF using html2canvas with onclone callback
+      // The onclone callback is called AFTER the clone is made but BEFORE rendering
+      // This is the perfect place to sanitize colors
+      const canvas = await html2canvas(clone, {
         scale: 2,
         backgroundColor: '#ffffff',
+        useCORS: true,
+        allowTaint: true,
+        ignoreElements: (el) => el.tagName === 'BUTTON',
+        onclone: (clonedDoc) => {
+          // Sanitize all colors in the cloned document
+          // The clonedDoc contains a copy of our DOM tree
+          const clonedRoot = clonedDoc.body.firstChild as HTMLElement;
+          if (clonedRoot) {
+            sanitizeElementColors(clonedRoot);
+          }
+        },
       });
 
+      // Clean up container
+      document.body.removeChild(container);
+
+      // Generate PDF
       const imgData = canvas.toDataURL('image/png');
       const pdf = new jsPDF('p', 'mm', 'a4');
 
@@ -94,6 +167,45 @@ export default function BookingDetail() {
     const link = `${window.location.origin}/admin/bookings/${booking?.id}`;
     navigator.clipboard.writeText(link);
     alert('Link copied to clipboard!');
+  };
+
+  const generateMoneyReceipt = async () => {
+    if (!booking) return;
+    setGeneratingReceipt(true);
+    try {
+      const response = await fetch(`/api/bookings/${booking.id}/money-receipt`);
+      if (!response.ok) throw new Error('Failed to generate receipt');
+
+      const { pdf } = await response.json();
+
+      // Download the PDF
+      const link = document.createElement('a');
+      link.href = pdf;
+      link.download = `money-receipt-${booking.client_name.replace(/\s+/g, '-').toLowerCase()}.pdf`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    } catch (error) {
+      console.error('Error generating money receipt:', error);
+      alert('Failed to generate money receipt. Please try again.');
+    } finally {
+      setGeneratingReceipt(false);
+    }
+  };
+
+  const downloadAllDocs = async () => {
+    if (!booking) return;
+
+    await downloadAllDocuments(booking.client_name, {
+      passport: booking.passport_photo || undefined,
+      visa: booking.visa_pdf_url || undefined,
+      moneyReceipt: booking.money_receipt_url || undefined,
+      paymentReceipts: (booking.payment_receipts || []).map(r => ({
+        url: r.receipt_url,
+        amount: r.amount,
+        date: r.date
+      })),
+    });
   };
 
   if (loading) {
@@ -152,6 +264,20 @@ export default function BookingDetail() {
               <Share2 className="w-4 h-4" />
               Share Link
             </button>
+            {(booking.status === 'paid' || booking.status === 'confirmed') && booking.amount && booking.amount > 0 && (
+              <button
+                onClick={generateMoneyReceipt}
+                disabled={generatingReceipt}
+                className="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white font-medium rounded-xl transition-colors flex items-center gap-2 disabled:opacity-50"
+              >
+                {generatingReceipt ? (
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                ) : (
+                  <DollarSign className="w-4 h-4" />
+                )}
+                Money Receipt
+              </button>
+            )}
             <button
               onClick={downloadPDF}
               className="px-4 py-2 bg-gradient-to-r from-orange-500 to-pink-500 text-white font-medium rounded-xl hover:opacity-90 transition-opacity flex items-center gap-2"
@@ -338,6 +464,162 @@ export default function BookingDetail() {
             <div className="bg-gray-50 dark:bg-gray-700 rounded-xl p-4">
               <p className="text-gray-700 dark:text-gray-300">{booking.notes}</p>
             </div>
+          </div>
+        )}
+
+        {/* Bank Details */}
+        <div>
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Bank Transfer Details</h3>
+          <div className="bg-gradient-to-br from-orange-50 to-pink-50 dark:from-orange-950/20 dark:to-pink-950/20 border border-orange-200 dark:border-orange-800 rounded-xl p-4">
+            {bankDetailsText ? (
+              <div className="whitespace-pre-wrap text-sm text-gray-900 dark:text-white">
+                {bankDetailsText}
+              </div>
+            ) : (
+              <div className="grid md:grid-cols-2 gap-4">
+                <div>
+                  <p className="text-xs text-gray-600 dark:text-gray-400 mb-1">Bank Name</p>
+                  <p className="font-semibold text-gray-900 dark:text-white">{displayBankDetails.bank_name}</p>
+                </div>
+                <div>
+                  <p className="text-xs text-gray-600 dark:text-gray-400 mb-1">Account Name</p>
+                  <p className="font-semibold text-gray-900 dark:text-white">{displayBankDetails.account_name}</p>
+                </div>
+                <div>
+                  <p className="text-xs text-gray-600 dark:text-gray-400 mb-1">Account Number</p>
+                  <div className="flex items-center gap-2">
+                    <p className="font-semibold text-gray-900 dark:text-white">{displayBankDetails.account_number}</p>
+                    <button
+                      onClick={() => navigator.clipboard.writeText(displayBankDetails.account_number)}
+                      className="p-1 rounded hover:bg-white/50"
+                    >
+                      <Copy className="w-3 h-3 text-gray-500" />
+                    </button>
+                  </div>
+                </div>
+                <div>
+                  <p className="text-xs text-gray-600 dark:text-gray-400 mb-1">SWIFT Code</p>
+                  <div className="flex items-center gap-2">
+                    <p className="font-semibold text-gray-900 dark:text-white">{displayBankDetails.swift_code}</p>
+                    <button
+                      onClick={() => navigator.clipboard.writeText(displayBankDetails.swift_code)}
+                      className="p-1 rounded hover:bg-white/50"
+                    >
+                      <Copy className="w-3 h-3 text-gray-500" />
+                    </button>
+                  </div>
+                </div>
+                <div className="md:col-span-2">
+                  <p className="text-xs text-gray-600 dark:text-gray-400 mb-1">Bank Address</p>
+                  <p className="font-semibold text-gray-900 dark:text-white">{displayBankDetails.bank_address}</p>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Travel Logistics */}
+        {(booking.guide_details || booking.car_details || booking.hotel_details) && (
+          <div>
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Travel Logistics</h3>
+            <div className="grid md:grid-cols-3 gap-4">
+              {booking.guide_details && (
+                <div className="bg-gray-50 dark:bg-gray-700 rounded-xl p-4">
+                  <div className="flex items-center gap-2 mb-2">
+                    <IdCard className="w-4 h-4 text-gray-500" />
+                    <p className="text-xs font-medium text-gray-600 dark:text-gray-400">Guide</p>
+                  </div>
+                  <p className="text-sm text-gray-900 dark:text-white whitespace-pre-line">{booking.guide_details}</p>
+                </div>
+              )}
+              {booking.car_details && (
+                <div className="bg-gray-50 dark:bg-gray-700 rounded-xl p-4">
+                  <div className="flex items-center gap-2 mb-2">
+                    <Car className="w-4 h-4 text-gray-500" />
+                    <p className="text-xs font-medium text-gray-600 dark:text-gray-400">Car</p>
+                  </div>
+                  <p className="text-sm text-gray-900 dark:text-white whitespace-pre-line">{booking.car_details}</p>
+                </div>
+              )}
+              {booking.hotel_details && (
+                <div className="bg-gray-50 dark:bg-gray-700 rounded-xl p-4">
+                  <div className="flex items-center gap-2 mb-2">
+                    <Building2 className="w-4 h-4 text-gray-500" />
+                    <p className="text-xs font-medium text-gray-600 dark:text-gray-400">Hotel</p>
+                  </div>
+                  <p className="text-sm text-gray-900 dark:text-white whitespace-pre-line">{booking.hotel_details}</p>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* Documents */}
+        {(booking.passport_photo || booking.visa_pdf_url || booking.money_receipt_url) && (
+          <div>
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Documents</h3>
+            <div className="space-y-3">
+              {booking.passport_photo && (
+                <div className="flex items-center justify-between bg-gray-50 dark:bg-gray-700 rounded-xl p-3">
+                  <div className="flex items-center gap-2">
+                    <File className="w-4 h-4 text-gray-500" />
+                    <span className="text-sm text-gray-900 dark:text-white">Passport Photo</span>
+                  </div>
+                  <a
+                    href={booking.passport_photo}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-sm text-orange-500 hover:text-orange-600 flex items-center gap-1"
+                  >
+                    <Download className="w-3 h-3" />
+                    View
+                  </a>
+                </div>
+              )}
+              {booking.visa_pdf_url && (
+                <div className="flex items-center justify-between bg-gray-50 dark:bg-gray-700 rounded-xl p-3">
+                  <div className="flex items-center gap-2">
+                    <File className="w-4 h-4 text-gray-500" />
+                    <span className="text-sm text-gray-900 dark:text-white">SDF e-Visa</span>
+                  </div>
+                  <a
+                    href={booking.visa_pdf_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-sm text-orange-500 hover:text-orange-600 flex items-center gap-1"
+                  >
+                    <Download className="w-3 h-3" />
+                    View
+                  </a>
+                </div>
+              )}
+              {booking.money_receipt_url && (
+                <div className="flex items-center justify-between bg-green-50 dark:bg-green-900/20 rounded-xl p-3">
+                  <div className="flex items-center gap-2">
+                    <Check className="w-4 h-4 text-green-500" />
+                    <span className="text-sm text-gray-900 dark:text-white">Money Receipt</span>
+                  </div>
+                  <a
+                    href={booking.money_receipt_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-sm text-green-500 hover:text-green-600 flex items-center gap-1"
+                  >
+                    <Download className="w-3 h-3" />
+                    View
+                  </a>
+                </div>
+              )}
+            </div>
+            {(booking.passport_photo || booking.visa_pdf_url || booking.money_receipt_url) && (
+              <button
+                onClick={downloadAllDocs}
+                className="mt-4 w-full px-4 py-3 bg-orange-500 hover:bg-orange-600 text-white font-medium rounded-xl transition-colors flex items-center justify-center gap-2"
+              >
+                <Download className="w-4 h-4" />
+                Download All Documents
+              </button>
+            )}
           </div>
         )}
 

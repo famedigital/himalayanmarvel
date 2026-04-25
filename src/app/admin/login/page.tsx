@@ -19,20 +19,31 @@ export default function LoginPage() {
     setLoading(true);
 
     try {
-      const { error } = await supabase.auth.signInWithPassword({
+      console.log('Attempting login with:', { email, passwordLength: password.length });
+
+      const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
 
+      console.log('Login response:', { data, error });
+
       if (error) {
+        console.error('Login error details:', {
+          message: error.message,
+          status: error.status,
+          name: error.name
+        });
         setError(error.message);
         setLoading(false);
         return;
       }
 
+      console.log('Login successful, redirecting...');
       router.push('/admin/dashboard');
       router.refresh();
     } catch (err) {
+      console.error('Unexpected error:', err);
       setError('An unexpected error occurred');
       setLoading(false);
     }

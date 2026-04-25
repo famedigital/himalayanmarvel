@@ -4,11 +4,11 @@ import { generateItineraryHTML } from '@/lib/itinerary-generator';
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const supabase = await createClient();
-    const id = params.id;
+    const { id } = await params;
 
     // Fetch itinerary with days and section openers
     const { data: itinerary, error } = await supabase

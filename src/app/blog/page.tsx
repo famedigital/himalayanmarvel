@@ -1,6 +1,7 @@
 import { createClient } from '@/lib/supabase/server';
 import Link from 'next/link';
 import { Calendar, User, ArrowRight } from 'lucide-react';
+import Navigation from '@/components/Navigation';
 
 async function getBlogs() {
   const supabase = await createClient();
@@ -19,22 +20,7 @@ export default async function BlogPage() {
 
   return (
     <main className="min-h-screen dark:bg-black bg-neutral-50">
-      {/* Navigation */}
-      <nav className="fixed top-0 left-0 right-0 z-50 dark:bg-black/80 bg-neutral-50/80 backdrop-blur-xl border-b dark:border-white/10 border-neutral-200">
-        <div className="container-premium">
-          <div className="flex items-center justify-between h-16">
-            <Link href="/" className="text-sm font-light tracking-[0.15em] dark:text-white text-neutral-900">
-              HIMALAYAN MARVELS
-            </Link>
-            <Link
-              href="/"
-              className="text-xs dark:text-white/60 text-neutral-600 hover:dark:text-white hover:text-neutral-900 transition-colors"
-            >
-              Back to Home
-            </Link>
-          </div>
-        </div>
-      </nav>
+      <Navigation />
 
       {/* Hero Section */}
       <section className="pt-32 pb-16 px-4">
@@ -197,6 +183,15 @@ export default async function BlogPage() {
           )}
         </div>
       </section>
+
+      {/* Simple Copyright */}
+      <footer className="py-8 border-t dark:border-white/10 border-neutral-200">
+        <div className="container-premium text-center">
+          <p className="text-sm dark:text-white/50 text-neutral-500">
+            © {new Date().getFullYear()} Himalayan Marvels. All rights reserved.
+          </p>
+        </div>
+      </footer>
     </main>
   );
 }

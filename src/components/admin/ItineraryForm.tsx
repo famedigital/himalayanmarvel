@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
 import {
@@ -41,6 +41,7 @@ export function ItineraryForm({ bookingId, initialData }: ItineraryFormProps) {
   const [activeTab, setActiveTab] = useState<string>('cover');
   const [saving, setSaving] = useState(false);
   const [previewMode, setPreviewMode] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   // Form state
   const [template, setTemplate] = useState('forest-classic');
@@ -51,7 +52,10 @@ export function ItineraryForm({ bookingId, initialData }: ItineraryFormProps) {
     guest_names: '',
     start_date: '',
     end_date: '',
-    cover_image: ''
+    cover_image: '',
+    no_of_pax: 1,
+    entry_point: 'Paro Airport',
+    exit_point: 'Paro Airport'
   });
 
   const [letter, setLetter] = useState({
@@ -116,6 +120,130 @@ export function ItineraryForm({ bookingId, initialData }: ItineraryFormProps) {
     { section_number: 1, title: 'THE JOURNEY BEGINS', subtitle: 'Your Adventure Starts', background_image: '' }
   ]);
 
+  const [backCover, setBackCover] = useState({
+    title: 'JOURNEY AWAITS',
+    logo: 'Silverpine Bhutan',
+    email: 'info@silverpinebhutan.com',
+    phone: '+975 77773737',
+    website: 'www.silverpinebhutan.com',
+    location: 'Thimphu, Bhutan',
+    background_image: ''
+  });
+
+  const [headerFooter, setHeaderFooter] = useState({
+    header_left: 'Silverpine Bhutan',
+    header_right_title: 'Itinerary',
+    header_right_website: 'www.silverpinebhutan.com',
+    footer_left: 'Silverpine Bhutan',
+    footer_center: 'www.silverpinebhutan.com'
+  });
+
+  // Load initial data when editing
+  useEffect(() => {
+    if (initialData) {
+      // Load cover data
+      setCover({
+        title: initialData.title || '',
+        subtitle: initialData.subtitle || '',
+        logo: initialData.logo || 'Silverpine Bhutan',
+        guest_names: initialData.guest_names || '',
+        start_date: initialData.start_date || '',
+        end_date: initialData.end_date || '',
+        cover_image: initialData.cover_image || '',
+        no_of_pax: initialData.no_of_pax || 1,
+        entry_point: initialData.entry_point || 'Paro Airport',
+        exit_point: initialData.exit_point || 'Paro Airport'
+      });
+
+      // Load letter data
+      setLetter({
+        date: initialData.letter_date || new Date().toLocaleDateString('en-US', { month: 'long', year: 'numeric' }),
+        salutation: initialData.letter_salutation || 'Kuzu zangpo la,',
+        body: (initialData.letter_body || []).join('\n\n'),
+        signature_name: initialData.letter_signature_name || 'Tashi Delek',
+        signature_title: initialData.letter_signature_title || 'Silverpine Bhutan'
+      });
+
+      // Load days
+      if (initialData.itinerary_days && initialData.itinerary_days.length > 0) {
+        const loadedDays = initialData.itinerary_days.map((day: any) => ({
+          day_number: day.day_number,
+          title: day.title || '',
+          subtitle: day.subtitle || '',
+          altitude: day.altitude || '',
+          distance: day.distance || '',
+          duration: day.duration || '',
+          high_point: day.high_point || '',
+          night_location: day.night_location || '',
+          description: day.description || '',
+          drop_cap: day.drop_cap ?? true,
+          breakfast: day.breakfast || '',
+          lunch: day.lunch || '',
+          dinner: day.dinner || '',
+          snacks: day.snacks || '',
+          weather_text: day.weather_text || '',
+          temperature: day.temperature || '',
+          image_url: day.image_url || '',
+          image_alt: day.image_alt || '',
+          highlights: (day.highlights || []).join('\n'),
+          pull_quote: day.pull_quote || ''
+        }));
+        setDays(loadedDays);
+      }
+
+      // Load pricing
+      if (initialData.pricing) {
+        const pricingData = initialData.pricing;
+        setPricing({
+          currency: pricingData.currency || 'USD',
+          symbol: pricingData.symbol || '$',
+          total: pricingData.total || '',
+          total_label: pricingData.total_label || 'Total Package Cost',
+          items: pricingData.items || [{ label: '', description: '', amount: '' }],
+          inclusions: (pricingData.inclusions || []).join('\n'),
+          exclusions: (pricingData.exclusions || []).join('\n')
+        });
+      }
+
+      // Load terms
+      if (initialData.terms) {
+        setTerms(initialData.terms);
+      }
+
+      // Load checklist
+      if (initialData.checklist) {
+        const checklistData = initialData.checklist;
+        setChecklist({
+          documents: (checklistData.documents || []).join('\n'),
+          clothing: (checklistData.clothing || []).join('\n'),
+          gear: (checklistData.gear || []).join('\n'),
+          essentials: (checklistData.essentials || []).join('\n')
+        });
+      }
+
+      // Load section openers
+      if (initialData.itinerary_section_openers && initialData.itinerary_section_openers.length > 0) {
+        const loadedOpeners = initialData.itinerary_section_openers.map((opener: any) => ({
+          section_number: opener.section_number,
+          title: opener.title,
+          subtitle: opener.subtitle || '',
+          background_image: opener.background_image
+        }));
+        setSectionOpeners(loadedOpeners);
+      }
+
+      // Load back cover
+      if (initialData.back_cover) {
+        setBackCover(initialData.back_cover);
+      }
+
+      // Load header/footer
+      if (initialData.header_footer) {
+        setHeaderFooter(initialData.header_footer);
+      }
+    }
+  }, [initialData]);
+
   const addDay = () => {
     const newDayNumber = days.length + 1;
     setDays([...days, {
@@ -177,6 +305,7 @@ export function ItineraryForm({ bookingId, initialData }: ItineraryFormProps) {
 
   const handleSave = async () => {
     setSaving(true);
+    setError(null);
 
     try {
       // Convert text areas to arrays
@@ -188,51 +317,106 @@ export function ItineraryForm({ bookingId, initialData }: ItineraryFormProps) {
       const checklistGear = checklist.gear.split('\n').filter(g => g.trim());
       const checklistEssentials = checklist.essentials.split('\n').filter(e => e.trim());
 
-      // Insert itinerary
-      const { data: itineraryData, error: itineraryError } = await supabase
-        .from('itineraries')
-        .insert({
-          title: cover.title,
-          subtitle: cover.subtitle,
-          logo: cover.logo,
-          guest_names: cover.guest_names,
-          start_date: cover.start_date || null,
-          end_date: cover.end_date || null,
-          cover_image: cover.cover_image || null,
-          letter_date: letter.date,
-          letter_salutation: letter.salutation,
-          letter_body: letter.body.split('\n\n').filter(b => b.trim()),
-          letter_signature_name: letter.signature_name,
-          letter_signature_title: letter.signature_title,
-          status: 'draft',
-          booking_id: bookingId || null,
-          pricing: {
-            currency: pricing.currency,
-            symbol: pricing.symbol,
-            total: pricing.total,
-            total_label: pricing.total_label,
-            items: pricing.items.filter(i => i.label),
-            inclusions: pricingInclusions,
-            exclusions: pricingExclusions
-          },
-          terms: terms,
-          checklist: {
-            documents: checklistDocuments,
-            clothing: checklistClothing,
-            gear: checklistGear,
-            essentials: checklistEssentials
-          }
-        })
-        .select('id')
-        .single();
+      // Check auth first
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) {
+        throw new Error('Not authenticated. Please log in again.');
+      }
 
-      if (itineraryError) throw itineraryError;
+      console.log('Auth check:', {
+        email: session.user.email,
+        app_meta: session.user.app_metadata,
+        user_meta: session.user.user_metadata,
+        access_token: session.access_token ? 'exists' : 'missing'
+      });
 
-      // Insert days
+      const payload = {
+        title: cover.title || 'Untitled Itinerary',
+        subtitle: cover.subtitle,
+        logo: cover.logo,
+        guest_names: cover.guest_names || 'Guest',
+        start_date: cover.start_date || null,
+        end_date: cover.end_date || null,
+        cover_image: cover.cover_image || null,
+        no_of_pax: cover.no_of_pax,
+        entry_point: cover.entry_point,
+        exit_point: cover.exit_point,
+        letter_date: letter.date,
+        letter_salutation: letter.salutation,
+        letter_body: letter.body.split('\n\n').filter(b => b.trim()),
+        letter_signature_name: letter.signature_name,
+        letter_signature_title: letter.signature_title,
+        status: 'draft',
+        booking_id: bookingId || null,
+        pricing: {
+          currency: pricing.currency,
+          symbol: pricing.symbol,
+          total: pricing.total,
+          total_label: pricing.total_label,
+          items: pricing.items.filter(i => i.label),
+          inclusions: pricingInclusions,
+          exclusions: pricingExclusions
+        },
+        terms: terms,
+        checklist: {
+          documents: checklistDocuments,
+          clothing: checklistClothing,
+          gear: checklistGear,
+          essentials: checklistEssentials
+        },
+        back_cover: backCover,
+        header_footer: headerFooter
+      };
+
+      console.log('Sending itinerary data:', JSON.stringify(payload, null, 2));
+
+      const isEditing = !!initialData?.id;
+      let itineraryId = initialData?.id;
+      let itineraryError;
+
+      if (isEditing) {
+        // Update existing itinerary
+        const { data, error } = await supabase
+          .from('itineraries')
+          .update(payload)
+          .eq('id', initialData.id)
+          .select('id')
+          .single();
+        itineraryError = error;
+        if (data) itineraryId = data.id;
+      } else {
+        // Insert new itinerary
+        const { data, error } = await supabase
+          .from('itineraries')
+          .insert(payload)
+          .select('id')
+          .single();
+        itineraryError = error;
+        if (data) itineraryId = data.id;
+      }
+
+      if (itineraryError) {
+        console.error('Itinerary save error:', JSON.stringify(itineraryError, null, 2));
+        console.error('Error keys:', Object.keys(itineraryError));
+        console.error('Error message:', itineraryError.message);
+        console.error('Error details:', itineraryError.details);
+        console.error('Error hint:', itineraryError.hint);
+        throw new Error(`Failed to ${isEditing ? 'update' : 'create'} itinerary: ${JSON.stringify(itineraryError)}`);
+      }
+
+      // Delete existing days if editing
+      if (isEditing) {
+        await supabase
+          .from('itinerary_days')
+          .delete()
+          .eq('itinerary_id', initialData.id);
+      }
+
+      // Insert/update days
       const daysToInsert = days
         .filter(d => d.title)
         .map(day => ({
-          itinerary_id: itineraryData.id,
+          itinerary_id: itineraryId,
           day_number: day.day_number,
           title: day.title,
           subtitle: day.subtitle || null,
@@ -263,11 +447,19 @@ export function ItineraryForm({ bookingId, initialData }: ItineraryFormProps) {
         if (daysError) throw daysError;
       }
 
+      // Delete existing section openers if editing
+      if (isEditing) {
+        await supabase
+          .from('itinerary_section_openers')
+          .delete()
+          .eq('itinerary_id', initialData.id);
+      }
+
       // Insert section openers
       const openersToInsert = sectionOpeners
         .filter(s => s.title && s.background_image)
         .map((opener, i) => ({
-          itinerary_id: itineraryData.id,
+          itinerary_id: itineraryId,
           section_number: i + 1,
           title: opener.title,
           subtitle: opener.subtitle || null,
@@ -286,7 +478,7 @@ export function ItineraryForm({ bookingId, initialData }: ItineraryFormProps) {
       router.push('/admin/itineraries');
     } catch (error) {
       console.error('Save failed:', error);
-      alert('Failed to save itinerary. Please try again.');
+      setError(error instanceof Error ? error.message : 'Failed to save itinerary. Please try again.');
     } finally {
       setSaving(false);
     }
@@ -299,6 +491,8 @@ export function ItineraryForm({ bookingId, initialData }: ItineraryFormProps) {
     { id: 'pricing', label: 'Pricing', icon: DollarSign },
     { id: 'terms', label: 'Terms', icon: FileCheck },
     { id: 'checklist', label: 'Checklist', icon: ListChecks },
+    { id: 'back-cover', label: 'Back Cover', icon: FileText },
+    { id: 'header-footer', label: 'Header/Footer', icon: FileText },
     { id: 'template', label: 'Template', icon: Sparkles }
   ];
 
@@ -306,7 +500,9 @@ export function ItineraryForm({ bookingId, initialData }: ItineraryFormProps) {
     <div className="max-w-4xl mx-auto">
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold text-gray-900">Create Itinerary</h1>
+        <h1 className="text-2xl font-bold text-gray-900">
+          {initialData ? 'Edit Itinerary' : 'Create Itinerary'}
+        </h1>
         <div className="flex gap-3">
           <button
             type="button"
@@ -327,6 +523,20 @@ export function ItineraryForm({ bookingId, initialData }: ItineraryFormProps) {
           </button>
         </div>
       </div>
+
+      {/* Error Display */}
+      {error && (
+        <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
+          <p className="text-red-800 font-medium">Error</p>
+          <p className="text-red-600 text-sm mt-1">{error}</p>
+          <button
+            onClick={() => setError(null)}
+            className="text-red-600 text-sm underline mt-2 hover:text-red-800"
+          >
+            Dismiss
+          </button>
+        </div>
+      )}
 
       {/* Tabs */}
       <div className="flex gap-2 mb-6 overflow-x-auto pb-2">
@@ -421,6 +631,40 @@ export function ItineraryForm({ bookingId, initialData }: ItineraryFormProps) {
                 value={cover.end_date}
                 onChange={(e) => setCover({ ...cover, end_date: e.target.value })}
                 className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-orange-500/50 focus:border-transparent"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">No. of Pax</label>
+              <input
+                type="number"
+                min="1"
+                value={cover.no_of_pax}
+                onChange={(e) => setCover({ ...cover, no_of_pax: Number(e.target.value) })}
+                className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-orange-500/50 focus:border-transparent"
+                placeholder="2"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Entry Point</label>
+              <input
+                type="text"
+                value={cover.entry_point}
+                onChange={(e) => setCover({ ...cover, entry_point: e.target.value })}
+                className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-orange-500/50 focus:border-transparent"
+                placeholder="Paro Airport"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Exit Point</label>
+              <input
+                type="text"
+                value={cover.exit_point}
+                onChange={(e) => setCover({ ...cover, exit_point: e.target.value })}
+                className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-orange-500/50 focus:border-transparent"
+                placeholder="Paro Airport"
               />
             </div>
 
@@ -812,6 +1056,173 @@ export function ItineraryForm({ bookingId, initialData }: ItineraryFormProps) {
               <Plus className="w-4 h-4" />
               Add Section Opener
             </button>
+          </div>
+        </div>
+      )}
+
+      {/* Back Cover Tab */}
+      {activeTab === 'back-cover' && (
+        <div className="bg-white rounded-xl border border-gray-200 p-6 space-y-6">
+          <div className="flex items-center gap-3 mb-4">
+            <div className="w-10 h-10 rounded-lg bg-indigo-100 flex items-center justify-center">
+              <FileText className="w-5 h-5 text-indigo-600" />
+            </div>
+            <div>
+              <h2 className="text-lg font-semibold text-gray-900">Back Cover Page</h2>
+              <p className="text-sm text-gray-500">Last page of the itinerary PDF</p>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            <div className="col-span-2">
+              <label className="block text-sm font-medium text-gray-700 mb-2">Title</label>
+              <input
+                type="text"
+                value={backCover.title}
+                onChange={(e) => setBackCover({ ...backCover, title: e.target.value })}
+                className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-orange-500/50"
+                placeholder="JOURNEY AWAITS"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Logo Text</label>
+              <input
+                type="text"
+                value={backCover.logo}
+                onChange={(e) => setBackCover({ ...backCover, logo: e.target.value })}
+                className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-orange-500/50"
+                placeholder="Silverpine Bhutan"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Email</label>
+              <input
+                type="email"
+                value={backCover.email}
+                onChange={(e) => setBackCover({ ...backCover, email: e.target.value })}
+                className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-orange-500/50"
+                placeholder="info@silverpinebhutan.com"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Phone</label>
+              <input
+                type="text"
+                value={backCover.phone}
+                onChange={(e) => setBackCover({ ...backCover, phone: e.target.value })}
+                className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-orange-500/50"
+                placeholder="+975 77773737"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Website</label>
+              <input
+                type="text"
+                value={backCover.website}
+                onChange={(e) => setBackCover({ ...backCover, website: e.target.value })}
+                className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-orange-500/50"
+                placeholder="www.silverpinebhutan.com"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Location</label>
+              <input
+                type="text"
+                value={backCover.location}
+                onChange={(e) => setBackCover({ ...backCover, location: e.target.value })}
+                className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-orange-500/50"
+                placeholder="Thimphu, Bhutan"
+              />
+            </div>
+
+            <div className="col-span-2">
+              <label className="block text-sm font-medium text-gray-700 mb-2">Background Image URL</label>
+              <input
+                type="url"
+                value={backCover.background_image}
+                onChange={(e) => setBackCover({ ...backCover, background_image: e.target.value })}
+                className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-orange-500/50"
+                placeholder="https://..."
+              />
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Header/Footer Tab */}
+      {activeTab === 'header-footer' && (
+        <div className="bg-white rounded-xl border border-gray-200 p-6 space-y-6">
+          <div className="flex items-center gap-3 mb-4">
+            <div className="w-10 h-10 rounded-lg bg-cyan-100 flex items-center justify-center">
+              <FileText className="w-5 h-5 text-cyan-600" />
+            </div>
+            <div>
+              <h2 className="text-lg font-semibold text-gray-900">Header & Footer</h2>
+              <p className="text-sm text-gray-500">Running headers and footers on inner pages</p>
+            </div>
+          </div>
+
+          <div>
+            <h3 className="text-sm font-medium text-gray-900 mb-3">Header (top of each inner page)</h3>
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Left (Logo/Company)</label>
+                <input
+                  type="text"
+                  value={headerFooter.header_left}
+                  onChange={(e) => setHeaderFooter({ ...headerFooter, header_left: e.target.value })}
+                  className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-orange-500/50"
+                  placeholder="Silverpine Bhutan"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Right (Page Title)</label>
+                <input
+                  type="text"
+                  value={headerFooter.header_right_title}
+                  onChange={(e) => setHeaderFooter({ ...headerFooter, header_right_title: e.target.value })}
+                  className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-orange-500/50"
+                  placeholder="Itinerary Title"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <h3 className="text-sm font-medium text-gray-900 mb-3">Footer (bottom of each inner page)</h3>
+            <div className="grid grid-cols-3 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Left</label>
+                <input
+                  type="text"
+                  value={headerFooter.footer_left}
+                  onChange={(e) => setHeaderFooter({ ...headerFooter, footer_left: e.target.value })}
+                  className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-orange-500/50"
+                  placeholder="Silverpine Bhutan"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Center (Website)</label>
+                <input
+                  type="text"
+                  value={headerFooter.footer_center}
+                  onChange={(e) => setHeaderFooter({ ...headerFooter, footer_center: e.target.value })}
+                  className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-orange-500/50"
+                  placeholder="www.silverpinebhutan.com"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Right</label>
+                <div className="px-4 py-3 border border-gray-200 rounded-lg bg-gray-50 text-gray-500 text-sm">
+                  Page Number (auto)
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       )}

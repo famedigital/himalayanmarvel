@@ -5,14 +5,15 @@ import TourForm from '@/components/admin/TourForm';
 export default async function EditTourPage({
   params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }) {
+  const { id } = await params;
   const supabase = await createClient();
 
   const { data: tour } = await supabase
     .from('tours')
     .select('*')
-    .eq('id', params.id)
+    .eq('id', id)
     .single();
 
   if (!tour) {

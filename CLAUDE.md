@@ -5,6 +5,9 @@
 ## Quick Links
 - [Project Memory](MEMORY.md) - Complete context including admin panel setup
 - [Admin Panel Details](memory/project_admin_panel.md) - Full CMS implementation guide
+- [Itinerary Builder System](memory/project_itinerary_system.md) - Custom tour itinerary PDF generator
+- [Hero Slider System](memory/project_hero_slider.md) - Admin-manageable hero with duplicate & primary toggle
+- [Build Fixes Reference](memory/build_fixes_april_2026.md) - Common build errors and solutions
 - [Recent Updates](#recent-updates) - Latest changes and improvements
 
 ## Project Overview
@@ -31,7 +34,12 @@ Run `node scripts/setup-db.js` to recreate tables if needed.
 
 ## Recent Updates
 
-### April 2026
+### April 23, 2026
+- **Hero Slider System** (`/admin/hero`): Fully editable hero with duplicate slides & primary toggle. All fields editable (title, subtitle, description, keywords, CTA text).
+
+### Earlier April 2026
+- **Itinerary Builder** (`/admin/itineraries/new`): Custom tour itinerary system with cover, letter, days, pricing, terms, and checklist. Generates professional HTML/PDF documents for guests.
+- **Build Fixes**: Fixed 7 TypeScript/compilation errors for Next.js 16 compatibility (see [build_fixes_april_2026.md](memory/build_fixes_april_2026.md))
 - **Instagram Feed Component** (`src/components/InstagramFeed.tsx`): Created with video playback on hover, click to open on Instagram
 - **Navigation Logo**: Increased 40% (w-8 → w-11), added Login button to `/admin/login`
 - **Hero Section**: Restructured to 2-column layout with large logo (384px) and golden glow effect

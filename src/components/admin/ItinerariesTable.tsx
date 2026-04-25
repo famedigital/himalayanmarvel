@@ -2,9 +2,10 @@
 
 import { useState } from 'react';
 import { createClient } from '@/lib/supabase/client';
-import { FileText, Eye, Download, Pencil, Trash2, Loader2 } from 'lucide-react';
+import { FileText, Eye, Download, Pencil, Trash2, Loader2, Copy } from 'lucide-react';
 import Link from 'next/link';
 import { DeleteConfirm } from './DeleteConfirm';
+import type { ItineraryDay } from '@/lib/supabase/itinerary-types';
 
 interface Itinerary {
   id: string;
@@ -24,6 +25,7 @@ interface ItinerariesTableProps {
 export function ItinerariesTable({ itineraries }: ItinerariesTableProps) {
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [duplicating, setDuplicating] = useState<string | null>(null);
   const [generating, setGenerating] = useState<string | null>(null);
   const [items, setItems] = useState(itineraries);
 
@@ -50,6 +52,106 @@ export function ItinerariesTable({ itineraries }: ItinerariesTableProps) {
       alert('Failed to delete. Please try again.');
     } finally {
       setIsDeleting(false);
+    }
+  };
+
+  const handleDuplicate = async (id: string) => {
+    setDuplicating(id);
+    try {
+      const supabase = createClient();
+
+      // Get full itinerary with days and section openers
+      const { data: itinerary, error: fetchError } = await supabase
+        .from('itineraries')
+        .select('*, itinerary_days(*), itinerary_section_openers(*)')
+        .eq('id', id)
+        .single();
+
+      if (fetchError) throw fetchError;
+
+      // Create new itinerary (copy without id)
+      const { data: newItinerary, error: insertError } = await supabase
+        .from('itineraries')
+        .insert({
+          title: `${itinerary.title} (Copy)`,
+          subtitle: itinerary.subtitle,
+          logo: itinerary.logo,
+          guest_names: itinerary.guest_names,
+          start_date: itinerary.start_date,
+          end_date: itinerary.end_date,
+          cover_image: itinerary.cover_image,
+          letter_date: itinerary.letter_date,
+          letter_salutation: itinerary.letter_salutation,
+          letter_body: itinerary.letter_body,
+          letter_signature_name: itinerary.letter_signature_name,
+          letter_signature_title: itinerary.letter_signature_title,
+          status: 'draft',
+          pricing: itinerary.pricing,
+          terms: itinerary.terms,
+          checklist: itinerary.checklist
+        })
+        .select('id')
+        .single();
+
+      if (insertError) throw insertError;
+
+      // Copy days
+      if (itinerary.itinerary_days && itinerary.itinerary_days.length > 0) {
+        const daysToInsert = itinerary.itinerary_days.map((day: any) => ({
+          itinerary_id: newItinerary.id,
+          day_number: day.day_number,
+          title: day.title,
+          subtitle: day.subtitle,
+          altitude: day.altitude,
+          distance: day.distance,
+          duration: day.duration,
+          high_point: day.high_point,
+          night_location: day.night_location,
+          description: day.description,
+          drop_cap: day.drop_cap,
+          breakfast: day.breakfast,
+          lunch: day.lunch,
+          dinner: day.dinner,
+          snacks: day.snacks,
+          weather_text: day.weather_text,
+          temperature: day.temperature,
+          image_url: day.image_url,
+          image_alt: day.image_alt,
+          highlights: day.highlights,
+          pull_quote: day.pull_quote,
+          special_boxes: day.special_boxes
+        }));
+
+        await supabase.from('itinerary_days').insert(daysToInsert);
+      }
+
+      // Copy section openers
+      if (itinerary.itinerary_section_openers && itinerary.itinerary_section_openers.length > 0) {
+        const openersToInsert = itinerary.itinerary_section_openers.map((opener: any) => ({
+          itinerary_id: newItinerary.id,
+          section_number: opener.section_number,
+          title: opener.title,
+          subtitle: opener.subtitle,
+          background_image: opener.background_image,
+          overlay_color: opener.overlay_color,
+          page_number: opener.page_number
+        }));
+
+        await supabase.from('itinerary_section_openers').insert(openersToInsert);
+      }
+
+      // Refresh list
+      const { data: updated } = await supabase
+        .from('itineraries')
+        .select('*, itinerary_days(count)')
+        .order('created_at', { ascending: false });
+
+      setItems(updated || []);
+    } catch (error) {
+      console.error('Duplicate failed:', error);
+      alert('Failed to duplicate. Please try again.');
+    } finally {
+      setDuplicating(null);
     }
   };
 
@@ -149,6 +251,18 @@ export function ItinerariesTable({ itineraries }: ItinerariesTableProps) {
                     >
                       <Pencil className="w-4 h-4" />
                     </Link>
+                    <button
+                      onClick={() => handleDuplicate(itinerary.id)}
+                      disabled={duplicating === itinerary.id}
+                      className="p-2 rounded-lg bg-purple-50 hover:bg-purple-100 text-purple-600 hover:text-purple-700 transition-colors disabled:opacity-50"
+                      title="Duplicate"
+                    >
+                      {duplicating === itinerary.id ? (
+                        <Loader2 className="w-4 h-4 animate-spin" />
+                      ) : (
+                        <Copy className="w-4 h-4" />
+                      )}
+                    </button>
                     <button
                       onClick={() => handleGenerateHTML(itinerary.id)}
                       disabled={generating === itinerary.id}

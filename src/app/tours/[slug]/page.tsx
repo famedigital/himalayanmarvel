@@ -2,8 +2,36 @@ import { createClient } from '@/lib/supabase/server';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { ArrowLeft, Clock, DollarSign, MapPin, Users, Calendar, Check, X, Mail } from 'lucide-react';
+import Navigation from '@/components/Navigation';
+import JsonLd from '@/components/seo/JsonLd';
+import { generateSeoMetadata, generateTouristTripSchema, generateBreadcrumbSchema, getCanonicalUrl } from '@/lib/seo';
+import type { Metadata } from 'next';
 
-async function getTour(slug: string) {
+interface Tour {
+  id: string;
+  slug: string;
+  title: string;
+  description: string;
+  excerpt?: string;
+  hero_image?: string;
+  duration?: number;
+  price?: number;
+  category?: string;
+  highlights?: string[];
+  itinerary?: Array<{
+    day: string;
+    title: string;
+    description: string;
+    activities?: string[];
+  }>;
+  inclusions?: string[];
+  exclusions?: string[];
+  gallery_images?: string[];
+  created_at: string;
+  updated_at: string;
+}
+
+async function getTour(slug: string): Promise<Tour | null> {
   const supabase = await createClient();
 
   const { data: tour } = await supabase
@@ -16,36 +44,71 @@ async function getTour(slug: string) {
   return tour;
 }
 
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
+  const { slug } = await params;
+  const tour = await getTour(slug);
+
+  if (!tour) {
+    return {};
+  }
+
+  const description = tour.excerpt || tour.description || '';
+  const image = tour.hero_image || '/og-image.jpg';
+
+  return generateSeoMetadata({
+    title: tour.title,
+    description,
+    image,
+    canonical: `/tours/${tour.slug}`,
+    type: 'website',
+  });
+}
+
+interface BreadcrumbItem {
+  name: string;
+  href: string;
+}
+
 export default async function TourDetailPage({
   params,
 }: {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }) {
-  const tour = await getTour(params.slug);
+  const { slug } = await params;
+  const tour = await getTour(slug);
 
   if (!tour) {
     notFound();
   }
 
+  // Generate JSON-LD schemas
+  const breadcrumbItems: BreadcrumbItem[] = [
+    { name: 'Home', href: '/' },
+    { name: 'Tours', href: '/tours' },
+    { name: tour.title, href: `/tours/${tour.slug}` },
+  ];
+
+  const breadcrumbSchema = generateBreadcrumbSchema({ items: breadcrumbItems });
+
+  const touristTripSchema = generateTouristTripSchema({
+    name: tour.title,
+    description: tour.description,
+    slug: tour.slug,
+    image: tour.hero_image || '',
+    price: tour.price,
+    duration: tour.duration ? `P${tour.duration}D` : undefined,
+  });
+
+  const jsonLdData = [breadcrumbSchema, touristTripSchema];
+
   return (
     <main className="min-h-screen dark:bg-black bg-neutral-50">
-      {/* Navigation */}
-      <nav className="fixed top-0 left-0 right-0 z-50 dark:bg-black/80 bg-neutral-50/80 backdrop-blur-xl border-b dark:border-white/10 border-neutral-200">
-        <div className="container-premium">
-          <div className="flex items-center justify-between h-16">
-            <Link href="/" className="text-sm font-light tracking-[0.15em] dark:text-white text-neutral-900">
-              HIMALAYAN MARVELS
-            </Link>
-            <Link
-              href="/tours"
-              className="flex items-center gap-2 text-xs dark:text-white/60 text-neutral-600 hover:dark:text-white hover:text-neutral-900 transition-colors"
-            >
-              <ArrowLeft className="w-4 h-4" />
-              All Tours
-            </Link>
-          </div>
-        </div>
-      </nav>
+      <JsonLd data={jsonLdData} />
+      <Navigation />
 
       {/* Hero */}
       <section className="pt-24">
@@ -215,7 +278,7 @@ export default async function TourDetailPage({
                 )}
 
                 <a
-                  href="https://wa.me/97577270465?text=Hi%2C%20I'm%20interested%20in%20booking%20the%20tour%3A%20" + encodeURIComponent(tour.title)
+                  href={`https://wa.me/97577270465?text=Hi%2C%20I'm%20interested%20in%20booking%20the%20tour%3A%20${encodeURIComponent(tour.title)}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="w-full py-4 px-6 bg-green-500 hover:bg-green-600 text-white font-semibold rounded-xl transition-colors flex items-center justify-center gap-2 mb-4"
@@ -243,6 +306,15 @@ export default async function TourDetailPage({
           </div>
         </div>
       </section>
+
+      {/* Simple Copyright */}
+      <footer className="py-8 border-t dark:border-white/10 border-neutral-200">
+        <div className="container-premium text-center">
+          <p className="text-sm dark:text-white/50 text-neutral-500">
+            © {new Date().getFullYear()} Himalayan Marvels. All rights reserved.
+          </p>
+        </div>
+      </footer>
     </main>
   );
 }

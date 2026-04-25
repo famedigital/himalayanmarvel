@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { createClient } from '@/lib/supabase/client';
-import { FileText, Pencil, Trash2 } from 'lucide-react';
+import { FileText, Pencil, Trash2, Eye, EyeOff, Loader2 } from 'lucide-react';
 import Link from 'next/link';
 import { DeleteConfirm } from './DeleteConfirm';
 
@@ -26,6 +26,7 @@ interface BlogsTableProps {
 export function BlogsTable({ blogs }: BlogsTableProps) {
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [togglingPublish, setTogglingPublish] = useState<string | null>(null);
   const [items, setItems] = useState(blogs);
 
   const deletingItem = items.find(b => b.id === deleteId);
@@ -52,6 +53,33 @@ export function BlogsTable({ blogs }: BlogsTableProps) {
       alert('Failed to delete. Please try again.');
     } finally {
       setIsDeleting(false);
+    }
+  };
+
+  const handleTogglePublish = async (id: string, currentlyPublished: boolean) => {
+    setTogglingPublish(id);
+    try {
+      const supabase = createClient();
+      const { error } = await supabase
+        .from('blogs')
+        .update({
+          is_published: !currentlyPublished,
+          published_at: !currentlyPublished ? new Date().toISOString() : null
+        })
+        .eq('id', id);
+
+      if (error) throw error;
+
+      setItems(prev => prev.map(b =>
+        b.id === id
+          ? { ...b, is_published: !currentlyPublished, published_at: !currentlyPublished ? new Date().toISOString() : undefined }
+          : b
+      ));
+    } catch (error) {
+      console.error('Toggle publish failed:', error);
+      alert('Failed to update publish status. Please try again.');
+    } finally {
+      setTogglingPublish(null);
     }
   };
 
@@ -123,6 +151,33 @@ export function BlogsTable({ blogs }: BlogsTableProps) {
                 </td>
                 <td className="py-4 px-6">
                   <div className="flex items-center justify-end gap-2">
+                    <a
+                      href={`/blog/${blog.slug}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="p-2 rounded-lg bg-blue-50 hover:bg-blue-100 text-blue-600 hover:text-blue-700 transition-colors"
+                      title="Preview"
+                    >
+                      <Eye className="w-4 h-4" />
+                    </a>
+                    <button
+                      onClick={() => handleTogglePublish(blog.id, blog.is_published)}
+                      disabled={togglingPublish === blog.id}
+                      className={`p-2 rounded-lg transition-colors disabled:opacity-50 ${
+                        blog.is_published
+                          ? 'bg-orange-50 hover:bg-orange-100 text-orange-600 hover:text-orange-700'
+                          : 'bg-green-50 hover:bg-green-100 text-green-600 hover:text-green-700'
+                      }`}
+                      title={blog.is_published ? 'Unpublish' : 'Publish'}
+                    >
+                      {togglingPublish === blog.id ? (
+                        <Loader2 className="w-4 h-4 animate-spin" />
+                      ) : blog.is_published ? (
+                        <EyeOff className="w-4 h-4" />
+                      ) : (
+                        <Eye className="w-4 h-4" />
+                      )}
+                    </button>
                     <Link
                       href={`/admin/blog/${blog.id}/edit`}
                       className="p-2 rounded-lg bg-gray-50 hover:bg-gray-100 text-gray-900/70 hover:text-gray-900 transition-colors"

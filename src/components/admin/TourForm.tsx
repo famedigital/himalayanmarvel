@@ -2,11 +2,55 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import * as z from 'zod';
 import CloudinaryUpload from './CloudinaryUpload';
 import GalleryManager from './GalleryManager';
-import { Map, Calendar, DollarSign, Tag, Save, X, Plus, Loader2 } from 'lucide-react';
+import {
+  Map,
+  Calendar,
+  DollarSign,
+  Tag,
+  Save,
+  X,
+  Plus,
+  Loader2,
+} from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 import { Tour, ItineraryDay } from '@/lib/supabase/types';
+import { FormError } from './form';
+
+// Zod validation schema for tour form
+const tourSchema = z.object({
+  title: z
+    .string()
+    .min(3, 'Title must be at least 3 characters')
+    .max(100, 'Title must not exceed 100 characters'),
+  slug: z
+    .string()
+    .min(1, 'Slug is required')
+    .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, 'Slug must contain only lowercase letters, numbers, and hyphens'),
+  description: z
+    .string()
+    .min(50, 'Description must be at least 50 characters')
+    .max(2000, 'Description must not exceed 2000 characters'),
+  price: z
+    .number()
+    .min(0, 'Price must be a positive number')
+    .optional()
+    .or(z.literal(0)),
+  duration: z
+    .number()
+    .int('Duration must be a whole number')
+    .positive('Duration must be at least 1 day'),
+  category: z
+    .string()
+    .optional()
+    .or(z.literal('')),
+});
+
+type TourFormData = z.infer<typeof tourSchema>;
 
 interface TourFormProps {
   tour?: Tour;
@@ -18,19 +62,44 @@ export default function TourForm({ tour, isEdit = false }: TourFormProps) {
   const supabase = createClient();
 
   const [loading, setLoading] = useState(false);
-  const [title, setTitle] = useState(tour?.title || '');
-  const [slug, setSlug] = useState(tour?.slug || '');
-  const [description, setDescription] = useState(tour?.description || '');
-  const [duration, setDuration] = useState(tour?.duration || 1);
-  const [price, setPrice] = useState(tour?.price || 0);
-  const [category, setCategory] = useState(tour?.category || '');
+  const [serverError, setServerError] = useState('');
+
+  // Form state with react-hook-form and Zod validation
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    setValue,
+    watch,
+    reset,
+  } = useForm<TourFormData>({
+    resolver: zodResolver(tourSchema),
+    defaultValues: {
+      title: tour?.title || '',
+      slug: tour?.slug || '',
+      description: tour?.description || '',
+      duration: tour?.duration || 1,
+      price: tour?.price || 0,
+      category: tour?.category || '',
+    },
+  });
+
+  // Watch title for slug auto-generation
+  const title = watch('title');
+  const slug = watch('slug');
+
+  // Additional state for arrays and objects
   const [heroImage, setHeroImage] = useState(tour?.hero_image || '');
   const [galleryImages, setGalleryImages] = useState<string[]>(tour?.gallery_images || []);
   const [isPublished, setIsPublished] = useState(tour?.is_published || false);
 
   // Highlights
   const [highlights, setHighlights] = useState<string[]>(tour?.highlights || ['']);
+
+  // Inclusions
   const [inclusions, setInclusions] = useState<string[]>(tour?.inclusions || ['']);
+
+  // Exclusions
   const [exclusions, setExclusions] = useState<string[]>(tour?.exclusions || ['']);
 
   // Itinerary
@@ -43,27 +112,27 @@ export default function TourForm({ tour, isEdit = false }: TourFormProps) {
         .toLowerCase()
         .replace(/[^a-z0-9]+/g, '-')
         .replace(/^-|-$/g, '');
-      setSlug(generatedSlug);
+      setValue('slug', generatedSlug);
     }
-  }, [title, isEdit]);
+  }, [title, isEdit, setValue]);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const onSubmit = async (data: TourFormData) => {
     setLoading(true);
+    setServerError('');
 
     try {
       const tourData = {
-        title,
-        slug,
-        description,
-        duration,
-        price,
-        category,
+        title: data.title,
+        slug: data.slug,
+        description: data.description,
+        duration: data.duration,
+        price: data.price,
+        category: data.category,
         hero_image: heroImage,
         gallery_images: galleryImages,
-        highlights: highlights.filter(h => h.trim() !== ''),
-        inclusions: inclusions.filter(i => i.trim() !== ''),
-        exclusions: exclusions.filter(e => e.trim() !== ''),
+        highlights: highlights.filter((h) => h.trim() !== ''),
+        inclusions: inclusions.filter((i) => i.trim() !== ''),
+        exclusions: exclusions.filter((e) => e.trim() !== ''),
         itinerary,
         is_published: isPublished,
         updated_at: new Date().toISOString(),
@@ -77,12 +146,12 @@ export default function TourForm({ tour, isEdit = false }: TourFormProps) {
 
         if (error) throw error;
       } else {
-        const { error } = await supabase
-          .from('tours')
-          .insert([{
+        const { error } = await supabase.from('tours').insert([
+          {
             ...tourData,
             created_at: new Date().toISOString(),
-          }]);
+          },
+        ]);
 
         if (error) throw error;
       }
@@ -91,7 +160,7 @@ export default function TourForm({ tour, isEdit = false }: TourFormProps) {
       router.refresh();
     } catch (error) {
       console.error('Error saving tour:', error);
-      alert('Failed to save tour. Please try again.');
+      setServerError('Failed to save tour. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -143,52 +212,76 @@ export default function TourForm({ tour, isEdit = false }: TourFormProps) {
   const removeItineraryDay = (index: number) => {
     const newItinerary = itinerary.filter((_, i) => i !== index);
     // Re-number days
-    newItinerary.forEach((day, i) => day.day = i + 1);
+    newItinerary.forEach((day, i) => (day.day = i + 1));
     setItinerary(newItinerary);
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-8">
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
+      {/* Server Error */}
+      {serverError && (
+        <div className="bg-red-500/10 border border-red-500/20 rounded-xl p-4">
+          <p className="text-red-500 text-sm">{serverError}</p>
+        </div>
+      )}
+
       {/* Basic Information */}
       <div className="bg-white backdrop-blur-xl border border-gray-200 rounded-2xl p-6">
-        <h2 className="text-xl font-semibold text-gray-900 mb-6">Basic Information</h2>
+        <h2 className="text-xl font-semibold text-gray-900 mb-6">
+          Basic Information
+        </h2>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* Title */}
           <div className="md:col-span-2">
-            <label htmlFor="title" className="block text-sm font-medium text-gray-900/70 mb-2">
+            <label
+              htmlFor="title"
+              className="block text-sm font-medium text-gray-900/70 mb-2"
+            >
               Tour Title
             </label>
             <input
               id="title"
               type="text"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 placeholder:text-gray-900/30 focus:outline-none focus:ring-2 focus:ring-orange-500/50 focus:border-transparent transition-all"
+              {...register('title')}
+              className={`w-full px-4 py-3 bg-gray-50 border rounded-xl text-gray-900 placeholder:text-gray-900/30 focus:outline-none focus:ring-2 focus:border-transparent transition-all ${
+                errors.title
+                  ? 'border-red-500 focus:ring-red-500/50'
+                  : 'border-gray-200 focus:ring-orange-500/50'
+              }`}
               placeholder="e.g., 7-Day Cultural Tour of Bhutan"
-              required
             />
+            <FormError error={errors.title} />
           </div>
 
           {/* Slug */}
           <div className="md:col-span-2">
-            <label htmlFor="slug" className="block text-sm font-medium text-gray-900/70 mb-2">
+            <label
+              htmlFor="slug"
+              className="block text-sm font-medium text-gray-900/70 mb-2"
+            >
               Slug
             </label>
             <input
               id="slug"
               type="text"
-              value={slug}
-              onChange={(e) => setSlug(e.target.value)}
-              className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 placeholder:text-gray-900/30 focus:outline-none focus:ring-2 focus:ring-orange-500/50 focus:border-transparent transition-all"
+              {...register('slug')}
+              className={`w-full px-4 py-3 bg-gray-50 border rounded-xl text-gray-900 placeholder:text-gray-900/30 focus:outline-none focus:ring-2 focus:border-transparent transition-all ${
+                errors.slug
+                  ? 'border-red-500 focus:ring-red-500/50'
+                  : 'border-gray-200 focus:ring-orange-500/50'
+              }`}
               placeholder="e.g., 7-day-cultural-tour-bhutan"
-              required
             />
+            <FormError error={errors.slug} />
           </div>
 
           {/* Duration */}
           <div>
-            <label htmlFor="duration" className="block text-sm font-medium text-gray-900/70 mb-2">
+            <label
+              htmlFor="duration"
+              className="block text-sm font-medium text-gray-900/70 mb-2"
+            >
               Duration (Days)
             </label>
             <div className="relative">
@@ -197,17 +290,23 @@ export default function TourForm({ tour, isEdit = false }: TourFormProps) {
                 id="duration"
                 type="number"
                 min="1"
-                value={duration}
-                onChange={(e) => setDuration(Number(e.target.value))}
-                className="w-full pl-12 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 placeholder:text-gray-900/30 focus:outline-none focus:ring-2 focus:ring-orange-500/50 focus:border-transparent transition-all"
-                required
+                {...register('duration', { valueAsNumber: true })}
+                className={`w-full pl-12 pr-4 py-3 bg-gray-50 border rounded-xl text-gray-900 placeholder:text-gray-900/30 focus:outline-none focus:ring-2 focus:border-transparent transition-all ${
+                  errors.duration
+                    ? 'border-red-500 focus:ring-red-500/50'
+                    : 'border-gray-200 focus:ring-orange-500/50'
+                }`}
               />
             </div>
+            <FormError error={errors.duration} />
           </div>
 
           {/* Price */}
           <div>
-            <label htmlFor="price" className="block text-sm font-medium text-gray-900/70 mb-2">
+            <label
+              htmlFor="price"
+              className="block text-sm font-medium text-gray-900/70 mb-2"
+            >
               Price (USD)
             </label>
             <div className="relative">
@@ -217,50 +316,82 @@ export default function TourForm({ tour, isEdit = false }: TourFormProps) {
                 type="number"
                 min="0"
                 step="0.01"
-                value={price}
-                onChange={(e) => setPrice(Number(e.target.value))}
-                className="w-full pl-12 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 placeholder:text-gray-900/30 focus:outline-none focus:ring-2 focus:ring-orange-500/50 focus:border-transparent transition-all"
-                required
+                {...register('price', { valueAsNumber: true })}
+                className={`w-full pl-12 pr-4 py-3 bg-gray-50 border rounded-xl text-gray-900 placeholder:text-gray-900/30 focus:outline-none focus:ring-2 focus:border-transparent transition-all ${
+                  errors.price
+                    ? 'border-red-500 focus:ring-red-500/50'
+                    : 'border-gray-200 focus:ring-orange-500/50'
+                }`}
               />
             </div>
+            <FormError error={errors.price} />
           </div>
 
           {/* Category */}
           <div className="md:col-span-2">
-            <label htmlFor="category" className="block text-sm font-medium text-gray-900/70 mb-2">
+            <label
+              htmlFor="category"
+              className="block text-sm font-medium text-gray-900/70 mb-2"
+            >
               Category
             </label>
             <div className="relative">
               <Tag className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-900/30" />
               <select
                 id="category"
-                value={category}
-                onChange={(e) => setCategory(e.target.value)}
+                {...register('category')}
                 className="w-full pl-12 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 focus:outline-none focus:ring-2 focus:ring-orange-500/50 focus:border-transparent transition-all appearance-none cursor-pointer"
               >
-                <option value="" className="bg-white">Select category</option>
-                <option value="Cultural Tours" className="bg-white">Cultural Tours</option>
-                <option value="Trekking Adventures" className="bg-white">Trekking Adventures</option>
-                <option value="Festival Tours" className="bg-white">Festival Tours</option>
-                <option value="Wellness Retreats" className="bg-white">Wellness Retreats</option>
-                <option value="Private Tours" className="bg-white">Private Tours</option>
+                <option value="" className="bg-white">
+                  Select category
+                </option>
+                <option value="Cultural Tours" className="bg-white">
+                  Cultural Tours
+                </option>
+                <option value="Trekking Adventures" className="bg-white">
+                  Trekking Adventures
+                </option>
+                <option value="Festival Tours" className="bg-white">
+                  Festival Tours
+                </option>
+                <option value="Wellness Retreats" className="bg-white">
+                  Wellness Retreats
+                </option>
+                <option value="Private Tours" className="bg-white">
+                  Private Tours
+                </option>
               </select>
             </div>
+            <FormError error={errors.category} />
           </div>
 
           {/* Description */}
           <div className="md:col-span-2">
-            <label htmlFor="description" className="block text-sm font-medium text-gray-900/70 mb-2">
+            <label
+              htmlFor="description"
+              className="block text-sm font-medium text-gray-900/70 mb-2"
+            >
               Description
             </label>
             <textarea
               id="description"
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
+              {...register('description')}
               rows={4}
-              className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 placeholder:text-gray-900/30 focus:outline-none focus:ring-2 focus:ring-orange-500/50 focus:border-transparent transition-all resize-none"
+              className={`w-full px-4 py-3 bg-gray-50 border rounded-xl text-gray-900 placeholder:text-gray-900/30 focus:outline-none focus:ring-2 focus:border-transparent transition-all resize-none ${
+                errors.description
+                  ? 'border-red-500 focus:ring-red-500/50'
+                  : 'border-gray-200 focus:ring-orange-500/50'
+              }`}
               placeholder="Describe the tour experience..."
             />
+            <div className="flex justify-between items-center mt-1">
+              <FormError error={errors.description} />
+              {watch('description') && (
+                <span className="text-xs text-gray-900/40">
+                  {watch('description').length} / 2000
+                </span>
+              )}
+            </div>
           </div>
         </div>
       </div>
@@ -318,7 +449,9 @@ export default function TourForm({ tour, isEdit = false }: TourFormProps) {
               <input
                 type="text"
                 value={highlight}
-                onChange={(e) => updateListItem(index, e.target.value, highlights, setHighlights)}
+                onChange={(e) =>
+                  updateListItem(index, e.target.value, highlights, setHighlights)
+                }
                 className="flex-1 px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 placeholder:text-gray-900/30 focus:outline-none focus:ring-2 focus:ring-orange-500/50 focus:border-transparent transition-all"
                 placeholder="e.g., Visit Tiger's Nest Monastery"
               />
@@ -356,7 +489,9 @@ export default function TourForm({ tour, isEdit = false }: TourFormProps) {
               <input
                 type="text"
                 value={item}
-                onChange={(e) => updateListItem(index, e.target.value, inclusions, setInclusions)}
+                onChange={(e) =>
+                  updateListItem(index, e.target.value, inclusions, setInclusions)
+                }
                 className="flex-1 px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 placeholder:text-gray-900/30 focus:outline-none focus:ring-2 focus:ring-orange-500/50 focus:border-transparent transition-all"
                 placeholder="e.g., 3-star hotel accommodations"
               />
@@ -394,14 +529,18 @@ export default function TourForm({ tour, isEdit = false }: TourFormProps) {
               <input
                 type="text"
                 value={item}
-                onChange={(e) => updateListItem(index, e.target.value, exclusions, setExclusions)}
+                onChange={(e) =>
+                  updateListItem(index, e.target.value, exclusions, setExclusions)
+                }
                 className="flex-1 px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 placeholder:text-gray-900/30 focus:outline-none focus:ring-2 focus:ring-orange-500/50 focus:border-transparent transition-all"
                 placeholder="e.g., International airfare"
               />
               {exclusions.length > 1 && (
                 <button
                   type="button"
-                  onClick={() => removeListItem(index, exclusions, setExclusions)}
+                  onClick={() =>
+                    removeListItem(index, exclusions, setExclusions)
+                  }
                   className="p-3 bg-red-500/10 hover:bg-red-500/20 text-red-400 rounded-xl transition-colors"
                 >
                   <X className="w-5 h-5" />
@@ -441,7 +580,10 @@ export default function TourForm({ tour, isEdit = false }: TourFormProps) {
         ) : (
           <div className="space-y-6">
             {itinerary.map((day, index) => (
-              <div key={index} className="border border-gray-200 rounded-xl p-6">
+              <div
+                key={index}
+                className="border border-gray-200 rounded-xl p-6"
+              >
                 <div className="flex items-center justify-between mb-4">
                   <h3 className="text-lg font-medium text-gray-900">
                     Day {day.day}
@@ -463,7 +605,9 @@ export default function TourForm({ tour, isEdit = false }: TourFormProps) {
                     <input
                       type="text"
                       value={day.title}
-                      onChange={(e) => updateItineraryDay(index, 'title', e.target.value)}
+                      onChange={(e) =>
+                        updateItineraryDay(index, 'title', e.target.value)
+                      }
                       className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 placeholder:text-gray-900/30 focus:outline-none focus:ring-2 focus:ring-orange-500/50 focus:border-transparent transition-all"
                       placeholder="e.g., Arrival in Paro"
                     />
@@ -475,7 +619,9 @@ export default function TourForm({ tour, isEdit = false }: TourFormProps) {
                     </label>
                     <textarea
                       value={day.description}
-                      onChange={(e) => updateItineraryDay(index, 'description', e.target.value)}
+                      onChange={(e) =>
+                        updateItineraryDay(index, 'description', e.target.value)
+                      }
                       rows={3}
                       className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 placeholder:text-gray-900/30 focus:outline-none focus:ring-2 focus:ring-orange-500/50 focus:border-transparent transition-all resize-none"
                       placeholder="Describe the day's activities..."
@@ -487,8 +633,18 @@ export default function TourForm({ tour, isEdit = false }: TourFormProps) {
                       Activities
                     </label>
                     <textarea
-                      value={Array.isArray(day.activities) ? day.activities.join('\n') : ''}
-                      onChange={(e) => updateItineraryDay(index, 'activities', e.target.value.split('\n').filter(a => a.trim()))}
+                      value={
+                        Array.isArray(day.activities)
+                          ? day.activities.join('\n')
+                          : ''
+                      }
+                      onChange={(e) =>
+                        updateItineraryDay(
+                          index,
+                          'activities',
+                          e.target.value.split('\n').filter((a) => a.trim())
+                        )
+                      }
                       rows={3}
                       className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 placeholder:text-gray-900/30 focus:outline-none focus:ring-2 focus:ring-orange-500/50 focus:border-transparent transition-all resize-none"
                       placeholder="One activity per line&#10;e.g.,&#10;Visit Paro Dzong&#10;Check into hotel&#10;Welcome dinner"

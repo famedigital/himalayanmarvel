@@ -5,14 +5,15 @@ import BlogEditor from '@/components/admin/BlogEditor';
 export default async function EditBlogPage({
   params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }) {
+  const { id } = await params;
   const supabase = await createClient();
 
   const { data: blog } = await supabase
     .from('blogs')
     .select('*')
-    .eq('id', params.id)
+    .eq('id', id)
     .single();
 
   if (!blog) {

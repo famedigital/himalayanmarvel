@@ -2,8 +2,28 @@ import { createClient } from '@/lib/supabase/server';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { ArrowLeft, Calendar, User, Share2 } from 'lucide-react';
+import Navigation from '@/components/Navigation';
+import JsonLd from '@/components/seo/JsonLd';
+import { generateSeoMetadata, generateArticleSchema, generateBreadcrumbSchema, getCanonicalUrl } from '@/lib/seo';
+import type { Metadata } from 'next';
 
-async function getBlog(slug: string) {
+interface Blog {
+  id: string;
+  slug: string;
+  title: string;
+  excerpt?: string;
+  content: string;
+  featured_image?: string;
+  category?: string;
+  author?: string;
+  tags?: string[];
+  gallery_images?: string[];
+  published_at?: string;
+  created_at: string;
+  updated_at: string;
+}
+
+async function getBlog(slug: string): Promise<Blog | null> {
   const supabase = await createClient();
 
   const { data: blog } = await supabase
@@ -30,12 +50,47 @@ async function getRecentBlogs(currentId: string) {
   return blogs || [];
 }
 
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
+  const { slug } = await params;
+  const blog = await getBlog(slug);
+
+  if (!blog) {
+    return {};
+  }
+
+  const description = blog.excerpt || '';
+  const image = blog.featured_image || '/og-image.jpg';
+  const publishedTime = blog.published_at || blog.created_at;
+  const modifiedTime = blog.updated_at;
+
+  return generateSeoMetadata({
+    title: blog.title,
+    description,
+    image,
+    canonical: `/blog/${blog.slug}`,
+    publishedTime,
+    modifiedTime,
+    authors: blog.author,
+    type: 'article',
+  });
+}
+
+interface BreadcrumbItem {
+  name: string;
+  href: string;
+}
+
 export default async function BlogPostPage({
   params,
 }: {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }) {
-  const blog = await getBlog(params.slug);
+  const { slug } = await params;
+  const blog = await getBlog(slug);
 
   if (!blog) {
     notFound();
@@ -43,27 +98,31 @@ export default async function BlogPostPage({
 
   const recentBlogs = await getRecentBlogs(blog.id);
 
+  // Generate JSON-LD schemas
+  const breadcrumbItems: BreadcrumbItem[] = [
+    { name: 'Home', href: '/' },
+    { name: 'Blog', href: '/blog' },
+    { name: blog.title, href: `/blog/${blog.slug}` },
+  ];
+
+  const breadcrumbSchema = generateBreadcrumbSchema({ items: breadcrumbItems });
+
+  const articleSchema = generateArticleSchema({
+    title: blog.title,
+    description: blog.excerpt || blog.title,
+    slug: blog.slug,
+    image: blog.featured_image || '/og-image.jpg',
+    publishedTime: blog.published_at || blog.created_at,
+    modifiedTime: blog.updated_at,
+    author: blog.author || 'Himalayan Marvels',
+  });
+
+  const jsonLdData = [breadcrumbSchema, articleSchema];
+
   return (
     <main className="min-h-screen dark:bg-black bg-neutral-50">
-      {/* Navigation */}
-      <nav className="fixed top-0 left-0 right-0 z-50 dark:bg-black/80 bg-neutral-50/80 backdrop-blur-xl border-b dark:border-white/10 border-neutral-200">
-        <div className="container-premium">
-          <div className="flex items-center justify-between h-16">
-            <Link href="/" className="text-sm font-light tracking-[0.15em] dark:text-white text-neutral-900">
-              HIMALAYAN MARVELS
-            </Link>
-            <div className="flex items-center gap-4">
-              <Link
-                href="/blog"
-                className="flex items-center gap-2 text-xs dark:text-white/60 text-neutral-600 hover:dark:text-white hover:text-neutral-900 transition-colors"
-              >
-                <ArrowLeft className="w-4 h-4" />
-                All Posts
-              </Link>
-            </div>
-          </div>
-        </div>
-      </nav>
+      <JsonLd data={jsonLdData} />
+      <Navigation />
 
       {/* Hero Image */}
       {blog.featured_image && (
@@ -209,6 +268,15 @@ export default async function BlogPostPage({
           </div>
         </section>
       )}
+
+      {/* Simple Copyright */}
+      <footer className="py-8 border-t dark:border-white/10 border-neutral-200">
+        <div className="container-premium text-center">
+          <p className="text-sm dark:text-white/50 text-neutral-500">
+            © {new Date().getFullYear()} Himalayan Marvels. All rights reserved.
+          </p>
+        </div>
+      </footer>
     </main>
   );
 }
