@@ -131,7 +131,7 @@ export default function HeroLuxury() {
         style={{ opacity, scale }}
         className="relative h-full flex items-center justify-center px-6 md:px-12"
       >
-        <div className="max-w-5xl mx-auto text-center">
+        <div className="max-w-5xl mx-auto text-center pt-16">
           {/* FOUNDER CREDENTIALS BADGE — NEW (Trust anchor) */}
           <motion.div
             initial={{ opacity: 0, y: -20 }}
