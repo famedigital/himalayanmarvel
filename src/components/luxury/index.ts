@@ -5,7 +5,8 @@ export { FounderHero } from './FounderHero';
 export { LuxuryBadge } from './LuxuryBadge';
 export { LuxuryButton } from './LuxuryButton';
 export { JourneyCard } from './JourneyCard';
-
-// TODO: Add these components in future phases
-// export { TrustBadge } from './TrustBadge';
-// export { VideoTestimonial } from './VideoTestimonial';
+export { TrustArchitectureElite } from './TrustArchitectureElite';
+export { VideoTestimonials } from './VideoTestimonials';
+export { FounderStoryCinematic } from './FounderStoryCinematic';
+export { CinematicScrollSection } from './CinematicScrollSection';
+export { ConciergeInquiryElite } from './ConciergeInquiryElite';

@@ -82,11 +82,13 @@ export default function HeroLuxury() {
   const currentSlide = primarySlide;
 
   const heroLogo = currentSlide?.logo || 'https://res.cloudinary.com/dxztrqjft/image/upload/v1776332482/HMT_Logo_New_1_fwgpfy.png';
-  const heroSubtitle = currentSlide?.subtitle || 'Where ancient wisdom meets modern luxury. Private journeys curated by insiders, not tours designed for tourists.';
+
+  // EMOTIONAL, CINEMATIC COPY — Not functional description
+  const heroSubtitle = currentSlide?.subtitle || 'In a world that never stops, Bhutan invites you to pause. To breathe. To rediscover what matters. This is not a vacation — it\'s a homecoming for your soul.';
   const heroLink = currentSlide?.link || '#contact';
   const heroMediaUrl = currentSlide?.url || 'https://res.cloudinary.com/dxztrqjft/video/upload/v1776271223/tashichodzong_ddin28.mp4';
   const heroMediaType = currentSlide?.type || 'video';
-  const heroCtaText = currentSlide?.ctaText || 'Request Private Consultation';
+  const heroCtaText = currentSlide?.ctaText || 'Begin Your Transformation';
 
   return (
     <section
