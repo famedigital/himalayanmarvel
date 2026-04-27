@@ -96,7 +96,7 @@ export default function Hero() {
   return (
     <section
       ref={ref}
-      className="relative h-[75vh] md:h-screen w-full overflow-hidden bg-[#0E140E]"
+      className="relative h-[85vh] md:h-screen w-full overflow-hidden bg-[#0E140E]"
     >
       {/* Image Carousel Background */}
       <div className="absolute inset-0">
@@ -195,18 +195,20 @@ export default function Hero() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, ease: [0.16, 1, 0.3, 1], delay: 0.4 }}
-            className="text-base md:text-lg text-white/80 max-w-2xl mx-auto leading-relaxed mb-10"
+            className="text-base md:text-lg text-white/80 max-w-2xl mx-auto leading-relaxed mb-6"
           >
             {heroSubtitle}
           </motion.p>
 
-          {/* CTA Button */}
+          {/* CTA Buttons - Side by Side */}
           <motion.div
             key={`cta-${currentSlide?.id || 'default'}`}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, ease: [0.16, 1, 0.3, 1], delay: 0.6 }}
+            className="flex flex-col sm:flex-row items-center justify-center gap-4"
           >
+            {/* Primary CTA - Green */}
             <motion.a
               href={heroLink}
               whileHover={{ x: 4, boxShadow: '0 8px 32px rgba(0, 104, 56, 0.4)' }}
@@ -220,17 +222,30 @@ export default function Hero() {
               {heroCtaText}
               <ArrowRight className="w-4 h-4" />
             </motion.a>
+
+            {/* Secondary CTA - Gold */}
+            <motion.button
+              onClick={() => {
+                const formElement = document.querySelector('[data-lead-form]') as HTMLElement;
+                formElement?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+              }}
+              whileHover={{ x: 4, boxShadow: '0 8px 32px rgba(212, 175, 55, 0.35)' }}
+              whileTap={{ scale: 0.98 }}
+              className="inline-flex px-10 py-4 rounded-full text-white text-sm font-medium tracking-wide items-center gap-3 transition-all"
+              style={{
+                backgroundColor: '#D4AF37',
+                border: '1px solid rgba(212, 175, 55, 0.3)',
+              }}
+            >
+              <span>Plan Your Trip</span>
+              <ArrowRight className="w-4 h-4" />
+            </motion.button>
           </motion.div>
 
-          {/* Lead Capture Form - Below the Fold */}
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: 0.8 }}
-            className="mt-12 max-w-2xl mx-auto"
-          >
+          {/* Lead Capture Form - Hidden, shown when scrolling */}
+          <div className="hidden">
             <LeadCaptureForm />
-          </motion.div>
+          </div>
         </div>
       </motion.div>
 

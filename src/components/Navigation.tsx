@@ -98,18 +98,15 @@ export default function Navigation() {
               whileHover={{ scale: 1.02 }}
               transition={{ duration: 0.3 }}
             >
-              <div className="relative w-8 h-8 md:w-10 md:h-10">
-                <img
-                  src="/logo/hmtlogo.png"
-                  alt="Himalayan Marvels"
-                  className="w-full h-full object-contain"
-                  style={{
-                    filter: isDark
-                      ? 'brightness(0) invert(1)' // White in dark mode
-                      : 'brightness(0)', // Black in light mode
-                  }}
-                />
-              </div>
+              <span
+                className="text-[0.7rem] md:text-xs font-semibold tracking-[0.2em] uppercase whitespace-nowrap"
+                style={{
+                  color: isDark ? '#F7F7F2' : '#1A1A1A',
+                  fontFamily: 'var(--font-playfair)',
+                }}
+              >
+                HIMALAYAN MARVELS
+              </span>
             </motion.div>
           </Link>
 
