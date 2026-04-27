@@ -20,8 +20,8 @@ const navItems = [
     ],
   },
   { name: 'Journal', href: '/blog' },
-  { name: 'About', href: '/#about' },
-  { name: 'Concierge', href: '/#contact' },
+  { name: 'About', href: '/about' },
+  { name: 'Concierge', href: '/concierge' },
 ];
 
 export default function Navigation() {
