@@ -1,11 +1,10 @@
 'use client';
 
-import { motion, useScroll, useTransform } from 'framer-motion';
-import { Mountain, Star, Compass, Camera } from 'lucide-react';
-import { useRef } from 'react';
+import { motion } from 'framer-motion';
+import { Mountain, Star, Compass, Camera, ArrowRight } from 'lucide-react';
 import { useTheme } from 'next-themes';
 import Image from 'next/image';
-import { cn } from '@/lib/utils';
+import { LuxuryButton } from './LuxuryButton';
 
 // Chapter data (defined outside component for hook rules)
 const chapters = [
@@ -41,215 +40,172 @@ const chapters = [
     title: 'The Return',
     subtitle: 'Forever changed',
     description: 'You\'re not the same person who arrived. You\'ve found stillness. Connection. Home.',
-    image: 'https://res.cloudinary.com/dxztrqjft/image/upload/v1776271223/tashichodzong_ddin28.mp4',
+    image: 'https://res.cloudinary.com/dxztrqjft/image/upload/v1776291879/tiger-nest-close_rm2bee.jpg',
     icon: Camera,
     color: 'from-rose-500 to-pink-500',
   },
 ];
 
 /**
- * CinematicScrollSection — Signature WOW moment with scroll-based storytelling
+ * CinematicScrollSection — 2x2 Grid Layout
  *
- * Addresses ChatGPT's feedback: "No signature brand moment"
- * "Need something users remember"
+ * All chapters visible at once. No excessive scrolling.
+ * Clean, scannable, immediate impact.
  */
 export function CinematicScrollSection() {
   const { theme, resolvedTheme } = useTheme();
   const isDark = resolvedTheme === 'dark' || theme === 'dark';
-  const containerRef = useRef<HTMLDivElement>(null);
-
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ['start start', 'end end'],
-  });
-
-  const y = useTransform(scrollYProgress, [0, 1], [0, -300]);
-  const opacity = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [1, 1, 0.5, 0]);
-  const scale = useTransform(scrollYProgress, [0, 0.5, 1], [1, 1.05, 1.1]);
-
-  // CTA opacity at the end
-  const ctaOpacity = useTransform(scrollYProgress, [0.9, 1], [0, 1]);
 
   return (
-    <section
-      ref={containerRef}
-      className="relative min-h-[300vh] bg-neutral-900 overflow-hidden"
-    >
-      {/* Fixed Background Image */}
-      <div className="sticky top-0 h-screen w-full">
-        <div className="absolute inset-0">
-          {chapters.map((chapter, index) => (
-            <div
-              key={chapter.id}
-              className="absolute inset-0 transition-opacity duration-1000"
-              style={{
-                // Simplified: show all backgrounds with overlay, no scroll-based opacity
-                opacity: 1,
-              }}
-            >
-              {chapter.id === 4 ? (
-                <video
-                  autoPlay
-                  muted
-                  loop
-                  playsInline
-                  className="w-full h-full object-cover"
-                >
-                  <source src={chapter.image} type="video/mp4" />
-                </video>
-              ) : (
-                <Image
-                  src={chapter.image}
-                  alt={chapter.title}
-                  fill
-                  className="object-cover"
-                />
-              )}
-              <div className="absolute inset-0 bg-black/50" />
-            </div>
-          ))}
-        </div>
+    <section className="section-luxury relative bg-neutral-900 overflow-hidden">
+      {/* Background with subtle gradient */}
+      <div className="absolute inset-0 bg-gradient-to-br from-neutral-900 via-neutral-800 to-neutral-900" />
 
-        {/* Gradient Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-black/70" />
-      </div>
+      {/* Decorative pattern overlay */}
+      <div
+        className="absolute inset-0 opacity-5"
+        style={{
+          backgroundImage: `radial-gradient(circle at 2px 2px, white 1px, transparent 0)`,
+          backgroundSize: '48px 48px'
+        }}
+      />
 
-      {/* Scrollable Content */}
-      <div className="relative z-10">
-        {chapters.map((chapter, index) => (
-          <motion.div
-            key={chapter.id}
-            className="min-h-screen flex items-center justify-center px-6"
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 1 }}
-          >
-            <div className="container-luxury">
+      <div className="container-luxury relative z-10 py-24">
+        {/* Header */}
+        <motion.div
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8 }}
+          className="text-center mb-16"
+        >
+          <div className="flex items-center justify-center gap-3 mb-6">
+            <div className="w-12 h-px bg-champagne-gold" />
+            <span className="text-champagne-gold text-xs uppercase tracking-[0.3em] font-semibold">
+              Your Story
+            </span>
+            <div className="w-12 h-px bg-champagne-gold" />
+          </div>
+
+          <h2 className="font-display text-display-section text-white mb-6">
+            Four Chapters to{' '}
+            <span className="gradient-text">Transformation</span>
+          </h2>
+
+          <p className="text-lg text-white/60 max-w-2xl mx-auto">
+            Every great journey follows a path. Discover yours.
+          </p>
+        </motion.div>
+
+        {/* 2x2 Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-16">
+          {chapters.map((chapter, index) => {
+            const Icon = chapter.icon;
+            return (
               <motion.div
-                initial={{ opacity: 0, y: 100 }}
+                key={chapter.id}
+                initial={{ opacity: 0, y: 40 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ duration: 1, delay: 0.3 }}
-                className="max-w-4xl"
+                transition={{ duration: 0.6, delay: index * 0.1 }}
+                whileHover={{ y: -8 }}
+                className="group relative overflow-hidden rounded-3xl"
+                style={{
+                  backgroundColor: 'rgba(255,255,255,0.03)',
+                  border: '1px solid rgba(212, 175, 55, 0.1)',
+                }}
               >
-                {/* Chapter Number */}
-                <motion.div
-                  initial={{ opacity: 0, x: -50 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.8, delay: 0.5 }}
-                  className="flex items-center gap-4 mb-8"
-                >
-                  <div className="text-8xl font-display font-bold text-white/10">
-                    0{chapter.id}
+                {/* Image */}
+                <div className="relative aspect-video overflow-hidden">
+                  <Image
+                    src={chapter.image}
+                    alt={chapter.title}
+                    fill
+                    className="object-cover transition-transform duration-700 group-hover:scale-110"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+
+                  {/* Chapter Number */}
+                  <div className="absolute top-4 left-4">
+                    <div className="w-12 h-12 rounded-full flex items-center justify-center bg-champagne-gold/20 backdrop-blur-sm border border-champagne-gold/30">
+                      <span className="text-champagne-gold font-display font-bold text-lg">
+                        0{chapter.id}
+                      </span>
+                    </div>
                   </div>
-                  <div className="w-24 h-px bg-gradient-to-r from-transparent via-white/30 to-transparent" />
-                </motion.div>
 
-                {/* Icon */}
-                <motion.div
-                  initial={{ opacity: 0, scale: 0 }}
-                  whileInView={{ opacity: 1, scale: 1 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.8, delay: 0.6, type: 'spring' }}
-                  className="w-20 h-20 rounded-2xl flex items-center justify-center mb-8"
+                  {/* Icon Badge */}
+                  <div className="absolute top-4 right-4">
+                    <div
+                      className="w-12 h-12 rounded-xl flex items-center justify-center"
+                      style={{
+                        background: `linear-gradient(135deg, ${chapter.color})`,
+                      }}
+                    >
+                      <Icon className="w-6 h-6 text-white" />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Content */}
+                <div className="p-6">
+                  {/* Title */}
+                  <h3 className="font-display text-2xl md:text-3xl text-white mb-2 group-hover:text-champagne-gold transition-colors">
+                    {chapter.title}
+                  </h3>
+
+                  {/* Subtitle */}
+                  <p className="text-champagne-gold text-sm mb-3 font-medium">
+                    {chapter.subtitle}
+                  </p>
+
+                  {/* Description */}
+                  <p className="text-white/60 text-sm leading-relaxed line-clamp-2">
+                    {chapter.description}
+                  </p>
+                </div>
+
+                {/* Hover glow effect */}
+                <div
+                  className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
                   style={{
-                    background: `linear-gradient(135deg, ${chapter.color})`,
-                    boxShadow: `0 20px 60px ${chapter.color.split(' ')[0]}40`,
+                    background: `radial-gradient(circle at center, ${chapter.color.split(' ')[0]}15 0%, transparent 70%)`,
                   }}
-                >
-                  <chapter.icon className="w-10 h-10 text-white" />
-                </motion.div>
-
-                {/* Title */}
-                <motion.h2
-                  initial={{ opacity: 0, y: 50 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 1, delay: 0.7 }}
-                  className="font-display text-6xl md:text-8xl text-white mb-6 leading-tight"
-                >
-                  {chapter.title}
-                </motion.h2>
-
-                {/* Subtitle */}
-                <motion.p
-                  initial={{ opacity: 0, y: 40 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 1, delay: 0.8 }}
-                  className="font-serif italic text-2xl md:text-3xl text-champagne-gold mb-6"
-                >
-                  {chapter.subtitle}
-                </motion.p>
-
-                {/* Description */}
-                <motion.p
-                  initial={{ opacity: 0, y: 30 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 1, delay: 0.9 }}
-                  className="text-xl md:text-2xl text-white/80 leading-relaxed font-light"
-                >
-                  {chapter.description}
-                </motion.p>
+                />
               </motion.div>
-            </div>
-          </motion.div>
-        ))}
-      </div>
+            );
+          })}
+        </div>
 
-      {/* Bottom CTA */}
-      <motion.div
-        className="min-h-screen flex items-center justify-center px-6"
-        initial={{ opacity: 0 }}
-        whileInView={{ opacity: 1 }}
-        viewport={{ once: true }}
-        transition={{ duration: 1 }}
-      >
-        <div className="text-center">
-          <motion.h2
-            initial={{ opacity: 0, y: 50 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 1 }}
-            className="font-display text-5xl md:text-7xl text-white mb-8"
-          >
+        {/* CTA Section */}
+        <motion.div
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8, delay: 0.4 }}
+          className="text-center"
+        >
+          <h2 className="font-display text-4xl md:text-5xl text-white mb-6">
             Your Journey{' '}
             <span className="gradient-text">Awaits</span>
-          </motion.h2>
+          </h2>
 
-          <motion.p
-            initial={{ opacity: 0, y: 40 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 1, delay: 0.2 }}
-            className="text-xl text-white/60 mb-12 max-w-2xl mx-auto"
-          >
+          <p className="text-lg text-white/60 mb-8 max-w-2xl mx-auto">
             Every journey begins with a conversation. Share your vision, and we&apos;ll
             design an experience beyond imagination.
-          </motion.p>
+          </p>
 
-          <motion.a
-            initial={{ opacity: 0, y: 40 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 1, delay: 0.4 }}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            href="#contact"
-            className="inline-flex items-center gap-3 px-12 py-5 rounded-full text-white font-semibold tracking-wide"
-            style={{
-              background: 'linear-gradient(135deg, #D4AF37 0%, #F4D03F 100%)',
-              boxShadow: '0 16px 48px rgba(212, 175, 55, 0.4)',
-            }}
+          <motion.div
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+            className="inline-block"
           >
-            Begin Your Transformation
-            <Compass className="w-5 h-5" />
-          </motion.a>
-        </div>
-      </motion.div>
+            <LuxuryButton variant="primary" size="xl" href="#contact" icon={true}>
+              Begin Your Transformation
+            </LuxuryButton>
+          </motion.div>
+        </motion.div>
+      </div>
     </section>
   );
 }
