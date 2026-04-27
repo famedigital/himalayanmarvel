@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { Inter, Playfair_Display, Geist } from 'next/font/google';
+import { Cormorant_Garamond, Playfair_Display, Inter } from 'next/font/google';
 import './globals.css';
 import { ThemeProvider } from '@/components/ThemeProvider';
 import { LayoutWrapper } from '@/components/LayoutWrapper';
@@ -7,28 +7,37 @@ import { QueryProvider } from '@/components/QueryProvider';
 import { NuqsAdapter } from 'nuqs/adapters/next/app';
 import { cn } from "@/lib/utils";
 
-const geist = Geist({subsets:['latin'],variable:'--font-sans'});
-
-const inter = Inter({
+// Luxury Display Font (Bold, Elegant)
+const cormorant = Cormorant_Garamond({
   subsets: ['latin'],
-  variable: '--font-inter',
+  variable: '--font-display',
   display: 'swap',
+  weight: ['600', '700'],
 });
 
+// Primary Serif (Elegant, Editorial)
 const playfair = Playfair_Display({
   subsets: ['latin'],
-  variable: '--font-playfair',
+  variable: '--font-serif',
+  display: 'swap',
+  weight: ['400', '500', '600'],
+});
+
+// Body Sans (Clean, Professional)
+const inter = Inter({
+  subsets: ['latin'],
+  variable: '--font-sans',
   display: 'swap',
 });
 
 export const metadata: Metadata = {
-  title: 'Himalayan Marvels | Luxury Bhutan Tours & Adventures',
-  description: 'Experience the mystical Kingdom of Bhutan with our premium tour packages. Discover ancient monasteries, pristine nature, and timeless traditions in the Last Shangri-La.',
-  keywords: ['Bhutan tours', 'Himalayan travel', 'Bhutan tourism', 'Tiger\'s Nest', 'Bhutan trekking', 'luxury travel Bhutan', 'Bhutan adventure'],
+  title: 'Himalayan Marvels | Private Bhutan Journey Curators',
+  description: 'Bhutan\'s premier luxury travel concierge. Private journeys curated by insiders, not tours designed for tourists. Founded by ex-Ritz-Carlton leadership.',
+  keywords: ['private Bhutan tour', 'luxury Bhutan travel', 'bespoke Bhutan journey', 'Bhutan concierge', 'private Himalayan expedition'],
   authors: [{ name: 'Himalayan Marvels' }],
   openGraph: {
-    title: 'Himalayan Marvels | Luxury Bhutan Tours',
-    description: 'Discover the mystical Kingdom of Bhutan with our premium tour packages.',
+    title: 'Himalayan Marvels | Private Bhutan Journey Curators',
+    description: 'Bhutan\'s premier luxury travel concierge. Private journeys curated by insiders.',
     type: 'website',
     url: 'https://himalayanmarvels.bt',
     siteName: 'Himalayan Marvels',
@@ -37,14 +46,14 @@ export const metadata: Metadata = {
         url: 'https://res.cloudinary.com/dxztrqjft/video/upload/v1776271223/tashichodzong_ddin28.mp4',
         width: 1200,
         height: 630,
-        alt: 'Himalayan Marvels - Bhutan Tours',
+        alt: 'Himalayan Marvels - Private Bhutan Journeys',
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Himalayan Marvels | Luxury Bhutan Tours',
-    description: 'Discover the mystical Kingdom of Bhutan with our premium tour packages.',
+    title: 'Himalayan Marvels | Private Bhutan Journey Curators',
+    description: 'Bhutan\'s premier luxury travel concierge. Private journeys curated by insiders.',
   },
 };
 
@@ -54,8 +63,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning className={cn("font-sans", geist.variable)}>
-      <body className={`${inter.variable} ${playfair.variable} antialiased`}>
+    <html lang="en" suppressHydrationWarning className={cn("antialiased", cormorant.variable, playfair.variable, inter.variable)}>
+      <body className="font-sans bg-background text-foreground antialiased">
         <ThemeProvider
           attribute="class"
           defaultTheme="dark"

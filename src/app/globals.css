@@ -5,10 +5,90 @@
 @custom-variant dark (&:is(.dark *));
 
 /* ============================================
-   ULTRA-LUXURY QUIET LUXURY PALETTE
-   Alabaster, Forest Green, and Champagne Gold
-   With Bhutanese heritage accents preserved
+   LUXURY TRANSFORMATION DESIGN SYSTEM
+   Private Bhutan Journey Curators
+   World-class premium brand architecture
    ============================================ */
+
+@theme {
+  /* LUXURY COLOR PALETTE */
+
+  /* Primary: Forest Green — Main CTA, Links */
+  --color-forest-green: 0 104 56;
+  --color-primary: 0 104 56;
+
+  /* Accent: Champagne Gold — Trust badges, luxury highlights */
+  --color-champagne-gold: 212 175 55;
+  --color-gold: 212 175 55;
+
+  /* Backgrounds */
+  --color-background: 247 247 242; /* Alabaster */
+  --color-dark-forest: 14 20 14; /* Dark mode background */
+  --color-card: 245 245 240; /* Warm alabaster cards */
+
+  /* Text */
+  --color-foreground: 26 26 26; /* Deep charcoal */
+  --color-muted: 115 115 110; /* Warm gray */
+  --color-muted-foreground: 115 115 110;
+
+  /* Borders */
+  --color-border: 225 223 218; /* Subtle warm borders */
+
+  /* Heritage Colors (Bhutanese) */
+  --color-bhutan-red: 142 38 26; /* Sa-tsag */
+  --color-bhutan-gold: 232 185 35; /* Sa-ser */
+  --color-bhutan-indigo: 26 42 58; /* Gunjo */
+
+  /* Neutral Palette (Luxury Depth) */
+  --color-charcoal: 26 26 26;
+  --color-warm-gray: 107 107 107;
+  --color-stone: 232 232 232;
+
+  /* Typography System */
+  --font-display: 'Cormorant Garamond', serif; /* Bold headings */
+  --font-serif: 'Playfair Display', serif; /* Elegant, editorial */
+  --font-sans: 'Inter', sans-serif; /* Clean, professional */
+}
+
+/* Dark mode overrides */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-background: 14 20 14;
+    --color-foreground: 247 247 242;
+    --color-card: 28 36 28;
+    --color-muted: 20 28 20;
+    --color-muted-foreground: 163 175 163;
+    --color-border: 40 50 40;
+  }
+}
+
+/* Manual dark mode class */
+.dark {
+  --color-background: 14 20 14;
+  --color-foreground: 247 247 242;
+  --color-card: 28 36 28;
+  --color-muted: 20 28 20;
+  --color-muted-foreground: 163 175 163;
+  --color-border: 40 50 40;
+
+  /* Hex values for compatibility */
+  --background: #0E140E;
+  --foreground: #f7f7f2;
+  --card: #1C241C;
+  --card-foreground: #f7f7f2;
+  --primary: #006838;
+  --primary-foreground: #f7f7f2;
+  --secondary: #2a3a2a;
+  --secondary-foreground: #f7f7f2;
+  --muted: #2a3a2a;
+  --muted-foreground: #a3afa3;
+  --accent: #D4AF37;
+  --accent-foreground: #0E140E;
+  --destructive: #c45c5c;
+  --border: rgba(255, 255, 255, 0.08);
+  --input: rgba(255, 255, 255, 0.12);
+  --ring: #006838;
+}
 
 @theme {
   /* Alabaster - Quiet luxury background */
@@ -53,58 +133,78 @@
   --color-primary-foreground: 255 255 255;
 }
 
-/* Dark mode colors - Dark Forest with green undertone */
-@media (prefers-color-scheme: dark) {
-  :root {
-    --color-background: 14 20 14;
-    --color-foreground: 247 247 242;
-    --color-card: 28 36 28;
-    --color-muted: 20 28 20;
-    --color-muted-foreground: 163 175 163;
-    --color-border: 40 50 40;
-  }
-}
+/* ============================================
+   LUXURY TYPOGRAPHY UTILITIES
+   ============================================ */
 
-/* Manual dark mode class override - Dark Forest luxury */
-.dark {
-  --color-background: 14 20 14;
-  --color-foreground: 247 247 242;
-  --color-card: 28 36 28;
-  --color-muted: 20 28 20;
-  --color-muted-foreground: 163 175 163;
-  --color-border: 40 50 40;
-  /* Use hex values instead of oklch() for html2canvas compatibility */
-  --background: #0E140E;
-  --foreground: #f7f7f2;
-  --card: #1C241C;
-  --card-foreground: #f7f7f2;
-  --popover: #1C241C;
-  --popover-foreground: #f7f7f2;
-  --primary: #006838;
-  --primary-foreground: #f7f7f2;
-  --secondary: #2a3a2a;
-  --secondary-foreground: #f7f7f2;
-  --muted: #2a3a2a;
-  --muted-foreground: #a3afa3;
-  --accent: #D4AF37;
-  --accent-foreground: #0E140E;
-  --destructive: #c45c5c;
-  --border: rgba(255, 255, 255, 0.08);
-  --input: rgba(255, 255, 255, 0.12);
-  --ring: #006838;
-  --chart-1: #e0e0e0;
-  --chart-2: #8a8a8a;
-  --chart-3: #707070;
-  --chart-4: #5e5e5e;
-  --chart-5: #6b6b6b;
-  --sidebar: #1C241C;
-  --sidebar-foreground: #f7f7f2;
-  --sidebar-primary: #006838;
-  --sidebar-primary-foreground: #f7f7f2;
-  --sidebar-accent: #2a3a2a;
-  --sidebar-accent-foreground: #f7f7f2;
-  --sidebar-border: rgba(255, 255, 255, 0.08);
-  --sidebar-ring: #006838;
+@layer utilities {
+  /* Display Typography (Cormorant Garamond) */
+  .font-display {
+    font-family: var(--font-display);
+    font-weight: 700;
+    letter-spacing: -0.02em; /* Tight tracking for luxury */
+  }
+
+  .text-display-hero {
+    font-size: clamp(3rem, 8vw, 5rem); /* 48px - 80px responsive */
+    line-height: 1.1;
+  }
+
+  .text-display-section {
+    font-size: clamp(2.5rem, 5vw, 3.5rem); /* 40px - 56px responsive */
+    line-height: 1.2;
+  }
+
+  .text-display-card {
+    font-size: clamp(1.5rem, 3vw, 2rem); /* 24px - 32px responsive */
+    line-height: 1.3;
+  }
+
+  /* Editorial Serif (Playfair Display) */
+  .font-serif {
+    font-family: var(--font-serif);
+  }
+
+  .font-editorial {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-weight: 500;
+  }
+
+  /* Body Sans (Inter) */
+  .font-sans {
+    font-family: var(--font-sans);
+  }
+
+  /* Luxury Text Utilities */
+  .text-luxury-heading {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(2.5rem, 5vw, 3.5rem);
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+  }
+
+  .text-luxury-body {
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    line-height: 1.625;
+  }
+
+  .text-luxury-small {
+    font-family: var(--font-sans);
+    font-size: 0.875rem;
+    line-height: 1.625;
+  }
+
+  /* Tracking Utilities */
+  .tracking-luxury-wide {
+    letter-spacing: 0.25em; /* Ultra-wide for labels */
+  }
+
+  .tracking-luxury-normal {
+    letter-spacing: 0.02em; /* Slight for headings */
+  }
 }
 
 /* ============================================
@@ -112,7 +212,36 @@
    ============================================ */
 
 @layer utilities {
-  /* Container */
+  /* Container (Luxury: Wider, more generous) */
+  .container-luxury {
+    max-width: 1400px; /* Wider than current 1200px */
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 4rem;
+    padding-right: 4rem;
+  }
+
+  @media (max-width: 768px) {
+    .container-luxury {
+      padding-left: 1.5rem;
+      padding-right: 1.5rem;
+    }
+  }
+
+  /* Section Spacing (Luxury: More generous) */
+  .section-luxury {
+    padding-top: 8rem; /* 128px — double current */
+    padding-bottom: 8rem;
+  }
+
+  @media (max-width: 768px) {
+    .section-luxury {
+      padding-top: 4rem;
+      padding-bottom: 4rem;
+    }
+  }
+
+  /* Legacy: Keep existing utilities */
   .container-premium {
     max-width: 1200px;
     margin-left: auto;
@@ -121,27 +250,24 @@
     padding-right: 2rem;
   }
 
-  @media (max-width: 768px) {
-    .container-premium {
-      padding-left: 1rem;
-      padding-right: 1rem;
-    }
-  }
-
-  /* Section Spacing */
   .section-padding {
     padding-top: 6rem;
     padding-bottom: 6rem;
   }
 
   @media (max-width: 768px) {
+    .container-premium {
+      padding-left: 1rem;
+      padding-right: 1rem;
+    }
+
     .section-padding {
       padding-top: 3rem;
       padding-bottom: 3rem;
     }
   }
 
-  /* Mobile horizontal scroll snap */
+  /* Scroll Snap */
   .scroll-snap-x {
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
@@ -162,7 +288,7 @@
     scroll-snap-align: start;
   }
 
-  /* Gradient Text - Luxury Forest Green to Champagne Gold */
+  /* Luxury Gradients */
   .gradient-text {
     background: linear-gradient(135deg, #006838 0%, #D4AF37 50%, #1A2A3A 100%);
     background-size: 200% 100%;
@@ -171,7 +297,21 @@
     -webkit-text-fill-color: transparent;
   }
 
-  /* Forest Green (#006838) - Primary luxury accent */
+  .gradient-gold {
+    background: linear-gradient(135deg, #D4AF37 0%, #F4D03F 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .gradient-forest {
+    background: linear-gradient(135deg, #006838 0%, #00A86B 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  /* Forest Green Utilities */
   .text-forest-green {
     color: #006838;
   }
@@ -184,7 +324,7 @@
     border-color: #006838;
   }
 
-  /* Champagne Gold (#D4AF37) - Luxury highlights */
+  /* Champagne Gold Utilities */
   .text-champagne-gold {
     color: #D4AF37;
   }
@@ -197,7 +337,7 @@
     border-color: #D4AF37;
   }
 
-  /* Alabaster (#F7F7F2) - Quiet luxury background */
+  /* Alabaster Utilities */
   .bg-alabaster {
     background-color: #F7F7F2;
   }
@@ -206,12 +346,12 @@
     color: #F7F7F2;
   }
 
-  /* Dark Forest - Dark mode background */
+  /* Dark Forest Utilities */
   .bg-dark-forest {
     background-color: #0E140E;
   }
 
-  /* Heritage: Bhutanese Red Earth (Sa-tsag) */
+  /* Heritage Colors */
   .text-bhutan-red {
     color: #8E261A;
   }
@@ -224,7 +364,6 @@
     border-color: #8E261A;
   }
 
-  /* Heritage: Bhutanese Gold (Sa-ser) */
   .text-bhutan-gold {
     color: #E8B923;
   }
@@ -237,17 +376,6 @@
     border-color: #E8B923;
   }
 
-  /* Legacy: Mineral White */
-  .bg-mineral-white {
-    background-color: #F8F4F0;
-  }
-
-  /* Legacy: Slate Charcoal */
-  .text-slate-charcoal {
-    color: #262626;
-  }
-
-  /* Heritage: Indigo/Space (Gunjo) */
   .text-bhutan-indigo {
     color: #1A2A3A;
   }
@@ -256,7 +384,20 @@
     background-color: #1A2A3A;
   }
 
-  /* Editorial Image Filter - Subtle warm editorial look */
+  /* Neutral Palette (Luxury Depth) */
+  .text-charcoal {
+    color: #1A1A1A;
+  }
+
+  .text-warm-gray {
+    color: #6B6B6B;
+  }
+
+  .bg-stone {
+    background-color: #E8E8E8;
+  }
+
+  /* Editorial Image Filter */
   .img-editorial {
     filter: sepia(0.05);
   }
@@ -278,7 +419,7 @@
 }
 
 /* ============================================
-   BASE STYLES WITH THEME TRANSITIONS
+   BASE STYLES WITH LUXURY ENHANCEMENTS
    ============================================ */
 
 @layer base {
@@ -297,7 +438,7 @@
   }
 
   body {
-    font-family: 'Inter', -apple-system, BlinkSystemFont, 'Segoe UI', sans-serif;
+    font-family: var(--font-sans), -apple-system, BlinkSystemFont, 'Segoe UI', sans-serif;
     background-color: rgb(var(--color-background));
     color: rgb(var(--color-foreground));
     overflow-x: hidden;
@@ -316,6 +457,215 @@
     outline: 2px solid #006838;
     outline-offset: 2px;
   }
+
+  /* Luxury Headings */
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-display;
+  }
+
+  /* Editorial Text */
+  .editorial-text {
+    @apply font-serif italic text-lg leading-relaxed;
+  }
+}
+
+/* ============================================
+   ADMIN THEME CONTRAST OVERRIDES
+   ============================================ */
+
+@layer components {
+  /* Force white text across admin in dark mode */
+  .dark .admin-theme {
+    color: #f9fafb;
+  }
+
+  .dark .admin-theme h1,
+  .dark .admin-theme h2,
+  .dark .admin-theme h3,
+  .dark .admin-theme h4,
+  .dark .admin-theme h5,
+  .dark .admin-theme h6,
+  .dark .admin-theme p,
+  .dark .admin-theme span,
+  .dark .admin-theme label,
+  .dark .admin-theme th,
+  .dark .admin-theme td,
+  .dark .admin-theme li {
+    color: #f9fafb !important;
+  }
+
+  /* Restore visible hover feedback in admin dark mode */
+  .dark .admin-theme a:hover,
+  .dark .admin-theme button:hover {
+    color: #fde68a !important; /* amber-200 */
+  }
+
+  .dark .admin-theme .hover\:text-gray-900:hover,
+  .dark .admin-theme .hover\:text-gray-700:hover,
+  .dark .admin-theme .hover\:text-gray-600:hover {
+    color: #fde68a !important;
+  }
+
+  .dark .admin-theme .hover\:bg-gray-100:hover,
+  .dark .admin-theme .hover\:bg-gray-50:hover,
+  .dark .admin-theme .hover\:bg-gray-200:hover {
+    background-color: rgba(255, 255, 255, 0.10) !important;
+  }
+
+  .dark .admin-theme .dark\:hover\:bg-white\/5:hover {
+    background-color: rgba(255, 255, 255, 0.08) !important;
+  }
+
+  /* Chips/badges: prevent white text on light pill backgrounds in dark mode */
+  .dark .admin-theme .bg-gray-100 {
+    background-color: rgba(255, 255, 255, 0.08) !important;
+  }
+
+  .dark .admin-theme .bg-gray-100\/50 {
+    background-color: rgba(255, 255, 255, 0.06) !important;
+  }
+
+  /* Colored action buttons (purple/blue) need dark-mode backgrounds too */
+  .dark .admin-theme .bg-purple-50,
+  .dark .admin-theme .bg-blue-50 {
+    background-color: rgba(255, 255, 255, 0.06) !important;
+  }
+
+  .dark .admin-theme .hover\:bg-purple-100:hover,
+  .dark .admin-theme .hover\:bg-blue-100:hover {
+    background-color: rgba(255, 255, 255, 0.10) !important;
+  }
+
+  /* Make icons readable in admin dark mode */
+  .dark .admin-theme svg {
+    color: inherit;
+    stroke: currentColor;
+  }
+
+  .admin-theme .text-gray-500 {
+    color: #4b5563 !important;
+  }
+
+  .admin-theme .text-gray-600 {
+    color: #374151 !important;
+  }
+
+  .admin-theme .text-gray-900\/50 {
+    color: #4b5563 !important;
+  }
+
+  .dark .admin-theme .text-gray-900 {
+    color: #f3f4f6 !important;
+  }
+
+  .dark .admin-theme .text-gray-700 {
+    color: #d1d5db !important;
+  }
+
+  .dark .admin-theme .text-gray-600 {
+    color: #9ca3af !important;
+  }
+
+  .dark .admin-theme .text-gray-500 {
+    color: #9ca3af !important;
+  }
+
+  .dark .admin-theme .text-gray-900\/50 {
+    color: #9ca3af !important;
+  }
+
+  .dark .admin-theme .bg-white {
+    background-color: rgba(17, 24, 39, 0.78) !important;
+  }
+
+  .dark .admin-theme .bg-gray-50 {
+    /* Used for icon buttons (Edit, etc). Keep it visibly "button-like". */
+    background-color: rgba(255, 255, 255, 0.08) !important;
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.10) !important;
+  }
+
+  .dark .admin-theme .border-gray-200 {
+    border-color: rgba(75, 85, 99, 0.55) !important;
+  }
+
+  /* Make form controls readable in admin dark mode */
+  .dark .admin-theme input,
+  .dark .admin-theme textarea,
+  .dark .admin-theme select {
+    color: #f3f4f6 !important;
+    background-color: rgba(31, 41, 55, 0.9) !important;
+    border-color: rgba(75, 85, 99, 0.7) !important;
+  }
+
+  .dark .admin-theme input::placeholder,
+  .dark .admin-theme textarea::placeholder {
+    color: #9ca3af !important;
+  }
+}
+
+/* ============================================
+   DISABLE TAP HIGHLIGHT
+   ============================================ */
+
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* ============================================
+   LUXURY ANIMATIONS
+   ============================================ */
+
+@keyframes shimmer {
+  0% {
+    background-position: 0% center;
+  }
+  100% {
+    background-position: 200% center;
+  }
+}
+
+@keyframes gradient-flow {
+  0% {
+    background-position: 0% center;
+  }
+  100% {
+    background-position: 200% center;
+  }
+}
+
+@keyframes float-gentle {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes pulse-gold {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+/* Luxury Animation Utilities */
+.animate-shimmer {
+  animation: shimmer 3s ease-in-out infinite;
+}
+
+.animate-gradient {
+  animation: gradient-flow 8s ease infinite;
+}
+
+.animate-float {
+  animation: float-gentle 6s ease-in-out infinite;
+}
+
+.animate-pulse-gold {
+  animation: pulse-gold 2s ease-in-out infinite;
 }
 
 /* ============================================

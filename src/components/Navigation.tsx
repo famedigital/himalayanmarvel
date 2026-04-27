@@ -10,19 +10,18 @@ import Link from 'next/link';
 const navItems = [
   { name: 'Home', href: '/' },
   {
-    name: 'Tours',
+    name: 'Journeys',
     href: '/tours',
     hasDropdown: true,
     children: [
-      { name: 'Cultural Tours', href: '/tours?type=cultural' },
-      { name: 'Treks', href: '/tours?type=trek' },
-      { name: 'Spiritual Journeys', href: '/tours?type=spiritual' },
-      { name: 'Luxury Tours', href: '/tours?type=luxury' },
+      { name: 'Cultural Immersion', href: '/tours?type=cultural' },
+      { name: 'Spiritual Wellness', href: '/tours?type=spiritual' },
+      { name: 'Himalayan Expeditions', href: '/tours?type=trek' },
     ],
   },
   { name: 'Journal', href: '/blog' },
   { name: 'About', href: '/#about' },
-  { name: 'Contact', href: '/#contact' },
+  { name: 'Concierge', href: '/#contact' },
 ];
 
 export default function Navigation() {
@@ -368,10 +367,10 @@ export default function Navigation() {
                 <a
                   href="#contact"
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="px-4 py-1.5 text-[0.6rem] font-medium tracking-[0.15em] uppercase rounded-full"
-                  style={{ color: '#FFFFFF', backgroundColor: '#006838' }}
+                  className="px-5 py-2 text-[0.6rem] font-medium tracking-[0.15em] uppercase rounded-full"
+                  style={{ color: '#FFFFFF', backgroundColor: '#006838', border: '1px solid rgba(212, 175, 55, 0.2)' }}
                 >
-                  Inquire
+                  Request Consultation
                 </a>
               </motion.div>
             </div>

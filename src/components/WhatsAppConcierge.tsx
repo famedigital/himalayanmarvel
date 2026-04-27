@@ -125,7 +125,7 @@ export default function WhatsAppConcierge() {
               justifyContent: 'center',
             }}
           >
-            Inquire
+            Consult
             <ArrowRight className="w-3.5 h-3.5" />
           </a>
         </div>
