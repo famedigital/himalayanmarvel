@@ -5,97 +5,110 @@
 @custom-variant dark (&:is(.dark *));
 
 /* ============================================
-   BHUTANESE IMPERIAL & SACRED PALETTE
-   Colors derived from Bhutanese Thangka and Dzong architecture
+   ULTRA-LUXURY QUIET LUXURY PALETTE
+   Alabaster, Forest Green, and Champagne Gold
+   With Bhutanese heritage accents preserved
    ============================================ */
 
 @theme {
-  /* Mineral White - Purity, limestone of Dzong walls */
-  --color-background: 248 244 240;
+  /* Alabaster - Quiet luxury background */
+  --color-background: 247 247 242;
 
-  /* Slate Charcoal - Dark Wood/Earth, grounding */
-  --color-foreground: 38 38 38;
+  /* Deep charcoal for text */
+  --color-foreground: 26 26 26;
 
-  /* Warm stone cards */
-  --color-card: 245 242 238;
+  /* Warm alabaster cards */
+  --color-card: 245 245 240;
 
   /* Subtle muted backgrounds */
-  --color-muted: 241 238 233;
-  --color-muted-foreground: 115 129 141;
+  --color-muted: 241 240 236;
+  --color-muted-foreground: 115 115 110;
 
-  /* Soft borders */
-  --color-border: 228 223 217;
+  /* Soft warm borders */
+  --color-border: 225 223 218;
 
-  /* Bhutanese Red Earth (Sa-tsag) - Spiritual tradition, sacred accents */
+  /* Forest Green (#006838) - Primary luxury accent */
+  --color-forest-green: 0 104 56;
+
+  /* Champagne Gold (#D4AF37) - Luxury borders and highlights */
+  --color-champagne-gold: 212 175 55;
+
+  /* Alabaster (#F7F7F2) - Named token */
+  --color-alabaster: 247 247 242;
+
+  /* Bhutanese Red Earth (Sa-tsag) - Retained as heritage accent */
   --color-bhutan-red: 142 38 26;
 
-  /* Bhutanese Gold (Sa-ser) - Royalty, the King, temporal power */
+  /* Bhutanese Gold (Sa-ser) - Retained for compatibility */
   --color-bhutan-gold: 232 185 35;
 
-  /* Indigo/Space (Gunjo) - Himalayan sky, health and longevity */
+  /* Indigo/Space (Gunjo) - Retained */
   --color-bhutan-indigo: 26 42 58;
 
-  /* Legacy primary for compatibility */
-  --color-primary: 142 38 26;
+  /* Dark Forest (#0E140E) - Dark mode background */
+  --color-dark-forest: 14 20 14;
+
+  /* Primary updated to Forest Green */
+  --color-primary: 0 104 56;
   --color-primary-foreground: 255 255 255;
 }
 
-/* Dark mode colors */
+/* Dark mode colors - Dark Forest with green undertone */
 @media (prefers-color-scheme: dark) {
   :root {
-    --color-background: 38 38 38;
-    --color-foreground: 248 244 240;
-    --color-card: 41 41 46;
-    --color-muted: 35 35 40;
-    --color-muted-foreground: 163 163 163;
-    --color-border: 55 55 60;
+    --color-background: 14 20 14;
+    --color-foreground: 247 247 242;
+    --color-card: 28 36 28;
+    --color-muted: 20 28 20;
+    --color-muted-foreground: 163 175 163;
+    --color-border: 40 50 40;
   }
 }
 
-/* Manual dark mode class override */
+/* Manual dark mode class override - Dark Forest luxury */
 .dark {
-  --color-background: 38 38 38;
-  --color-foreground: 248 244 240;
-  --color-card: 41 41 46;
-  --color-muted: 35 35 40;
-  --color-muted-foreground: 163 163 163;
-  --color-border: 55 55 60;
+  --color-background: 14 20 14;
+  --color-foreground: 247 247 242;
+  --color-card: 28 36 28;
+  --color-muted: 20 28 20;
+  --color-muted-foreground: 163 175 163;
+  --color-border: 40 50 40;
   /* Use hex values instead of oklch() for html2canvas compatibility */
-  --background: #262626;
-  --foreground: #f8f4f0;
-  --card: #343438;
-  --card-foreground: #f8f4f0;
-  --popover: #343438;
-  --popover-foreground: #f8f4f0;
-  --primary: #ebebeb;
-  --primary-foreground: #262626;
-  --secondary: #6b6b6b;
-  --secondary-foreground: #f8f4f0;
-  --muted: #6b6b6b;
-  --muted-foreground: #b4b4b4;
-  --accent: #6b6b6b;
-  --accent-foreground: #f8f4f0;
+  --background: #0E140E;
+  --foreground: #f7f7f2;
+  --card: #1C241C;
+  --card-foreground: #f7f7f2;
+  --popover: #1C241C;
+  --popover-foreground: #f7f7f2;
+  --primary: #006838;
+  --primary-foreground: #f7f7f2;
+  --secondary: #2a3a2a;
+  --secondary-foreground: #f7f7f2;
+  --muted: #2a3a2a;
+  --muted-foreground: #a3afa3;
+  --accent: #D4AF37;
+  --accent-foreground: #0E140E;
   --destructive: #c45c5c;
-  --border: rgba(255, 255, 255, 0.1);
-  --input: rgba(255, 255, 255, 0.15);
-  --ring: #8a8a8a;
+  --border: rgba(255, 255, 255, 0.08);
+  --input: rgba(255, 255, 255, 0.12);
+  --ring: #006838;
   --chart-1: #e0e0e0;
   --chart-2: #8a8a8a;
   --chart-3: #707070;
   --chart-4: #5e5e5e;
   --chart-5: #6b6b6b;
-  --sidebar: #343438;
-  --sidebar-foreground: #f8f4f0;
-  --sidebar-primary: #6366f1;
-  --sidebar-primary-foreground: #f8f4f0;
-  --sidebar-accent: #6b6b6b;
-  --sidebar-accent-foreground: #f8f4f0;
-  --sidebar-border: rgba(255, 255, 255, 0.1);
-  --sidebar-ring: #8a8a8a;
+  --sidebar: #1C241C;
+  --sidebar-foreground: #f7f7f2;
+  --sidebar-primary: #006838;
+  --sidebar-primary-foreground: #f7f7f2;
+  --sidebar-accent: #2a3a2a;
+  --sidebar-accent-foreground: #f7f7f2;
+  --sidebar-border: rgba(255, 255, 255, 0.08);
+  --sidebar-ring: #006838;
 }
 
 /* ============================================
-   BHUTANESE COLOR TOKENS
+   LUXURY COLOR TOKENS & UTILITIES
    ============================================ */
 
 @layer utilities {
@@ -110,8 +123,8 @@
 
   @media (max-width: 768px) {
     .container-premium {
-      padding-left: 1.5rem;
-      padding-right: 1.5rem;
+      padding-left: 1rem;
+      padding-right: 1rem;
     }
   }
 
@@ -123,21 +136,82 @@
 
   @media (max-width: 768px) {
     .section-padding {
-      padding-top: 4rem;
-      padding-bottom: 4rem;
+      padding-top: 3rem;
+      padding-bottom: 3rem;
     }
   }
 
-  /* Gradient Text - Bhutanese Sacred Gradient */
+  /* Mobile horizontal scroll snap */
+  .scroll-snap-x {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  .scroll-snap-x::-webkit-scrollbar {
+    display: none;
+  }
+
+  .snap-center {
+    scroll-snap-align: center;
+  }
+
+  .snap-start {
+    scroll-snap-align: start;
+  }
+
+  /* Gradient Text - Luxury Forest Green to Champagne Gold */
   .gradient-text {
-    background: linear-gradient(135deg, #8E261A 0%, #E8B923 50%, #1A2A3A 100%);
+    background: linear-gradient(135deg, #006838 0%, #D4AF37 50%, #1A2A3A 100%);
     background-size: 200% 100%;
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
   }
 
-  /* Bhutanese Red Earth (Sa-tsag) - Sacred accents */
+  /* Forest Green (#006838) - Primary luxury accent */
+  .text-forest-green {
+    color: #006838;
+  }
+
+  .bg-forest-green {
+    background-color: #006838;
+  }
+
+  .border-forest-green {
+    border-color: #006838;
+  }
+
+  /* Champagne Gold (#D4AF37) - Luxury highlights */
+  .text-champagne-gold {
+    color: #D4AF37;
+  }
+
+  .bg-champagne-gold {
+    background-color: #D4AF37;
+  }
+
+  .border-champagne-gold {
+    border-color: #D4AF37;
+  }
+
+  /* Alabaster (#F7F7F2) - Quiet luxury background */
+  .bg-alabaster {
+    background-color: #F7F7F2;
+  }
+
+  .text-alabaster {
+    color: #F7F7F2;
+  }
+
+  /* Dark Forest - Dark mode background */
+  .bg-dark-forest {
+    background-color: #0E140E;
+  }
+
+  /* Heritage: Bhutanese Red Earth (Sa-tsag) */
   .text-bhutan-red {
     color: #8E261A;
   }
@@ -150,7 +224,7 @@
     border-color: #8E261A;
   }
 
-  /* Bhutanese Gold (Sa-ser) - Royalty */
+  /* Heritage: Bhutanese Gold (Sa-ser) */
   .text-bhutan-gold {
     color: #E8B923;
   }
@@ -163,23 +237,28 @@
     border-color: #E8B923;
   }
 
-  /* Mineral White */
+  /* Legacy: Mineral White */
   .bg-mineral-white {
     background-color: #F8F4F0;
   }
 
-  /* Slate Charcoal */
+  /* Legacy: Slate Charcoal */
   .text-slate-charcoal {
     color: #262626;
   }
 
-  /* Indigo/Space (Gunjo) */
+  /* Heritage: Indigo/Space (Gunjo) */
   .text-bhutan-indigo {
     color: #1A2A3A;
   }
 
   .bg-bhutan-indigo {
     background-color: #1A2A3A;
+  }
+
+  /* Editorial Image Filter - Subtle warm editorial look */
+  .img-editorial {
+    filter: sepia(0.05);
   }
 
   /* Line Clamp Utilities */
@@ -226,15 +305,15 @@
     @apply bg-background text-foreground;
   }
 
-  /* Selection - Bhutanese Red tint */
+  /* Selection - Forest Green tint */
   ::selection {
-    background: rgba(142, 38, 26, 0.3);
+    background: rgba(0, 104, 56, 0.25);
     color: inherit;
   }
 
-  /* Focus styles */
+  /* Focus styles - Forest Green */
   :focus-visible {
-    outline: 2px solid #8E261A;
+    outline: 2px solid #006838;
     outline-offset: 2px;
   }
 }

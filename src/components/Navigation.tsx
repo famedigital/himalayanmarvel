@@ -21,14 +21,13 @@ export default function Navigation() {
   const [mounted, setMounted] = useState(false);
   const { theme, resolvedTheme } = useTheme();
 
-  /* eslint-disable react-hooks/set-state-in-effect */
   useEffect(() => {
     setMounted(true);
   }, []);
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 20);
+      setIsScrolled(window.scrollY > 50);
     };
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
@@ -38,106 +37,130 @@ export default function Navigation() {
 
   return (
     <>
-      {/* Ultra Premium Navigation */}
+      {/* Floating Dock Navigation */}
       <motion.nav
         initial={{ y: -100, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-        className="fixed top-0 left-0 right-0 z-50"
-        style={{
-          backgroundColor: isDark
-            ? isScrolled ? 'rgba(10, 10, 10, 0.95)' : 'rgba(10, 10, 10, 0.85)'
-            : isScrolled ? 'rgba(248, 244, 240, 0.98)' : 'rgba(248, 244, 240, 0.9)',
-          backdropFilter: 'blur(20px)',
-        }}
+        transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+        className="fixed top-6 left-1/2 -translate-x-1/2 z-50 w-auto"
       >
-        {/* Gold Accent Line - Subtle */}
-        <div className="h-[0.5px]" style={{ background: 'linear-gradient(90deg, transparent, rgba(232, 185, 35, 0.4), transparent)' }} />
-
-        <div className="container-premium">
-          <div className="flex items-center justify-between h-20">
-            {/* Logo - Left */}
-            <Link href="#">
-              <motion.div
-                className="flex items-center"
-                whileHover={{ scale: 1.01 }}
-                transition={{ duration: 0.3 }}
-              >
-                <motion.span
-                  className="text-lg font-light tracking-[0.15em] hidden sm:block"
-                  style={{ color: isDark ? '#FFFFFF' : '#1A1A1A' }}
-                >
-                  HIMALAYAN MARVELS
-                </motion.span>
-              </motion.div>
-            </Link>
-
-            {/* Navigation Links - Center */}
-            <div className="hidden md:flex items-center gap-10">
-              {navItems.map((item) => (
-                <Link key={item.name} href={item.href}>
-                  <motion.div
-                    whileHover={{ y: -1 }}
-                    transition={{ duration: 0.2 }}
-                    className="relative group"
-                  >
-                    <span
-                      className="text-xs font-light tracking-[0.2em] uppercase py-2 inline-block"
-                      style={{ color: isDark ? 'rgba(255, 255, 255, 0.9)' : 'rgba(26, 26, 26, 0.88)' }}
-                    >
-                      {item.name}
-                    </span>
-                    {/* Underline animation */}
-                    <motion.span
-                      className="absolute bottom-0 left-0 right-0 h-[1px]"
-                      style={{ backgroundColor: '#E8B923', scaleX: 0, transformOrigin: 'left' }}
-                      whileHover={{ scaleX: 1 }}
-                      transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-                    />
-                  </motion.div>
-                </Link>
-              ))}
-            </div>
-
-            {/* Right Actions */}
-            <div className="flex items-center gap-4">
-              <ThemeToggle />
-
-              {/* Login */}
-              <motion.a
-                whileHover={{ y: -1 }}
-                whileTap={{ scale: 0.98 }}
-                href="/admin/login"
-                className="text-xs font-light tracking-[0.15em] hidden sm:block transition-colors"
-                style={{ color: isDark ? 'rgba(255, 255, 255, 0.82)' : 'rgba(26, 26, 26, 0.82)' }}
-              >
-                LOGIN
-              </motion.a>
-
-              {/* Inquire Button - Premium */}
-              <motion.a
-                whileHover={{ y: -1 }}
-                whileTap={{ scale: 0.98 }}
-                href="#contact"
-                className="px-6 py-2.5 text-xs font-medium tracking-[0.15em] hidden sm:block transition-all rounded-sm"
+        <div
+          className="flex items-center gap-1 md:gap-2 px-4 md:px-6 py-3 rounded-2xl transition-all duration-500"
+          style={{
+            backgroundColor: isDark
+              ? isScrolled ? 'rgba(14, 20, 14, 0.92)' : 'rgba(14, 20, 14, 0.8)'
+              : isScrolled ? 'rgba(247, 247, 242, 0.95)' : 'rgba(247, 247, 242, 0.82)',
+            backdropFilter: isScrolled ? 'blur(32px) saturate(180%)' : 'blur(24px) saturate(180%)',
+            WebkitBackdropFilter: isScrolled ? 'blur(32px) saturate(180%)' : 'blur(24px) saturate(180%)',
+            border: '1px solid rgba(212, 175, 55, 0.12)',
+            boxShadow: isScrolled
+              ? isDark
+                ? '0 8px 40px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(212, 175, 55, 0.05)'
+                : '0 8px 40px rgba(0, 0, 0, 0.08), 0 0 0 1px rgba(212, 175, 55, 0.08)'
+              : isDark
+                ? '0 4px 24px rgba(0, 0, 0, 0.3)'
+                : '0 4px 24px rgba(0, 0, 0, 0.04)',
+          }}
+        >
+          {/* Logo */}
+          <Link href="/">
+            <motion.div
+              className="flex items-center mr-2 md:mr-4"
+              whileHover={{ scale: 1.02 }}
+              transition={{ duration: 0.3 }}
+            >
+              <span
+                className="text-[0.7rem] md:text-xs font-semibold tracking-[0.2em] uppercase whitespace-nowrap"
                 style={{
-                  color: '#FFFFFF',
-                  backgroundColor: '#8E261A',
+                  color: isDark ? '#F7F7F2' : '#1A1A1A',
+                  fontFamily: 'var(--font-playfair)',
                 }}
               >
-                INQUIRE
-              </motion.a>
+                HIMALAYAN MARVELS
+              </span>
+            </motion.div>
+          </Link>
 
-              {/* Mobile Menu Button */}
-              <motion.button
-                whileTap={{ scale: 0.95 }}
-                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                className="md:hidden"
-                style={{ color: isDark ? '#FFFFFF' : '#1A1A1A' }}
-              >
-                {isMobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-              </motion.button>
-            </div>
+          {/* Divider */}
+          <div
+            className="hidden md:block w-px h-4 mx-2"
+            style={{ backgroundColor: isDark ? 'rgba(212, 175, 55, 0.15)' : 'rgba(0, 104, 56, 0.12)' }}
+          />
+
+          {/* Navigation Links */}
+          <div className="hidden md:flex items-center gap-6">
+            {navItems.map((item) => (
+              <Link key={item.name} href={item.href}>
+                <motion.div
+                  whileHover={{ y: -1 }}
+                  transition={{ duration: 0.2 }}
+                  className="relative group"
+                >
+                  <span
+                    className="text-[0.7rem] font-semibold tracking-[0.18em] uppercase py-1 inline-block transition-colors"
+                    style={{ color: isDark ? 'rgba(247, 247, 242, 0.9)' : 'rgba(0, 104, 56, 0.85)' }}
+                    onMouseEnter={(e) => {
+                      (e.target as HTMLElement).style.color = isDark ? '#F7F7F2' : '#006838';
+                    }}
+                    onMouseLeave={(e) => {
+                      (e.target as HTMLElement).style.color = isDark ? 'rgba(247, 247, 242, 0.9)' : 'rgba(0, 104, 56, 0.85)';
+                    }}
+                  >
+                    {item.name}
+                  </span>
+                  <motion.span
+                    className="absolute bottom-0 left-0 right-0 h-[1px]"
+                    style={{ backgroundColor: '#D4AF37', scaleX: 0, transformOrigin: 'left' }}
+                    whileHover={{ scaleX: 1 }}
+                    transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+                  />
+                </motion.div>
+              </Link>
+            ))}
+          </div>
+
+          {/* Divider */}
+          <div
+            className="hidden md:block w-px h-4 mx-2"
+            style={{ backgroundColor: isDark ? 'rgba(212, 175, 55, 0.15)' : 'rgba(0, 104, 56, 0.12)' }}
+          />
+
+          {/* Right Actions */}
+          <div className="flex items-center gap-2 md:gap-3">
+            <ThemeToggle />
+
+            <motion.a
+              whileHover={{ y: -1 }}
+              whileTap={{ scale: 0.98 }}
+              href="/admin/login"
+              className="text-[0.65rem] font-semibold tracking-[0.15em] uppercase hidden md:block transition-colors"
+              style={{ color: isDark ? 'rgba(247, 247, 242, 0.7)' : 'rgba(0, 104, 56, 0.6)' }}
+            >
+              Login
+            </motion.a>
+
+            <motion.a
+              whileHover={{ y: -1, boxShadow: '0 4px 16px rgba(0, 104, 56, 0.3)' }}
+              whileTap={{ scale: 0.97 }}
+              href="#contact"
+              className="px-5 py-2 text-[0.65rem] font-semibold tracking-[0.15em] uppercase hidden md:block rounded-full transition-all"
+              style={{
+                color: '#FFFFFF',
+                backgroundColor: '#006838',
+              }}
+            >
+              Inquire
+            </motion.a>
+
+            {/* Mobile Menu Button */}
+            <motion.button
+              whileTap={{ scale: 0.95 }}
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              className="md:hidden p-1"
+              style={{ color: isDark ? '#F7F7F2' : '#1A1A1A' }}
+            >
+              {isMobileMenuOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
+            </motion.button>
           </div>
         </div>
       </motion.nav>
@@ -149,39 +172,59 @@ export default function Navigation() {
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
-            transition={{ duration: 0.3 }}
-            className="fixed top-20 left-0 right-0 z-40 md:hidden"
+            transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+            className="fixed top-24 left-4 right-4 z-40 md:hidden rounded-2xl overflow-hidden"
             style={{
-              backgroundColor: isDark ? 'rgba(10, 10, 10, 0.98)' : 'rgba(248, 244, 240, 0.98)',
-              backdropFilter: 'blur(20px)',
+              backgroundColor: isDark ? 'rgba(14, 20, 14, 0.98)' : 'rgba(247, 247, 242, 0.98)',
+              backdropFilter: 'blur(24px) saturate(180%)',
+              WebkitBackdropFilter: 'blur(24px) saturate(180%)',
+              border: '1px solid rgba(212, 175, 55, 0.12)',
+              boxShadow: isDark
+                ? '0 16px 48px rgba(0, 0, 0, 0.5)'
+                : '0 16px 48px rgba(0, 0, 0, 0.08)',
             }}
           >
-            <div className="container-premium py-8">
+            <div className="px-6 py-6">
               {navItems.map((item, index) => (
                 <motion.a
                   key={item.name}
                   href={item.href}
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: index * 0.05, duration: 0.3 }}
+                  transition={{ delay: index * 0.05, duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="block py-3 text-xs font-light tracking-[0.2em] uppercase"
-                style={{ color: isDark ? 'rgba(255, 255, 255, 0.92)' : 'rgba(26, 26, 26, 0.92)' }}
+                  className="block py-3 text-xs font-medium tracking-[0.2em] uppercase transition-colors border-b last:border-b-0"
+                  style={{
+                    color: isDark ? 'rgba(247, 247, 242, 0.8)' : 'rgba(0, 104, 56, 0.7)',
+                    borderColor: isDark ? 'rgba(212, 175, 55, 0.08)' : 'rgba(0, 104, 56, 0.06)',
+                  }}
                 >
                   {item.name}
                 </motion.a>
               ))}
-              <motion.a
-                href="/admin/login"
+              <motion.div
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: navItems.length * 0.05, duration: 0.3 }}
-                onClick={() => setIsMobileMenuOpen(false)}
-                className="block py-3 mt-4 text-xs font-light tracking-[0.15em] uppercase"
-                style={{ color: isDark ? 'rgba(255, 255, 255, 0.82)' : 'rgba(26, 26, 26, 0.82)' }}
+                className="pt-4 flex gap-3"
               >
-                Login
-              </motion.a>
+                <a
+                  href="/admin/login"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="text-[0.6rem] font-medium tracking-[0.15em] uppercase"
+                  style={{ color: isDark ? 'rgba(247, 247, 242, 0.5)' : 'rgba(0, 104, 56, 0.45)' }}
+                >
+                  Login
+                </a>
+                <a
+                  href="#contact"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="px-4 py-1.5 text-[0.6rem] font-medium tracking-[0.15em] uppercase rounded-full"
+                  style={{ color: '#FFFFFF', backgroundColor: '#006838' }}
+                >
+                  Inquire
+                </a>
+              </motion.div>
             </div>
           </motion.div>
         )}

@@ -57,8 +57,8 @@ export function ThemeToggle() {
         className="absolute inset-0 opacity-0 hover:opacity-100 transition-opacity duration-300"
         style={{
           background: isDark
-            ? 'linear-gradient(135deg, rgba(249, 115, 22, 0.3), rgba(139, 92, 246, 0.3))'
-            : 'linear-gradient(135deg, rgba(249, 115, 22, 0.4), rgba(139, 92, 246, 0.4))',
+            ? 'linear-gradient(135deg, rgba(0, 104, 56, 0.4), rgba(212, 175, 55, 0.3))'
+            : 'linear-gradient(135deg, rgba(0, 104, 56, 0.3), rgba(212, 175, 55, 0.2))',
         }}
       />
     </motion.button>

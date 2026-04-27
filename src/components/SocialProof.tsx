@@ -3,12 +3,10 @@
 import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
 import { Star, Quote, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useState, useRef, useEffect } from 'react';
+import { useTheme } from 'next-themes';
 import Image from 'next/image';
-import { Card, CardContent } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-import { Button } from '@/components/ui/button';
 import { fetchInstagramPosts, type InstagramPost } from '@/lib/instagram';
+import RevealOnScroll from './ui/RevealOnScroll';
 
 // Instagram icon component
 const InstagramIcon = () => (
@@ -45,26 +43,26 @@ const reviews = [
 const FALLBACK_POSTS = [
   {
     id: '1',
-    thumbnail: 'https://images.unsplash.com/photo-1620665495597-fdc8ce790084?w=400&h=400&fit=crop',
+    thumbnail: 'https://res.cloudinary.com/dxztrqjft/image/upload/w_400,h_400,c_fill/v1776291879/tiger-nest-close_rm2bee',
     caption: 'The sacred Taktsang Palphug Monastery',
     likes: '2.4k',
   },
   {
     id: '2',
-    thumbnail: 'https://images.unsplash.com/photo-1666190075474-6f5a1f4dc1f8?w=400&h=400&fit=crop',
+    thumbnail: 'https://res.cloudinary.com/dxztrqjft/image/upload/w_400,h_400,c_fill/v1776291877/dochula_r3uler',
     caption: 'Punakha Dzong at dawn',
     likes: '3.1k',
   },
   {
     id: '3',
-    thumbnail: 'https://images.unsplash.com/photo-1609766856927-7eb8a87ec384?w=400&h=400&fit=crop',
-    caption: 'Prayer flags fluttering',
+    thumbnail: 'https://res.cloudinary.com/dxztrqjft/image/upload/w_400,h_400,c_fill/v1776291902/buddha-point-view_skbl41',
+    caption: 'Buddha Point panoramic views',
     likes: '1.8k',
   },
   {
     id: '4',
-    thumbnail: 'https://images.unsplash.com/photo-1596395919718-83c7f1f19e0c?w=400&h=400&fit=crop',
-    caption: 'Bhutanese hospitality',
+    thumbnail: 'https://res.cloudinary.com/dxztrqjft/image/upload/w_400,h_400,c_fill/v1776271223/tashichodzong_ddin28',
+    caption: 'Tashichho Dzong, seat of the government',
     likes: '2.7k',
   },
 ];
@@ -106,7 +104,7 @@ function InstaCard({ post, index }: { post: InstagramPost | typeof FALLBACK_POST
         </div>
       </div>
 
-      {/* Caption & Likes */}
+      {/* Caption */}
       <div className="absolute inset-x-0 bottom-0 p-4 translate-y-full group-hover:translate-y-0 transition-transform duration-300">
         <p className="text-white text-sm font-medium line-clamp-2 mb-2">{caption}</p>
       </div>
@@ -119,14 +117,21 @@ export default function SocialProof() {
   const [direction, setDirection] = useState(0);
   const [instagramPosts, setInstagramPosts] = useState<typeof FALLBACK_POSTS | InstagramPost[]>(FALLBACK_POSTS);
   const [isLoadingInstagram, setIsLoadingInstagram] = useState(true);
+  const [mounted, setMounted] = useState(false);
+  const { theme, resolvedTheme } = useTheme();
   const sectionRef = useRef(null);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const isDark = mounted ? (resolvedTheme === 'dark' || theme === 'dark') : true;
+
   const { scrollYProgress } = useScroll({
     target: sectionRef,
     offset: ['start end', 'end start'],
   });
 
-  const rotateX = useTransform(scrollYProgress, [0, 1], [0, 0]);
-  const rotateY = useTransform(scrollYProgress, [0, 1], [0, 0]);
   const scale = useTransform(scrollYProgress, [0, 0.5, 1], [0.95, 1, 0.95]);
 
   // Fetch Instagram posts on mount
@@ -135,7 +140,7 @@ export default function SocialProof() {
       try {
         const posts = await fetchInstagramPosts();
         if (posts.length > 0) {
-          setInstagramPosts(posts.slice(0, 4)); // Take first 4 posts
+          setInstagramPosts(posts.slice(0, 4));
         }
       } catch (error) {
         console.error('Failed to load Instagram posts:', error);
@@ -156,185 +161,228 @@ export default function SocialProof() {
     setCurrentIndex((prev) => (prev - 1 + reviews.length) % reviews.length);
   };
 
-  // Use first 4 posts for masonry layout
   const displayPosts = instagramPosts.slice(0, 4);
 
   return (
     <section ref={sectionRef} className="relative py-24 lg:py-32 overflow-hidden">
-      {/* Animated Background */}
-      <div className="absolute inset-0 bg-gradient-to-br from-neutral-100 via-white to-neutral-50 dark:from-neutral-950 dark:via-black dark:to-neutral-900" />
+      {/* Background */}
+      <div
+        className="absolute inset-0"
+        style={{
+          background: isDark
+            ? 'linear-gradient(135deg, #0E140E, #0A120A, #0E140E)'
+            : 'linear-gradient(135deg, #FFFFFF, #F7F7F2, #FFFFFF)',
+        }}
+      />
 
       {/* Floating Orbs */}
       <motion.div
-        animate={{
-          scale: [1, 1.2, 1],
-          opacity: [0.3, 0.5, 0.3],
-        }}
+        animate={{ scale: [1, 1.2, 1], opacity: [0.3, 0.5, 0.3] }}
         transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }}
-        className="absolute -top-20 -left-20 w-96 h-96 bg-gradient-to-br from-amber-500/20 to-transparent rounded-full blur-3xl"
+        className="absolute -top-20 -left-20 w-96 h-96 bg-gradient-to-br from-[#006838]/15 to-transparent rounded-full blur-3xl"
       />
       <motion.div
-        animate={{
-          scale: [1.2, 1, 1.2],
-          opacity: [0.2, 0.4, 0.2],
-        }}
+        animate={{ scale: [1.2, 1, 1.2], opacity: [0.2, 0.4, 0.2] }}
         transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut' }}
-        className="absolute -bottom-20 -right-20 w-96 h-96 bg-gradient-to-br from-red-500/10 to-transparent rounded-full blur-3xl"
+        className="absolute -bottom-20 -right-20 w-96 h-96 bg-gradient-to-br from-[#D4AF37]/10 to-transparent rounded-full blur-3xl"
       />
 
       <div className="container-premium relative z-10">
         {/* Section Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-          className="text-center mb-16"
-        >
-          <Badge variant="outline" className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.3em] mb-4">
-            <span className="w-8 h-px bg-gradient-to-r from-transparent to-current" />
-            Social Proof
-            <span className="w-8 h-px bg-gradient-to-l from-transparent to-current" />
-          </Badge>
-          <h2 className="text-4xl md:text-5xl lg:text-6xl font-semibold dark:text-white text-neutral-900">
+        <RevealOnScroll className="text-center mb-16">
+          <div className="flex items-center justify-center gap-3 mb-4">
+            <div className="w-8 h-px" style={{ backgroundColor: '#D4AF37' }} />
+            <span
+              className="text-[0.65rem] font-semibold tracking-[0.3em] uppercase"
+              style={{ color: '#D4AF37' }}
+            >
+              Social Proof
+            </span>
+            <div className="w-8 h-px" style={{ backgroundColor: '#D4AF37' }} />
+          </div>
+          <h2
+            className="text-4xl md:text-5xl lg:text-6xl font-light"
+            style={{
+              color: isDark ? '#F7F7F2' : '#1A1A1A',
+              fontFamily: 'var(--font-playfair)',
+            }}
+          >
             Trusted by{' '}
-            <span className="bg-gradient-to-r from-amber-600 to-red-600 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-[#006838] to-[#D4AF37] bg-clip-text text-transparent">
               Travelers
             </span>
           </h2>
-        </motion.div>
+        </RevealOnScroll>
 
         {/* Main Grid */}
         <motion.div
-          style={{ rotateX, rotateY, scale }}
+          style={{ scale }}
           className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-start"
         >
           {/* Testimonials Column */}
-          <motion.div
-            initial={{ opacity: 0, x: -50 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-            className="order-2 lg:order-1"
-          >
+          <RevealOnScroll direction="left" className="order-2 lg:order-1">
             <div className="sticky top-24">
               {/* Glass Card */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                className="relative group"
-              >
+              <div className="relative group">
                 {/* Glow Effect */}
                 <motion.div
                   animate={{
                     boxShadow: [
-                      '0 0 60px -12px rgba(139, 38, 26, 0.1)',
-                      '0 0 80px -12px rgba(139, 38, 26, 0.2)',
-                      '0 0 60px -12px rgba(139, 38, 26, 0.1)',
+                      '0 0 60px -12px rgba(0, 104, 56, 0.1)',
+                      '0 0 80px -12px rgba(0, 104, 56, 0.2)',
+                      '0 0 60px -12px rgba(0, 104, 56, 0.1)',
                     ],
                   }}
                   transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
-                  className="absolute -inset-1 bg-gradient-to-r from-amber-600/30 to-red-600/30 rounded-3xl blur-xl opacity-50 group-hover:opacity-75 transition-opacity"
+                  className="absolute -inset-1 bg-gradient-to-r from-[#006838]/20 to-[#D4AF37]/20 rounded-3xl blur-xl opacity-50 group-hover:opacity-75 transition-opacity"
                 />
 
-                <Card className="relative p-8 md:p-10 border-0 dark:bg-neutral-900/80 bg-white/80 backdrop-blur-xl shadow-2xl">
-                  <CardContent className="p-0">
-                    {/* Animated Quote Icon */}
+                <div
+                  className="relative p-8 md:p-10 rounded-3xl"
+                  style={{
+                    backgroundColor: isDark ? 'rgba(28, 36, 28, 0.8)' : 'rgba(255, 255, 255, 0.85)',
+                    backdropFilter: 'blur(24px)',
+                    boxShadow: isDark
+                      ? '0 16px 48px rgba(0,0,0,0.3)'
+                      : '0 16px 48px rgba(0,0,0,0.06)',
+                  }}
+                >
+                  {/* Quote Icon */}
+                  <div
+                    className="w-16 h-16 rounded-2xl flex items-center justify-center mb-8"
+                    style={{
+                      backgroundColor: isDark ? 'rgba(0, 104, 56, 0.12)' : 'rgba(0, 104, 56, 0.06)',
+                    }}
+                  >
+                    <Quote
+                      className="w-8 h-8"
+                      style={{ color: isDark ? 'rgba(247,247,242,0.5)' : 'rgba(26,26,26,0.3)' }}
+                    />
+                  </div>
+
+                  {/* Review Carousel */}
+                  <AnimatePresence mode="wait" initial={false}>
                     <motion.div
-                      animate={{ rotate: [0, 5, -5, 0] }}
-                      transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
-                      className="w-16 h-16 dark:bg-white/10 bg-neutral-100 rounded-2xl flex items-center justify-center mb-8"
+                      key={currentIndex}
+                      custom={direction}
+                      initial={{ x: direction > 0 ? 50 : -50, opacity: 0 }}
+                      animate={{ x: 0, opacity: 1 }}
+                      exit={{ x: direction < 0 ? 50 : -50, opacity: 0 }}
+                      transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
                     >
-                      <Quote className="w-8 h-8 dark:text-white/60 text-neutral-700" />
-                    </motion.div>
-
-                    {/* Review Carousel */}
-                    <AnimatePresence mode="wait" initial={false}>
-                      <motion.div
-                        key={currentIndex}
-                        custom={direction}
-                        initial={{ x: direction > 0 ? 50 : -50, opacity: 0 }}
-                        animate={{ x: 0, opacity: 1 }}
-                        exit={{ x: direction < 0 ? 50 : -50, opacity: 0 }}
-                        transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+                      <p
+                        className="text-xl md:text-2xl leading-relaxed mb-8"
+                        style={{
+                          color: isDark ? 'rgba(247,247,242,0.85)' : 'rgba(26,26,26,0.8)',
+                        }}
                       >
-                        <p className="text-xl md:text-2xl dark:text-white/90 text-neutral-800 leading-relaxed mb-8">
-                          {reviews[currentIndex].text}
-                        </p>
+                        {reviews[currentIndex].text}
+                      </p>
 
-                        <div className="flex items-center gap-4 mb-6">
-                          {/* Avatar */}
-                          <Avatar className="w-14 h-14">
-                            <AvatarFallback className="bg-gradient-to-br from-amber-500 to-red-600 text-white font-semibold text-lg shadow-lg">
-                              {reviews[currentIndex].avatar}
-                            </AvatarFallback>
-                          </Avatar>
-
-                          <div>
-                            <p className="dark:text-white text-neutral-900 font-medium text-lg">
-                              {reviews[currentIndex].name}
-                            </p>
-                            <p className="dark:text-white/60 text-neutral-600 text-sm">
-                              {reviews[currentIndex].location}
-                            </p>
-                          </div>
+                      <div className="flex items-center gap-4 mb-6">
+                        {/* Avatar */}
+                        <div
+                          className="w-14 h-14 rounded-full flex items-center justify-center text-white font-semibold text-lg"
+                          style={{
+                            background: 'linear-gradient(135deg, #006838, #D4AF37)',
+                          }}
+                        >
+                          {reviews[currentIndex].avatar}
                         </div>
 
-                        {/* Stars */}
-                        <div className="flex items-center gap-1">
-                          {[...Array(5)].map((_, i) => (
-                            <motion.div
-                              key={i}
-                              initial={{ scale: 0, rotate: -180 }}
-                              animate={{ scale: 1, rotate: 0 }}
-                              transition={{ delay: i * 0.05, type: 'spring', stiffness: 200 }}
-                            >
-                              <Star className="w-5 h-5 fill-amber-400 text-amber-400" />
-                            </motion.div>
-                          ))}
+                        <div>
+                          <p
+                            className="font-medium text-lg"
+                            style={{ color: isDark ? '#F7F7F2' : '#1A1A1A' }}
+                          >
+                            {reviews[currentIndex].name}
+                          </p>
+                          <p
+                            className="text-sm"
+                            style={{ color: isDark ? 'rgba(247,247,242,0.4)' : 'rgba(26,26,26,0.4)' }}
+                          >
+                            {reviews[currentIndex].location}
+                          </p>
                         </div>
-                      </motion.div>
-                    </AnimatePresence>
+                      </div>
 
-                    {/* Navigation */}
-                    <div className="flex items-center justify-between mt-8 pt-8 border-t border-white/10">
-                      <div className="flex items-center gap-2">
-                        {reviews.map((_, index) => (
-                          <button
-                            key={index}
-                            onClick={() => {
-                              setDirection(index > currentIndex ? 1 : -1);
-                              setCurrentIndex(index);
-                            }}
-                            className={`h-2 rounded-full transition-all ${
-                              index === currentIndex
-                                ? 'w-10 bg-gradient-to-r from-amber-500 to-red-600'
-                                : 'w-2 bg-neutral-300 dark:bg-white/20 hover:bg-neutral-500 dark:hover:bg-white/40'
-                            }`}
-                          />
+                      {/* Stars */}
+                      <div className="flex items-center gap-1">
+                        {[...Array(5)].map((_, i) => (
+                          <motion.div
+                            key={i}
+                            initial={{ scale: 0, rotate: -180 }}
+                            animate={{ scale: 1, rotate: 0 }}
+                            transition={{ delay: i * 0.05, type: 'spring', stiffness: 200 }}
+                          >
+                            <Star className="w-5 h-5 fill-amber-400 text-amber-400" />
+                          </motion.div>
                         ))}
                       </div>
+                    </motion.div>
+                  </AnimatePresence>
 
-                      <div className="flex items-center gap-2">
-                        <Button variant="outline" size="icon" onClick={handlePrev} className="rounded-full w-12 h-12">
-                          <ChevronLeft className="w-5 h-5" />
-                        </Button>
-                        <Button variant="outline" size="icon" onClick={handleNext} className="rounded-full w-12 h-12">
-                          <ChevronRight className="w-5 h-5" />
-                        </Button>
-                      </div>
+                  {/* Navigation */}
+                  <div
+                    className="flex items-center justify-between mt-8 pt-8"
+                    style={{ borderTop: `1px solid ${isDark ? 'rgba(212, 175, 55, 0.08)' : 'rgba(0, 104, 56, 0.06)'}` }}
+                  >
+                    <div className="flex items-center gap-2">
+                      {reviews.map((_, index) => (
+                        <button
+                          key={index}
+                          onClick={() => {
+                            setDirection(index > currentIndex ? 1 : -1);
+                            setCurrentIndex(index);
+                          }}
+                          className="h-2 rounded-full transition-all"
+                          style={{
+                            width: index === currentIndex ? 40 : 8,
+                            backgroundColor: index === currentIndex
+                              ? '#006838'
+                              : isDark ? 'rgba(247,247,242,0.15)' : 'rgba(26,26,26,0.15)',
+                          }}
+                        />
+                      ))}
                     </div>
-                  </CardContent>
-                </Card>
-              </motion.div>
+
+                    <div className="flex items-center gap-2">
+                      <motion.button
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                        onClick={handlePrev}
+                        className="rounded-full w-12 h-12 flex items-center justify-center transition-colors cursor-pointer"
+                        style={{
+                          backgroundColor: isDark ? 'rgba(28, 36, 28, 0.8)' : 'rgba(247, 247, 242, 0.8)',
+                          border: `1px solid ${isDark ? 'rgba(212, 175, 55, 0.08)' : 'rgba(0, 104, 56, 0.06)'}`,
+                          color: isDark ? 'rgba(247,247,242,0.6)' : 'rgba(26,26,26,0.5)',
+                        }}
+                      >
+                        <ChevronLeft className="w-5 h-5" />
+                      </motion.button>
+                      <motion.button
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                        onClick={handleNext}
+                        className="rounded-full w-12 h-12 flex items-center justify-center transition-colors cursor-pointer"
+                        style={{
+                          backgroundColor: isDark ? 'rgba(28, 36, 28, 0.8)' : 'rgba(247, 247, 242, 0.8)',
+                          border: `1px solid ${isDark ? 'rgba(212, 175, 55, 0.08)' : 'rgba(0, 104, 56, 0.06)'}`,
+                          color: isDark ? 'rgba(247,247,242,0.6)' : 'rgba(26,26,26,0.5)',
+                        }}
+                      >
+                        <ChevronRight className="w-5 h-5" />
+                      </motion.button>
+                    </div>
+                  </div>
+                </div>
+              </div>
 
               {/* Stats */}
-              <div className="grid grid-cols-3 gap-4 mt-8">
+              <div className="grid grid-cols-2 gap-4 mt-8">
                 {[
                   { value: '12+', label: 'Years' },
                   { value: '4.9', label: 'Rating' },
-                  { value: '2k+', label: 'Reviews' },
                 ].map((stat, index) => (
                   <motion.div
                     key={index}
@@ -342,46 +390,57 @@ export default function SocialProof() {
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ duration: 0.5, delay: index * 0.1 }}
-                    className="text-center p-4 rounded-2xl dark:bg-white/5 bg-neutral-100/50 backdrop-blur-sm"
+                    className="text-center p-4 rounded-2xl"
+                    style={{
+                      backgroundColor: isDark ? 'rgba(28, 36, 28, 0.5)' : 'rgba(247, 247, 242, 0.8)',
+                      border: `1px solid ${isDark ? 'rgba(212, 175, 55, 0.06)' : 'rgba(0, 104, 56, 0.04)'}`,
+                    }}
                   >
-                    <p className="text-2xl font-bold bg-gradient-to-r from-amber-600 to-red-600 bg-clip-text text-transparent">
+                    <p className="text-2xl font-bold bg-gradient-to-r from-[#006838] to-[#D4AF37] bg-clip-text text-transparent">
                       {stat.value}
                     </p>
-                    <p className="text-xs dark:text-white/60 text-neutral-600 mt-1">{stat.label}</p>
+                    <p
+                      className="text-xs mt-1"
+                      style={{ color: isDark ? 'rgba(247,247,242,0.4)' : 'rgba(26,26,26,0.4)' }}
+                    >
+                      {stat.label}
+                    </p>
                   </motion.div>
                 ))}
               </div>
             </div>
-          </motion.div>
+          </RevealOnScroll>
 
           {/* Instagram Column */}
-          <motion.div
-            initial={{ opacity: 0, x: 50 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-            className="order-1 lg:order-2"
-          >
+          <RevealOnScroll direction="right" className="order-1 lg:order-2">
             <div className="space-y-6">
               {/* Instagram Header */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                className="flex items-center justify-between"
-              >
+              <div className="flex items-center justify-between">
                 <div>
                   <div className="flex items-center gap-3 mb-2">
                     <div className="w-10 h-10 rounded-full bg-gradient-to-br from-purple-500 via-pink-500 to-orange-500 p-0.5">
-                      <div className="w-full h-full rounded-full dark:bg-neutral-900 bg-white flex items-center justify-center">
+                      <div
+                        className="w-full h-full rounded-full flex items-center justify-center"
+                        style={{ backgroundColor: isDark ? '#1C241C' : '#FFFFFF' }}
+                      >
                         <div className="w-5 h-5" style={{ color: '#E1306C' }}>
                           <InstagramIcon />
                         </div>
                       </div>
                     </div>
                     <div>
-                      <p className="dark:text-white text-neutral-900 font-semibold">@himalayanmarvels.travel</p>
-                      <p className="text-xs dark:text-white/60 text-neutral-600">Travel Company</p>
+                      <p
+                        className="font-semibold"
+                        style={{ color: isDark ? '#F7F7F2' : '#1A1A1A' }}
+                      >
+                        @himalayanmarvels.travel
+                      </p>
+                      <p
+                        className="text-xs"
+                        style={{ color: isDark ? 'rgba(247,247,242,0.4)' : 'rgba(26,26,26,0.4)' }}
+                      >
+                        Travel Company
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -391,17 +450,25 @@ export default function SocialProof() {
                   rel="noopener noreferrer"
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
-                  className="inline-flex items-center justify-center rounded-full bg-gradient-to-r from-amber-600 to-red-600 px-4 py-2 text-sm font-medium text-white shadow-lg shadow-amber-500/25 hover:shadow-xl hover:shadow-amber-500/30 transition-all"
+                  className="inline-flex items-center justify-center rounded-full px-4 py-2 text-sm font-medium text-white shadow-lg transition-all"
+                  style={{
+                    backgroundColor: '#006838',
+                    boxShadow: '0 4px 16px rgba(0, 104, 56, 0.25)',
+                  }}
                 >
                   Follow
                 </motion.a>
-              </motion.div>
+              </div>
 
               {/* Loading State */}
               {isLoadingInstagram ? (
                 <div className="grid grid-cols-2 gap-4">
                   {[1, 2, 3, 4].map((i) => (
-                    <div key={i} className="aspect-square rounded-2xl bg-neutral-200 dark:bg-white/5 animate-pulse" />
+                    <div
+                      key={i}
+                      className="aspect-square rounded-2xl animate-pulse"
+                      style={{ backgroundColor: isDark ? 'rgba(28, 36, 28, 0.5)' : 'rgba(0,0,0,0.04)' }}
+                    />
                   ))}
                 </div>
               ) : (
@@ -419,15 +486,15 @@ export default function SocialProof() {
               )}
 
               {/* Follow CTA */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: 0.3 }}
-                className="relative overflow-hidden rounded-2xl p-6 dark:bg-gradient-to-br dark:from-purple-900/30 dark:to-pink-900/30 bg-gradient-to-br from-purple-100 to-pink-100 border border-purple-200/50 dark:border-white/10"
+              <div
+                className="relative overflow-hidden rounded-2xl p-6"
+                style={{
+                  background: isDark
+                    ? 'linear-gradient(135deg, rgba(0, 104, 56, 0.12), rgba(212, 175, 55, 0.08))'
+                    : 'linear-gradient(135deg, rgba(0, 104, 56, 0.04), rgba(212, 175, 55, 0.03))',
+                  border: `1px solid ${isDark ? 'rgba(212, 175, 55, 0.08)' : 'rgba(0, 104, 56, 0.06)'}`,
+                }}
               >
-                <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImdyaWQiIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTSAwIDEwIEwgNDAgMTAgTSAxMCAwIEwgMTAgNDAgTSAwIDIwIEwgNDAgMjAgTSAyMCAwIEwgMjAgNDAgTSAwIDMwIEwgNDAgMzAgTSAzMCAwIEwgMzAgNDAiIGZpbGw9Im5vbmUiIHN0cm9rZT0iY3VycmVudENvbG9yIiBzdHJva2Utb3BhY2l0eT0iMC4wNSIvPjwvcGF0dGVybj48L2RlZnM+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0idXJsKCNncmlkKSIvPjwvc3ZnPg==')] opacity-30" />
-
                 <div className="relative flex items-center gap-4">
                   <div className="flex -space-x-3">
                     {[1, 2, 3, 4].map((i) => (
@@ -437,18 +504,32 @@ export default function SocialProof() {
                         whileInView={{ scale: 1 }}
                         viewport={{ once: true }}
                         transition={{ delay: 0.4 + i * 0.1, type: 'spring' }}
-                        className="w-10 h-10 rounded-full border-2 border-white dark:border-neutral-900 bg-gradient-to-br from-amber-400 to-red-500"
+                        className="w-10 h-10 rounded-full border-2"
+                        style={{
+                          borderColor: isDark ? '#1C241C' : '#FFFFFF',
+                          background: 'linear-gradient(135deg, #006838, #D4AF37)',
+                        }}
                       />
                     ))}
                   </div>
                   <div>
-                    <p className="dark:text-white text-neutral-900 font-medium">Join 50k+ travelers</p>
-                    <p className="text-sm dark:text-white/70 text-neutral-600">Follow for daily inspiration</p>
+                    <p
+                      className="font-medium"
+                      style={{ color: isDark ? '#F7F7F2' : '#1A1A1A' }}
+                    >
+                      Join 50k+ travelers
+                    </p>
+                    <p
+                      className="text-sm"
+                      style={{ color: isDark ? 'rgba(247,247,242,0.5)' : 'rgba(26,26,26,0.5)' }}
+                    >
+                      Follow for daily inspiration
+                    </p>
                   </div>
                 </div>
-              </motion.div>
+              </div>
             </div>
-          </motion.div>
+          </RevealOnScroll>
         </motion.div>
       </div>
     </section>

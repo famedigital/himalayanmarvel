@@ -2,6 +2,9 @@
 
 import { motion } from 'framer-motion';
 import { Mountain, Gem, Sparkles } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { useTheme } from 'next-themes';
+import RevealOnScroll from './ui/RevealOnScroll';
 
 const features = [
   {
@@ -22,45 +25,61 @@ const features = [
 ];
 
 export default function WhyTravelWithUs() {
+  const [mounted, setMounted] = useState(false);
+  const { theme, resolvedTheme } = useTheme();
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const isDark = mounted ? (resolvedTheme === 'dark' || theme === 'dark') : true;
+
   return (
-    <section className="section-padding relative overflow-hidden" style={{ backgroundColor: '#F8F4F0' }}>
+    <section
+      className="section-padding relative overflow-hidden"
+      style={{ backgroundColor: isDark ? '#0E140E' : '#FFFFFF' }}
+    >
       <div className="container-premium relative z-10">
         {/* Section Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: '-100px' }}
-          transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
-          className="text-center mb-20"
-        >
-          <p className="text-xs uppercase tracking-[0.25em] text-amber-700/70 mb-4">
-            The Difference
-          </p>
-          <h2 className="text-4xl md:text-5xl font-semibold mb-6" style={{ color: '#262626' }}>
+        <RevealOnScroll className="text-center mb-20">
+          <div className="flex items-center justify-center gap-3 mb-4">
+            <div className="w-8 h-px" style={{ backgroundColor: '#006838' }} />
+            <span
+              className="text-[0.65rem] font-semibold tracking-[0.3em] uppercase"
+              style={{ color: '#006838' }}
+            >
+              The Difference
+            </span>
+            <div className="w-8 h-px" style={{ backgroundColor: '#006838' }} />
+          </div>
+          <h2
+            className="text-4xl md:text-5xl font-light mb-6"
+            style={{
+              color: isDark ? '#F7F7F2' : '#1A1A1A',
+              fontFamily: 'var(--font-playfair)',
+            }}
+          >
             Why Travel With Us
           </h2>
-          <p className="text-lg max-w-2xl mx-auto leading-relaxed" style={{ color: 'rgba(38, 38, 38, 0.65)' }}>
+          <p
+            className="text-lg max-w-2xl mx-auto leading-relaxed"
+            style={{ color: isDark ? 'rgba(247,247,242,0.45)' : 'rgba(26,26,26,0.45)' }}
+          >
             We don&apos;t offer tours. We design journeys that transform.
           </p>
-        </motion.div>
+        </RevealOnScroll>
 
         {/* Features Grid */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-16">
           {features.map((feature, index) => {
             const Icon = feature.icon;
             return (
-              <motion.div
-                key={feature.title}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: '-100px' }}
-                transition={{ duration: 0.8, delay: index * 0.12, ease: [0.16, 1, 0.3, 1] }}
-              >
+              <RevealOnScroll key={feature.title} delay={index * 0.12}>
                 <div className="h-full">
                   {/* Icon */}
                   <motion.div
                     className="w-14 h-14 rounded-2xl flex items-center justify-center mb-8"
-                    style={{ backgroundColor: '#8E261A' }}
+                    style={{ backgroundColor: '#006838' }}
                     whileHover={{ scale: 1.05 }}
                     transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
                   >
@@ -68,16 +87,22 @@ export default function WhyTravelWithUs() {
                   </motion.div>
 
                   {/* Title */}
-                  <h3 className="text-xl font-medium mb-4" style={{ color: '#262626' }}>
+                  <h3
+                    className="text-xl font-medium mb-4"
+                    style={{ color: isDark ? '#F7F7F2' : '#1A1A1A' }}
+                  >
                     {feature.title}
                   </h3>
 
                   {/* Description */}
-                  <p className="leading-relaxed" style={{ color: 'rgba(38, 38, 38, 0.6)' }}>
+                  <p
+                    className="leading-relaxed"
+                    style={{ color: isDark ? 'rgba(247,247,242,0.45)' : 'rgba(26,26,26,0.5)' }}
+                  >
                     {feature.description}
                   </p>
                 </div>
-              </motion.div>
+              </RevealOnScroll>
             );
           })}
         </div>

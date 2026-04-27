@@ -3,7 +3,9 @@
 import { motion } from 'framer-motion';
 import { createClient } from '@/lib/supabase/client';
 import { useEffect, useState } from 'react';
+import { useTheme } from 'next-themes';
 import { Loader2 } from 'lucide-react';
+import RevealOnScroll from './ui/RevealOnScroll';
 
 interface AboutContent {
   name: string;
@@ -18,6 +20,14 @@ interface AboutContent {
 export default function FounderDynamic() {
   const [content, setContent] = useState<AboutContent | null>(null);
   const [loading, setLoading] = useState(true);
+  const [mounted, setMounted] = useState(false);
+  const { theme, resolvedTheme } = useTheme();
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const isDark = mounted ? (resolvedTheme === 'dark' || theme === 'dark') : true;
 
   useEffect(() => {
     const fetchContent = async () => {
@@ -32,7 +42,6 @@ export default function FounderDynamic() {
       if (data?.value) {
         setContent(data.value);
       } else {
-        // Default content if not set
         setContent({
           name: 'Bivatsu',
           subtitle: 'Founder & CEO',
@@ -51,9 +60,9 @@ export default function FounderDynamic() {
 
   if (loading || !content) {
     return (
-      <section id="about" className="section-padding dark:bg-neutral-900 bg-white">
+      <section id="about" className="section-padding" style={{ backgroundColor: isDark ? '#0E140E' : '#FFFFFF' }}>
         <div className="container-premium flex items-center justify-center py-24">
-          <Loader2 className="w-8 h-8 text-orange-500 animate-spin" />
+          <Loader2 className="w-8 h-8 animate-spin" style={{ color: '#D4AF37' }} />
         </div>
       </section>
     );
@@ -68,25 +77,29 @@ export default function FounderDynamic() {
   const statsList = content.stats.split('|');
 
   return (
-    <section id="about" className="section-padding dark:bg-neutral-900 bg-white">
+    <section id="about" className="section-padding" style={{ backgroundColor: isDark ? '#0E140E' : '#FFFFFF' }}>
       <div className="container-premium">
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
           {/* Image */}
-          <motion.div
-            initial={{ opacity: 0, x: -60 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8, ease: [0.25, 0.1, 0.25, 1] }}
-            className="order-2 lg:order-1"
-          >
+          <RevealOnScroll direction="left" className="order-2 lg:order-1">
             <div className="relative">
-              <div className="relative rounded-3xl overflow-hidden shadow-2xl">
+              <div
+                className="relative rounded-3xl overflow-hidden"
+                style={{ boxShadow: isDark ? '0 24px 64px rgba(0,0,0,0.4)' : '0 24px 64px rgba(0,0,0,0.08)' }}
+              >
                 <img
                   src={content.image}
                   alt={content.name}
                   className="w-full aspect-[4/5] object-cover"
                 />
-                <div className="absolute inset-0 dark:bg-gradient-to-t bg-gradient-to-t dark:from-black/40 from-neutral-900/30 to-transparent" />
+                <div
+                  className="absolute inset-0"
+                  style={{
+                    background: isDark
+                      ? 'linear-gradient(to top, rgba(14,20,14,0.4) 0%, transparent 50%)'
+                      : 'linear-gradient(to top, rgba(26,26,26,0.15) 0%, transparent 50%)',
+                  }}
+                />
               </div>
 
               {/* Experience Badge */}
@@ -95,36 +108,56 @@ export default function FounderDynamic() {
                   initial={{ opacity: 0, y: 40 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
-                  transition={{ duration: 0.8, delay: 0.3, ease: [0.25, 0.1, 0.25, 1] }}
-                  className="absolute -bottom-6 -right-6 px-6 py-4 rounded-2xl shadow-xl dark:bg-neutral-900 bg-white dark:border border-white/10 border-neutral-200"
+                  transition={{ duration: 0.8, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
+                  className="absolute -bottom-6 -right-6 px-6 py-4 rounded-2xl"
+                  style={{
+                    backgroundColor: isDark ? 'rgba(28, 36, 28, 0.9)' : '#FFFFFF',
+                    border: `1px solid ${isDark ? 'rgba(212, 175, 55, 0.12)' : 'rgba(0, 104, 56, 0.08)'}`,
+                    boxShadow: isDark ? '0 12px 40px rgba(0,0,0,0.4)' : '0 12px 40px rgba(0,0,0,0.06)',
+                    backdropFilter: 'blur(20px)',
+                  }}
                 >
                   <p className="text-3xl font-bold gradient-text">{statsList[0]}</p>
-                  <p className="text-xs dark:text-white/50 text-neutral-600 uppercase tracking-wider">Years Experience</p>
+                  <p
+                    className="text-xs uppercase tracking-wider"
+                    style={{ color: isDark ? 'rgba(247,247,242,0.4)' : 'rgba(26,26,26,0.4)' }}
+                  >
+                    Years Experience
+                  </p>
                 </motion.div>
               )}
             </div>
-          </motion.div>
+          </RevealOnScroll>
 
           {/* Content */}
-          <motion.div
-            initial={{ opacity: 0, x: 60 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8, delay: 0.2, ease: [0.25, 0.1, 0.25, 1] }}
-            className="order-1 lg:order-2"
-          >
-            <span className="text-xs dark:text-white/40 text-neutral-500 uppercase tracking-[0.2em]">
+          <RevealOnScroll direction="right" delay={0.15} className="order-1 lg:order-2">
+            <span
+              className="text-xs uppercase tracking-[0.2em]"
+              style={{ color: isDark ? 'rgba(247,247,242,0.35)' : 'rgba(26,26,26,0.35)' }}
+            >
               {content.subtitle}
             </span>
 
-            <h2 className="text-5xl md:text-6xl font-bold dark:text-white text-neutral-900 mt-4 mb-2 tracking-tight">
+            <h2
+              className="text-5xl md:text-6xl font-light mt-4 mb-2 tracking-tight"
+              style={{
+                color: isDark ? '#F7F7F2' : '#1A1A1A',
+                fontFamily: 'var(--font-playfair)',
+              }}
+            >
               {firstName}
             </h2>
-            <h2 className="text-5xl md:text-6xl font-bold mb-8 tracking-tight">
+            <h2
+              className="text-5xl md:text-6xl font-light mb-8 tracking-tight"
+              style={{ fontFamily: 'var(--font-playfair)' }}
+            >
               <span className="gradient-text">{lastName}</span>
             </h2>
 
-            <p className="dark:text-white/70 text-neutral-700 text-lg leading-relaxed mb-8 max-w-md">
+            <p
+              className="text-lg leading-relaxed mb-8 max-w-md"
+              style={{ color: isDark ? 'rgba(247,247,242,0.6)' : 'rgba(26,26,26,0.6)' }}
+            >
               {content.bio}
             </p>
 
@@ -143,11 +176,15 @@ export default function FounderDynamic() {
                       whileInView={{ opacity: 1, y: 0 }}
                       viewport={{ once: true }}
                       transition={{ duration: 0.5, delay: 0.3 + index * 0.1 }}
-                      className="px-4 py-2 rounded-full dark:bg-white/5 bg-neutral-100 dark:border border-white/10 border-neutral-200"
+                      className="px-4 py-2 rounded-full"
+                      style={{
+                        backgroundColor: isDark ? 'rgba(28, 36, 28, 0.6)' : 'rgba(247, 247, 242, 0.8)',
+                        border: `1px solid ${isDark ? 'rgba(212, 175, 55, 0.08)' : 'rgba(0, 104, 56, 0.06)'}`,
+                      }}
                     >
-                      <p className="text-xs dark:text-white/80 text-neutral-700">
+                      <p className="text-xs" style={{ color: isDark ? 'rgba(247,247,242,0.7)' : 'rgba(26,26,26,0.6)' }}>
                         <span className="font-semibold">{label}</span>
-                        {detail && <span className="dark:text-white/50 text-neutral-500"> — {detail}</span>}
+                        {detail && <span style={{ color: isDark ? 'rgba(247,247,242,0.4)' : 'rgba(26,26,26,0.4)' }}> — {detail}</span>}
                       </p>
                     </motion.div>
                   );
@@ -158,7 +195,12 @@ export default function FounderDynamic() {
             {/* Luxury Brands */}
             {brandsList.length > 0 && (
               <div className="mb-8">
-                <p className="text-xs dark:text-white/40 text-neutral-500 uppercase tracking-wider mb-3">Leadership at</p>
+                <p
+                  className="text-xs uppercase tracking-wider mb-3"
+                  style={{ color: isDark ? 'rgba(247,247,242,0.3)' : 'rgba(26,26,26,0.3)' }}
+                >
+                  Leadership at
+                </p>
                 <div className="flex flex-wrap gap-4">
                   {brandsList.map((brand, index) => (
                     <motion.span
@@ -167,10 +209,13 @@ export default function FounderDynamic() {
                       whileInView={{ opacity: 1 }}
                       viewport={{ once: true }}
                       transition={{ duration: 0.5, delay: 0.5 + index * 0.1 }}
-                      className="text-sm dark:text-white/70 text-neutral-700 font-medium"
+                      className="text-sm font-medium"
+                      style={{ color: isDark ? 'rgba(247,247,242,0.6)' : 'rgba(26,26,26,0.6)' }}
                     >
                       {brand}
-                      {index < brandsList.length - 1 && <span className="dark:text-white/30 text-neutral-400 mx-2">•</span>}
+                      {index < brandsList.length - 1 && (
+                        <span style={{ color: isDark ? 'rgba(247,247,242,0.2)' : 'rgba(26,26,26,0.2)' }} className="mx-2">•</span>
+                      )}
                     </motion.span>
                   ))}
                 </div>
@@ -190,16 +235,21 @@ export default function FounderDynamic() {
                     initial={{ opacity: 0, y: 40 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
-                    transition={{ duration: 0.8, delay: 0.6 + index * 0.1, ease: [0.25, 0.1, 0.25, 1] }}
+                    transition={{ duration: 0.8, delay: 0.6 + index * 0.1, ease: [0.16, 1, 0.3, 1] }}
                     className="text-center"
                   >
                     <p className="text-4xl font-bold gradient-text">{value}</p>
-                    <p className="text-xs dark:text-white/40 text-neutral-500 uppercase tracking-wider mt-2">{label}</p>
+                    <p
+                      className="text-xs uppercase tracking-wider mt-2"
+                      style={{ color: isDark ? 'rgba(247,247,242,0.3)' : 'rgba(26,26,26,0.35)' }}
+                    >
+                      {label}
+                    </p>
                   </motion.div>
                 );
               })}
             </div>
-          </motion.div>
+          </RevealOnScroll>
         </div>
       </div>
     </section>

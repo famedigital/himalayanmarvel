@@ -1,14 +1,10 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Mail, Phone, MapPin, Send } from 'lucide-react';
-import { useState } from 'react';
-import { Card } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { Label } from '@/components/ui/label';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
+import { Mail, Phone, MapPin, Send, ArrowRight, Compass } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { useTheme } from 'next-themes';
+import RevealOnScroll from './ui/RevealOnScroll';
 
 export default function Contact() {
   const [formData, setFormData] = useState({
@@ -16,157 +12,358 @@ export default function Contact() {
     email: '',
     message: '',
   });
+  const [mounted, setMounted] = useState(false);
+  const { theme, resolvedTheme } = useTheme();
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const isDark = mounted ? (resolvedTheme === 'dark' || theme === 'dark') : true;
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     console.log('Form submitted:', formData);
   };
 
+  const contactDetails = [
+    {
+      icon: Phone,
+      text: '+975 77270465',
+      label: 'Call us directly',
+      href: 'tel:+97577270465',
+    },
+    {
+      icon: Mail,
+      text: 'info@himalayanmarvels.com',
+      label: 'Send us an email',
+      href: 'mailto:info@himalayanmarvels.com',
+    },
+    {
+      icon: MapPin,
+      text: 'Changbangdu, Thimphu, 11001',
+      label: 'Visit our office',
+      href: '#',
+    },
+  ];
+
   return (
-    <section id="contact" className="section-padding dark:bg-black bg-neutral-50 relative overflow-hidden">
-      {/* Ambient background */}
-      <div className="absolute inset-0 dark:opacity-20 opacity-50">
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full blur-[200px] bg-gradient-to-r from-orange-500/30 via-rose-500/30 to-purple-500/30" />
+    <section id="contact" className="section-padding relative overflow-hidden">
+      {/* Background */}
+      <div
+        className="absolute inset-0"
+        style={{
+          backgroundColor: isDark ? '#0A120A' : '#F7F7F2',
+        }}
+      />
+
+      {/* Subtle ambient glow */}
+      <div className="absolute inset-0 pointer-events-none">
+        <div
+          className="absolute top-0 right-0 w-[500px] h-[500px] rounded-full"
+          style={{
+            background: 'radial-gradient(circle, rgba(0, 104, 56, 0.08) 0%, transparent 70%)',
+            filter: 'blur(80px)',
+          }}
+        />
+        <div
+          className="absolute bottom-0 left-0 w-[400px] h-[400px] rounded-full"
+          style={{
+            background: 'radial-gradient(circle, rgba(212, 175, 55, 0.06) 0%, transparent 70%)',
+            filter: 'blur(80px)',
+          }}
+        />
       </div>
 
       <div className="container-premium relative z-10">
         {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 40 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8, ease: [0.25, 0.1, 0.25, 1] }}
-          className="text-center mb-16"
-        >
-          <Badge variant="outline" className="text-xs uppercase tracking-[0.25em] mb-4">
-            Get in Touch
-          </Badge>
-          <h2 className="text-4xl md:text-5xl font-bold dark:text-white text-neutral-900 mt-4">
-            Start your{' '}
-            <span className="gradient-text">Bhutan journey</span>
+        <RevealOnScroll className="text-center mb-20">
+          <div className="flex items-center justify-center gap-3 mb-6">
+            <div
+              className="w-8 h-px"
+              style={{ backgroundColor: '#D4AF37' }}
+            />
+            <span
+              className="text-[0.65rem] font-semibold tracking-[0.3em] uppercase"
+              style={{ color: '#D4AF37' }}
+            >
+              Begin Your Journey
+            </span>
+            <div
+              className="w-8 h-px"
+              style={{ backgroundColor: '#D4AF37' }}
+            />
+          </div>
+          <h2
+            className="text-4xl md:text-6xl font-light mb-6"
+            style={{
+              color: isDark ? '#F7F7F2' : '#1A1A1A',
+              fontFamily: 'var(--font-playfair)',
+            }}
+          >
+            Craft Your{' '}
+            <em style={{ color: '#D4AF37' }}>Sacred</em>
+            <br />
+            Himalayan Experience
           </h2>
-        </motion.div>
-
-        <div className="grid lg:grid-cols-2 gap-12 max-w-5xl mx-auto">
-          {/* Contact Info */}
-          <motion.div
-            initial={{ opacity: 0, x: -60 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8, ease: [0.25, 0.1, 0.25, 1] }}
-            className="space-y-6"
+          <p
+            className="text-base md:text-lg max-w-xl mx-auto leading-relaxed"
+            style={{ color: isDark ? 'rgba(247, 247, 242, 0.5)' : 'rgba(26, 26, 26, 0.45)' }}
           >
-            <h3 className="text-2xl font-semibold dark:text-white text-neutral-900 mb-8">
-              Let&apos;s plan your adventure
-            </h3>
+            Every journey begins with a conversation. Share your vision, and we&apos;ll design an experience beyond imagination.
+          </p>
+        </RevealOnScroll>
 
-            {[
-              {
-                icon: Phone,
-                text: '+975 77270465',
-                label: 'Call us directly',
-                href: 'tel:+97577270465',
-              },
-              {
-                icon: Mail,
-                text: 'info@himalayanmarvels.com',
-                label: 'Send us an email',
-                href: 'mailto:info@himalayanmarvels.com',
-              },
-              {
-                icon: MapPin,
-                text: 'Changbangdu, Thimphu, 11001',
-                label: 'Visit our office',
-                href: '#',
-              },
-            ].map((item, index) => {
-              const Icon = item.icon;
-              return (
-                <motion.a
-                  key={index}
-                  href={item.href}
-                  initial={{ opacity: 0, y: 30 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.6, delay: index * 0.1, ease: [0.25, 0.1, 0.25, 1] }}
-                  whileHover={{ x: 8 }}
-                  className="block"
+        {/* Main Content Grid */}
+        <div className="grid lg:grid-cols-5 gap-8 lg:gap-12 max-w-6xl mx-auto">
+          {/* Left: Contact Info & Editorial */}
+          <div className="lg:col-span-2 space-y-6">
+            <RevealOnScroll direction="left">
+              {/* Editorial card */}
+              <div
+                className="rounded-2xl p-8 mb-6"
+                style={{
+                  backgroundColor: isDark ? 'rgba(28, 36, 28, 0.6)' : 'rgba(255, 255, 255, 0.8)',
+                  border: '1px solid rgba(212, 175, 55, 0.1)',
+                  backdropFilter: 'blur(20px)',
+                }}
+              >
+                <Compass
+                  className="w-5 h-5 mb-6"
+                  style={{ color: '#D4AF37' }}
+                />
+                <p
+                  className="text-lg md:text-xl font-light leading-relaxed mb-6 italic"
+                  style={{
+                    color: isDark ? 'rgba(247, 247, 242, 0.75)' : 'rgba(26, 26, 26, 0.7)',
+                    fontFamily: 'var(--font-playfair)',
+                  }}
                 >
-                  <Card className="flex items-start gap-4 p-5 border-2 dark:border-white/5 border-neutral-200 dark:hover:border-white/10 hover:border-neutral-300 transition-all group">
-                    <div className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 bg-gradient-to-br from-orange-500/15 to-purple-500/15">
-                      <Icon className="w-5 h-5 dark:text-white/70 text-neutral-700 group-hover:scale-110 transition-transform" />
-                    </div>
-                    <div>
-                      <p className="text-xs dark:text-white/40 text-neutral-500 uppercase tracking-wider mb-1">{item.label}</p>
-                      <p className="dark:text-white text-neutral-900 font-medium">{item.text}</p>
-                    </div>
-                  </Card>
-                </motion.a>
-              );
-            })}
-          </motion.div>
-
-          {/* Contact Form */}
-          <motion.div
-            initial={{ opacity: 0, x: 60 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8, ease: [0.25, 0.1, 0.25, 1] }}
-          >
-            <Card className="p-6 dark:bg-white/5 bg-white dark:border-white/10 border-neutral-200">
-              <form onSubmit={handleSubmit} className="space-y-5">
-                <div className="space-y-2">
-                  <Label htmlFor="name">Your Name</Label>
-                  <Input
-                    type="text"
-                    id="name"
-                    value={formData.name}
-                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                    placeholder="Enter your name"
-                    required
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="email">Email Address</Label>
-                  <Input
-                    type="email"
-                    id="email"
-                    value={formData.email}
-                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                    placeholder="your@email.com"
-                    required
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="message">Your Message</Label>
-                  <Textarea
-                    id="message"
-                    value={formData.message}
-                    onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                    rows={4}
-                    placeholder="Tell us about your dream trip..."
-                    required
-                  />
-                </div>
-
-                <motion.div
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
+                  &ldquo;We don&apos;t sell tours. We curate transformative encounters with a kingdom that measures wealth in happiness.&rdquo;
+                </p>
+                <div
+                  className="w-12 h-px mb-4"
+                  style={{ backgroundColor: 'rgba(212, 175, 55, 0.3)' }}
+                />
+                <p
+                  className="text-xs tracking-[0.15em] uppercase font-semibold"
+                  style={{ color: isDark ? 'rgba(247, 247, 242, 0.4)' : 'rgba(26, 26, 26, 0.35)' }}
                 >
-                  <Button
-                    type="submit"
-                    size="lg"
-                    className="w-full h-12 rounded-full bg-gradient-to-r from-orange-500 to-pink-500 text-white font-semibold shadow-xl shadow-orange-500/30"
+                  Himalayan Marvels Team
+                </p>
+              </div>
+            </RevealOnScroll>
+
+            {/* Contact details */}
+            <div className="space-y-3">
+              {contactDetails.map((item, index) => {
+                const Icon = item.icon;
+                return (
+                  <RevealOnScroll key={index} direction="left" delay={0.1 * (index + 1)}>
+                    <motion.a
+                      href={item.href}
+                      whileHover={{ x: 6 }}
+                      transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+                      className="flex items-center gap-4 p-4 rounded-xl group cursor-pointer transition-all"
+                      style={{
+                        backgroundColor: 'transparent',
+                        border: '1px solid transparent',
+                      }}
+                      onMouseEnter={(e) => {
+                        (e.currentTarget as HTMLElement).style.backgroundColor = isDark ? 'rgba(28, 36, 28, 0.5)' : 'rgba(255, 255, 255, 0.6)';
+                        (e.currentTarget as HTMLElement).style.borderColor = isDark ? 'rgba(212, 175, 55, 0.08)' : 'rgba(0, 104, 56, 0.06)';
+                      }}
+                      onMouseLeave={(e) => {
+                        (e.currentTarget as HTMLElement).style.backgroundColor = 'transparent';
+                        (e.currentTarget as HTMLElement).style.borderColor = 'transparent';
+                      }}
+                    >
+                      <div
+                        className="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 transition-all"
+                        style={{
+                          backgroundColor: isDark ? 'rgba(0, 104, 56, 0.12)' : 'rgba(0, 104, 56, 0.08)',
+                        }}
+                      >
+                        <Icon
+                          className="w-4 h-4 transition-colors"
+                          style={{ color: '#006838' }}
+                        />
+                      </div>
+                      <div>
+                        <p
+                          className="text-[0.6rem] uppercase tracking-[0.2em] mb-0.5"
+                          style={{ color: isDark ? 'rgba(247, 247, 242, 0.3)' : 'rgba(26, 26, 26, 0.3)' }}
+                        >
+                          {item.label}
+                        </p>
+                        <p
+                          className="text-sm font-medium"
+                          style={{ color: isDark ? 'rgba(247, 247, 242, 0.85)' : 'rgba(26, 26, 26, 0.8)' }}
+                        >
+                          {item.text}
+                        </p>
+                      </div>
+                    </motion.a>
+                  </RevealOnScroll>
+                );
+              })}
+            </div>
+
+            {/* Response time badge */}
+            <RevealOnScroll direction="left" delay={0.4}>
+              <div
+                className="flex items-center gap-3 pt-4"
+              >
+                <div
+                  className="w-2 h-2 rounded-full"
+                  style={{ backgroundColor: '#006838', boxShadow: '0 0 8px rgba(0, 104, 56, 0.4)' }}
+                />
+                <span
+                  className="text-[0.65rem] tracking-[0.15em] uppercase font-semibold"
+                  style={{ color: isDark ? 'rgba(247, 247, 242, 0.35)' : 'rgba(26, 26, 26, 0.3)' }}
+                >
+                  Typically responds within 4 hours
+                </span>
+              </div>
+            </RevealOnScroll>
+          </div>
+
+          {/* Right: Form */}
+          <div className="lg:col-span-3">
+            <RevealOnScroll direction="right">
+              <div
+                className="rounded-2xl p-8 md:p-10"
+                style={{
+                  backgroundColor: isDark ? 'rgba(20, 28, 20, 0.8)' : 'rgba(255, 255, 255, 0.9)',
+                  border: '1px solid rgba(212, 175, 55, 0.1)',
+                  backdropFilter: 'blur(24px)',
+                  boxShadow: isDark
+                    ? '0 24px 64px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(247, 247, 242, 0.03)'
+                    : '0 24px 64px rgba(0, 0, 0, 0.04), inset 0 1px 0 rgba(255, 255, 255, 0.5)',
+                }}
+              >
+                <form onSubmit={handleSubmit} className="space-y-6">
+                  {/* Name field */}
+                  <div className="space-y-2">
+                    <label
+                      htmlFor="name"
+                      className="text-[0.65rem] font-semibold tracking-[0.2em] uppercase block"
+                      style={{ color: isDark ? 'rgba(247, 247, 242, 0.4)' : 'rgba(26, 26, 26, 0.35)' }}
+                    >
+                      Full Name
+                    </label>
+                    <input
+                      type="text"
+                      id="name"
+                      value={formData.name}
+                      onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                      placeholder="Your name"
+                      required
+                      className="w-full bg-transparent outline-none text-sm md:text-base py-3 border-b transition-colors"
+                      style={{
+                        color: isDark ? '#F7F7F2' : '#1A1A1A',
+                        borderColor: isDark ? 'rgba(212, 175, 55, 0.1)' : 'rgba(0, 104, 56, 0.1)',
+                      }}
+                      onFocus={(e) => {
+                        (e.target as HTMLElement).style.borderColor = '#D4AF37';
+                      }}
+                      onBlur={(e) => {
+                        (e.target as HTMLElement).style.borderColor = isDark ? 'rgba(212, 175, 55, 0.1)' : 'rgba(0, 104, 56, 0.1)';
+                      }}
+                    />
+                  </div>
+
+                  {/* Email field */}
+                  <div className="space-y-2">
+                    <label
+                      htmlFor="email"
+                      className="text-[0.65rem] font-semibold tracking-[0.2em] uppercase block"
+                      style={{ color: isDark ? 'rgba(247, 247, 242, 0.4)' : 'rgba(26, 26, 26, 0.35)' }}
+                    >
+                      Email Address
+                    </label>
+                    <input
+                      type="email"
+                      id="email"
+                      value={formData.email}
+                      onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                      placeholder="your@email.com"
+                      required
+                      className="w-full bg-transparent outline-none text-sm md:text-base py-3 border-b transition-colors"
+                      style={{
+                        color: isDark ? '#F7F7F2' : '#1A1A1A',
+                        borderColor: isDark ? 'rgba(212, 175, 55, 0.1)' : 'rgba(0, 104, 56, 0.1)',
+                      }}
+                      onFocus={(e) => {
+                        (e.target as HTMLElement).style.borderColor = '#D4AF37';
+                      }}
+                      onBlur={(e) => {
+                        (e.target as HTMLElement).style.borderColor = isDark ? 'rgba(212, 175, 55, 0.1)' : 'rgba(0, 104, 56, 0.1)';
+                      }}
+                    />
+                  </div>
+
+                  {/* Message field */}
+                  <div className="space-y-2">
+                    <label
+                      htmlFor="message"
+                      className="text-[0.65rem] font-semibold tracking-[0.2em] uppercase block"
+                      style={{ color: isDark ? 'rgba(247, 247, 242, 0.4)' : 'rgba(26, 26, 26, 0.35)' }}
+                    >
+                      Your Vision
+                    </label>
+                    <textarea
+                      id="message"
+                      value={formData.message}
+                      onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+                      rows={5}
+                      placeholder="Describe your dream Himalayan experience..."
+                      required
+                      className="w-full bg-transparent outline-none text-sm md:text-base py-3 border-b resize-none transition-colors"
+                      style={{
+                        color: isDark ? '#F7F7F2' : '#1A1A1A',
+                        borderColor: isDark ? 'rgba(212, 175, 55, 0.1)' : 'rgba(0, 104, 56, 0.1)',
+                      }}
+                      onFocus={(e) => {
+                        (e.target as HTMLElement).style.borderColor = '#D4AF37';
+                      }}
+                      onBlur={(e) => {
+                        (e.target as HTMLElement).style.borderColor = isDark ? 'rgba(212, 175, 55, 0.1)' : 'rgba(0, 104, 56, 0.1)';
+                      }}
+                    />
+                  </div>
+
+                  {/* Submit */}
+                  <div className="pt-4">
+                    <motion.button
+                      type="submit"
+                      whileHover={{
+                        scale: 1.01,
+                        boxShadow: '0 12px 40px rgba(0, 104, 56, 0.35)',
+                      }}
+                      whileTap={{ scale: 0.99 }}
+                      className="w-full py-4 rounded-full text-white text-[0.7rem] font-semibold tracking-[0.2em] uppercase flex items-center justify-center gap-3 transition-all cursor-pointer"
+                      style={{
+                        backgroundColor: '#006838',
+                        border: '1px solid rgba(212, 175, 55, 0.2)',
+                      }}
+                    >
+                      <span>Begin the Conversation</span>
+                      <ArrowRight className="w-4 h-4" />
+                    </motion.button>
+                  </div>
+
+                  {/* Privacy note */}
+                  <p
+                    className="text-center text-[0.6rem] tracking-wider pt-2"
+                    style={{ color: isDark ? 'rgba(247, 247, 242, 0.2)' : 'rgba(26, 26, 26, 0.2)' }}
                   >
-                    <span>Send Message</span>
-                    <Send className="w-5 h-5 ml-2" />
-                  </Button>
-                </motion.div>
-              </form>
-            </Card>
-          </motion.div>
+                    Your information is held in the strictest confidence
+                  </p>
+                </form>
+              </div>
+            </RevealOnScroll>
+          </div>
         </div>
       </div>
     </section>

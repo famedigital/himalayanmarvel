@@ -121,7 +121,7 @@ export default function Hero() {
   return (
     <section
       ref={ref}
-      className="relative h-screen w-full overflow-hidden bg-stone-950"
+      className="relative h-[75vh] md:h-screen w-full overflow-hidden bg-[#0E140E]"
     >
       {/* Video/Image Background */}
       <div className="absolute inset-0">
@@ -132,7 +132,7 @@ export default function Hero() {
             muted
             loop
             playsInline
-            className="w-full h-full object-cover"
+            className="w-full h-full object-cover img-editorial"
           >
             <source src={heroMediaUrl} type="video/mp4" />
           </video>
@@ -140,100 +140,131 @@ export default function Hero() {
           <img
             src={heroMediaUrl}
             alt="Hero background"
-            className="w-full h-full object-cover"
+            className="w-full h-full object-cover img-editorial"
           />
         )}
 
-        {/* Elegant dark overlay */}
-        <div className="absolute inset-0 bg-black/40" />
+        {/* Cinematic dual-layer overlay */}
+        <div className="absolute inset-0 bg-black/30" />
+        <div
+          className="absolute inset-0"
+          style={{
+            background: 'radial-gradient(ellipse at center, transparent 30%, rgba(0,0,0,0.5) 100%)',
+          }}
+        />
       </div>
 
       {/* Hero Content */}
       <motion.div
         style={{ opacity, scale }}
-        className="relative h-full flex items-center px-6 md:px-12 lg:px-20"
+        className="relative h-full flex items-center justify-center px-6 md:px-12"
       >
-        <div className="flex-1">
-          {/* Centered Content */}
-          <div className="max-w-3xl mx-auto text-center">
-            {/* Logo */}
-            <motion.div
-              key={`logo-${currentSlide?.id || 'default'}`}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 1, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
-              className="mb-8 flex justify-center"
-            >
-              <div className="relative w-48 h-48 md:w-60 md:h-60 lg:w-72 lg:h-72">
-                <Image
-                  src={heroLogo}
-                  alt="Himalayan Marvels"
-                  fill
-                  sizes="(max-width: 768px) 192px, (max-width: 1024px) 240px, 288px"
-                  className="object-contain drop-shadow-2xl"
-                  style={{ filter: 'drop-shadow(0 0 60px rgba(232, 185, 35, 0.3))' }}
-                />
-              </div>
-            </motion.div>
-
-            {/* Subtitle */}
-            <motion.p
-              key={`subtitle-${currentSlide?.id || 'default'}`}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 1, ease: [0.16, 1, 0.3, 1], delay: 0.2 }}
-              className="text-lg md:text-2xl mb-12 max-w-2xl mx-auto leading-relaxed text-stone-200"
-            >
-              {staticSubtitle}
-              {rotatingParts.length > 0 && (
-                <>
-                  {staticSubtitle ? ', ' : ''}
-                  <span className="text-amber-200">{typedDynamicPart}</span>
-                </>
-              )}
-              <motion.span
-                animate={{ opacity: [1, 0] }}
-                transition={{ duration: 0.8, repeat: Infinity, repeatDelay: 0.4 }}
-                className="inline-block w-0.5 h-6 md:h-8 bg-amber-400/90 ml-1 align-middle rounded-full"
+        <div className="max-w-4xl mx-auto text-center">
+          {/* Logo - Elegant smaller placement */}
+          <motion.div
+            key={`logo-${currentSlide?.id || 'default'}`}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
+            className="mb-10 flex justify-center"
+          >
+            <div className="relative w-24 h-24 md:w-36 md:h-36 lg:w-48 lg:h-48">
+              <Image
+                src={heroLogo}
+                alt="Himalayan Marvels"
+                fill
+                sizes="(max-width: 768px) 144px, 192px"
+                className="object-contain"
+                style={{ filter: 'drop-shadow(0 0 40px rgba(212, 175, 55, 0.25))' }}
               />
-            </motion.p>
+            </div>
+          </motion.div>
 
-            {/* CTA */}
-            <motion.div
-              key={`cta-${currentSlide?.id || 'default'}`}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 1, ease: [0.16, 1, 0.3, 1], delay: 0.3 }}
+          {/* Cinematic Heading - Typography First */}
+          <motion.h1
+            key={`heading-${currentSlide?.id || 'default'}`}
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1], delay: 0.2 }}
+            className="text-4xl md:text-7xl lg:text-8xl font-light text-white mb-8 tracking-tight"
+            style={{ fontFamily: 'var(--font-playfair)' }}
+          >
+            The Last{' '}
+            <span className="italic" style={{ color: '#D4AF37' }}>
+              Shangri-La
+            </span>
+          </motion.h1>
+
+          {/* Subtitle with typing effect */}
+          <motion.p
+            key={`subtitle-${currentSlide?.id || 'default'}`}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1, ease: [0.16, 1, 0.3, 1], delay: 0.4 }}
+            className="text-base md:text-xl mb-14 max-w-2xl mx-auto leading-relaxed"
+            style={{ color: 'rgba(247, 247, 242, 0.8)' }}
+          >
+            {staticSubtitle}
+            {rotatingParts.length > 0 && (
+              <>
+                {staticSubtitle ? ', ' : ''}
+                <span style={{ color: '#D4AF37' }}>{typedDynamicPart}</span>
+              </>
+            )}
+            <motion.span
+              animate={{ opacity: [1, 0] }}
+              transition={{ duration: 0.8, repeat: Infinity, repeatDelay: 0.4 }}
+              className="inline-block w-0.5 h-5 md:h-7 ml-1 align-middle rounded-full"
+              style={{ backgroundColor: 'rgba(212, 175, 55, 0.7)' }}
+            />
+          </motion.p>
+
+          {/* CTA Button */}
+          <motion.div
+            key={`cta-${currentSlide?.id || 'default'}`}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1, ease: [0.16, 1, 0.3, 1], delay: 0.6 }}
+          >
+            <motion.a
+              href={heroLink}
+              whileHover={{ x: 4, boxShadow: '0 8px 32px rgba(0, 104, 56, 0.4)' }}
+              whileTap={{ scale: 0.98 }}
+              className="inline-flex px-10 py-4 rounded-full text-white text-sm font-medium tracking-wide items-center gap-3 transition-all"
+              style={{
+                backgroundColor: '#006838',
+                border: '1px solid rgba(212, 175, 55, 0.25)',
+              }}
             >
-              <motion.a
-                href={heroLink}
-                whileHover={{ x: 4 }}
-                whileTap={{ scale: 0.98 }}
-                className="inline-flex px-10 py-4 rounded-full text-white text-sm font-medium tracking-wide items-center gap-3 transition-all"
-                style={{ backgroundColor: '#8E261A' }}
-              >
-                {heroCtaText}
-                <ArrowRight className="w-4 h-4" />
-              </motion.a>
-            </motion.div>
-          </div>
+              {heroCtaText}
+              <ArrowRight className="w-4 h-4" />
+            </motion.a>
+          </motion.div>
         </div>
       </motion.div>
 
       {/* Bottom Gradient Fade */}
-      <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-[#F8F4F0] to-transparent" />
+      <div
+        className="absolute bottom-0 left-0 right-0 h-32 dark:hidden"
+        style={{ background: 'linear-gradient(to top, #F7F7F2, transparent)' }}
+      />
+      <div
+        className="absolute bottom-0 left-0 right-0 h-32 hidden dark:block"
+        style={{ background: 'linear-gradient(to top, #0E140E, transparent)' }}
+      />
 
       {/* Scroll Indicator */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 2, duration: 1.5 }}
-        className="absolute bottom-8 left-1/2 -translate-x-1/2"
+        className="absolute bottom-10 left-1/2 -translate-x-1/2"
       >
         <motion.div
           animate={{ y: [0, 8, 0] }}
           transition={{ duration: 2.5, repeat: Infinity, ease: 'easeInOut' }}
-          className="w-px h-16 bg-white/30"
+          className="w-px h-16 rounded-full"
+          style={{ backgroundColor: 'rgba(212, 175, 55, 0.3)' }}
         />
       </motion.div>
     </section>
