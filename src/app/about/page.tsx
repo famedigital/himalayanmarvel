@@ -1,6 +1,8 @@
 import { Metadata } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
+import Navigation from '@/components/Navigation';
+import Footer from '@/components/Footer';
 import RevealOnScroll from '@/components/ui/RevealOnScroll';
 import JsonLd from '@/components/seo/JsonLd';
 
@@ -60,6 +62,7 @@ export default function AboutPage() {
   return (
     <main className="min-h-screen bg-alabaster dark:bg-dark-forest">
       <JsonLd data={organizationSchema} />
+      <Navigation />
 
       {/* Hero Section */}
       <section className="relative h-[60vh] min-h-[500px] flex items-center justify-center overflow-hidden">
@@ -345,6 +348,7 @@ export default function AboutPage() {
           </RevealOnScroll>
         </div>
       </section>
+      <Footer />
     </main>
   );
 }
