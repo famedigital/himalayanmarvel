@@ -37,7 +37,7 @@ export default function WhatsAppConcierge() {
             border: '1px solid rgba(212, 175, 55, 0.12)',
           }}
         >
-          Personal Concierge
+          Chat with Local Expert
         </motion.div>
 
         {/* Pulse Ring */}
@@ -96,7 +96,7 @@ export default function WhatsAppConcierge() {
             }}
           >
             <MessageCircle className="w-4 h-4" />
-            WhatsApp
+            Local Expert
           </a>
 
           {/* Inquire Button */}

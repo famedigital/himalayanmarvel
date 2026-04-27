@@ -1,16 +1,26 @@
 'use client';
 
 import { motion, AnimatePresence } from 'framer-motion';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { ThemeToggle } from './ThemeToggle';
 import { useTheme } from 'next-themes';
-import { Menu, X } from 'lucide-react';
+import { Menu, X, ChevronDown } from 'lucide-react';
 import Link from 'next/link';
 
 const navItems = [
   { name: 'Home', href: '/' },
-  { name: 'Tours', href: '/tours' },
-  { name: 'Blog', href: '/blog' },
+  {
+    name: 'Tours',
+    href: '/tours',
+    hasDropdown: true,
+    children: [
+      { name: 'Cultural Tours', href: '/tours?type=cultural' },
+      { name: 'Treks', href: '/tours?type=trek' },
+      { name: 'Spiritual Journeys', href: '/tours?type=spiritual' },
+      { name: 'Luxury Tours', href: '/tours?type=luxury' },
+    ],
+  },
+  { name: 'Journal', href: '/blog' },
   { name: 'About', href: '/#about' },
   { name: 'Contact', href: '/#contact' },
 ];
@@ -18,8 +28,10 @@ const navItems = [
 export default function Navigation() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [openDropdown, setOpenDropdown] = useState<string | null>(null);
   const [mounted, setMounted] = useState(false);
   const { theme, resolvedTheme } = useTheme();
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     setMounted(true);
@@ -32,6 +44,23 @@ export default function Navigation() {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setOpenDropdown(null);
+      }
+    };
+
+    if (openDropdown) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [openDropdown]);
 
   const isDark = mounted ? (resolvedTheme === 'dark' || theme === 'dark') : true;
 
@@ -69,15 +98,18 @@ export default function Navigation() {
               whileHover={{ scale: 1.02 }}
               transition={{ duration: 0.3 }}
             >
-              <span
-                className="text-[0.7rem] md:text-xs font-semibold tracking-[0.2em] uppercase whitespace-nowrap"
-                style={{
-                  color: isDark ? '#F7F7F2' : '#1A1A1A',
-                  fontFamily: 'var(--font-playfair)',
-                }}
-              >
-                HIMALAYAN MARVELS
-              </span>
+              <div className="relative w-8 h-8 md:w-10 md:h-10">
+                <img
+                  src="/logo/hmtlogo.png"
+                  alt="Himalayan Marvels"
+                  className="w-full h-full object-contain"
+                  style={{
+                    filter: isDark
+                      ? 'brightness(0) invert(1)' // White in dark mode
+                      : 'brightness(0)', // Black in light mode
+                  }}
+                />
+              </div>
             </motion.div>
           </Link>
 
@@ -90,32 +122,97 @@ export default function Navigation() {
           {/* Navigation Links */}
           <div className="hidden md:flex items-center gap-6">
             {navItems.map((item) => (
-              <Link key={item.name} href={item.href}>
-                <motion.div
-                  whileHover={{ y: -1 }}
-                  transition={{ duration: 0.2 }}
-                  className="relative group"
-                >
-                  <span
-                    className="text-[0.7rem] font-semibold tracking-[0.18em] uppercase py-1 inline-block transition-colors"
-                    style={{ color: isDark ? 'rgba(247, 247, 242, 0.9)' : 'rgba(0, 104, 56, 0.85)' }}
-                    onMouseEnter={(e) => {
-                      (e.target as HTMLElement).style.color = isDark ? '#F7F7F2' : '#006838';
-                    }}
-                    onMouseLeave={(e) => {
-                      (e.target as HTMLElement).style.color = isDark ? 'rgba(247, 247, 242, 0.9)' : 'rgba(0, 104, 56, 0.85)';
-                    }}
-                  >
-                    {item.name}
-                  </span>
-                  <motion.span
-                    className="absolute bottom-0 left-0 right-0 h-[1px]"
-                    style={{ backgroundColor: '#D4AF37', scaleX: 0, transformOrigin: 'left' }}
-                    whileHover={{ scaleX: 1 }}
-                    transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-                  />
-                </motion.div>
-              </Link>
+              <div key={item.name} className="relative" ref={item.hasDropdown ? dropdownRef : undefined}>
+                {item.hasDropdown ? (
+                  <>
+                    <motion.button
+                      whileHover={{ y: -1 }}
+                      transition={{ duration: 0.2 }}
+                      className="relative flex items-center gap-1 group"
+                      onClick={() => setOpenDropdown(openDropdown === item.name ? null : item.name)}
+                      onMouseEnter={() => setOpenDropdown(item.name)}
+                    >
+                      <span
+                        className="text-[0.7rem] font-semibold tracking-[0.18em] uppercase py-1 inline-block transition-colors"
+                        style={{ color: isDark ? 'rgba(247, 247, 242, 0.9)' : 'rgba(0, 104, 56, 0.85)' }}
+                      >
+                        {item.name}
+                      </span>
+                      <ChevronDown
+                        className="w-3 h-3 transition-transform duration-200"
+                        style={{
+                          color: isDark ? 'rgba(247, 247, 242, 0.6)' : 'rgba(0, 104, 56, 0.6)',
+                          transform: openDropdown === item.name ? 'rotate(180deg)' : 'rotate(0deg)',
+                        }}
+                      />
+                      <motion.span
+                        className="absolute bottom-0 left-0 right-0 h-[1px]"
+                        style={{ backgroundColor: '#D4AF37', scaleX: openDropdown === item.name ? 1 : 0, transformOrigin: 'left' }}
+                        transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+                      />
+                    </motion.button>
+
+                    {/* Dropdown Menu */}
+                    <AnimatePresence>
+                      {openDropdown === item.name && item.children && (
+                        <motion.div
+                          initial={{ opacity: 0, y: 10 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0, y: 10 }}
+                          transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
+                          className="absolute top-full left-0 mt-2 min-w-[200px] rounded-xl overflow-hidden"
+                          style={{
+                            backgroundColor: isDark ? 'rgba(14, 20, 14, 0.98)' : 'rgba(247, 247, 242, 0.98)',
+                            backdropFilter: 'blur(24px) saturate(180%)',
+                            WebkitBackdropFilter: 'blur(24px) saturate(180%)',
+                            border: '1px solid rgba(212, 175, 55, 0.12)',
+                            boxShadow: isDark
+                              ? '0 16px 48px rgba(0, 0, 0, 0.4)'
+                              : '0 16px 48px rgba(0, 0, 0, 0.08)',
+                          }}
+                          onMouseLeave={() => setOpenDropdown(null)}
+                        >
+                          {item.children.map((child) => (
+                            <Link
+                              key={child.name}
+                              href={child.href}
+                              onClick={() => setOpenDropdown(null)}
+                              className="block px-5 py-3 text-[0.65rem] font-semibold tracking-[0.15em] uppercase transition-colors border-b last:border-b-0 hover:bg-black/5 dark:hover:bg-white/5"
+                              style={{
+                                color: isDark ? 'rgba(247, 247, 242, 0.8)' : 'rgba(0, 104, 56, 0.7)',
+                                borderColor: isDark ? 'rgba(212, 175, 55, 0.08)' : 'rgba(0, 104, 56, 0.06)',
+                              }}
+                            >
+                              {child.name}
+                            </Link>
+                          ))}
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </>
+                ) : (
+                  <Link href={item.href}>
+                    <motion.div
+                      whileHover={{ y: -1 }}
+                      transition={{ duration: 0.2 }}
+                      className="relative group"
+                    >
+                      <span
+                        className="text-[0.7rem] font-semibold tracking-[0.18em] uppercase py-1 inline-block transition-colors"
+                        style={{ color: isDark ? 'rgba(247, 247, 242, 0.9)' : 'rgba(0, 104, 56, 0.85)' }}
+                      >
+                        {item.name}
+                      </span>
+                      <motion.span
+                        className="absolute bottom-0 left-0 right-0 h-[1px]"
+                        style={{ backgroundColor: '#D4AF37', scaleX: 0, transformOrigin: 'left' }}
+                        whileHover={{ scaleX: 1 }}
+                        transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+                      />
+                    </motion.div>
+                  </Link>
+                )}
+              </div>
             ))}
           </div>
 
@@ -186,21 +283,76 @@ export default function Navigation() {
           >
             <div className="px-6 py-6">
               {navItems.map((item, index) => (
-                <motion.a
-                  key={item.name}
-                  href={item.href}
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: index * 0.05, duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  className="block py-3 text-xs font-medium tracking-[0.2em] uppercase transition-colors border-b last:border-b-0"
-                  style={{
-                    color: isDark ? 'rgba(247, 247, 242, 0.8)' : 'rgba(0, 104, 56, 0.7)',
-                    borderColor: isDark ? 'rgba(212, 175, 55, 0.08)' : 'rgba(0, 104, 56, 0.06)',
-                  }}
-                >
-                  {item.name}
-                </motion.a>
+                <div key={item.name}>
+                  {item.hasDropdown ? (
+                    <div>
+                      <motion.button
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: index * 0.05, duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+                        onClick={() => setOpenDropdown(openDropdown === item.name ? null : item.name)}
+                        className="w-full flex items-center justify-between py-3 text-xs font-medium tracking-[0.2em] uppercase transition-colors border-b"
+                        style={{
+                          color: isDark ? 'rgba(247, 247, 242, 0.8)' : 'rgba(0, 104, 56, 0.7)',
+                          borderColor: isDark ? 'rgba(212, 175, 55, 0.08)' : 'rgba(0, 104, 56, 0.06)',
+                        }}
+                      >
+                        {item.name}
+                        <ChevronDown
+                          className="w-3 h-3 transition-transform duration-200"
+                          style={{
+                            transform: openDropdown === item.name ? 'rotate(180deg)' : 'rotate(0deg)',
+                          }}
+                        />
+                      </motion.button>
+
+                      <AnimatePresence>
+                        {openDropdown === item.name && item.children && (
+                          <motion.div
+                            initial={{ opacity: 0, height: 0 }}
+                            animate={{ opacity: 1, height: 'auto' }}
+                            exit={{ opacity: 0, height: 0 }}
+                            transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
+                            className="overflow-hidden"
+                          >
+                            {item.children.map((child, childIndex) => (
+                              <Link
+                                key={child.name}
+                                href={child.href}
+                                onClick={() => {
+                                  setIsMobileMenuOpen(false);
+                                  setOpenDropdown(null);
+                                }}
+                                className="block pl-4 py-3 text-[0.65rem] font-medium tracking-[0.15em] uppercase transition-colors border-b last:border-b-0"
+                                style={{
+                                  color: isDark ? 'rgba(247, 247, 242, 0.6)' : 'rgba(0, 104, 56, 0.55)',
+                                  borderColor: isDark ? 'rgba(212, 175, 55, 0.06)' : 'rgba(0, 104, 56, 0.04)',
+                                }}
+                              >
+                                {child.name}
+                              </Link>
+                            ))}
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </div>
+                  ) : (
+                    <Link href={item.href} onClick={() => setIsMobileMenuOpen(false)}>
+                      <motion.span
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: index * 0.05, duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+                        className="block py-3 text-xs font-medium tracking-[0.2em] uppercase transition-colors border-b last:border-b-0"
+                        style={{
+                          color: isDark ? 'rgba(247, 247, 242, 0.8)' : 'rgba(0, 104, 56, 0.7)',
+                          borderColor: isDark ? 'rgba(212, 175, 55, 0.08)' : 'rgba(0, 104, 56, 0.06)',
+                        }}
+                      >
+                        {item.name}
+                      </motion.span>
+                    </Link>
+                  )}
+                </div>
               ))}
               <motion.div
                 initial={{ opacity: 0, x: -20 }}

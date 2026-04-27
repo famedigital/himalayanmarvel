@@ -1,11 +1,12 @@
 'use client';
 
-import { motion, useScroll, useTransform } from 'framer-motion';
+import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
 import { useRef, useEffect, useState } from 'react';
 import { useTheme } from 'next-themes';
 import Image from 'next/image';
 import { createClient } from '@/lib/supabase/client';
+import LeadCaptureForm from '@/components/LeadCaptureForm';
 
 interface HeroSlide {
   id: string;
@@ -32,10 +33,16 @@ export default function Hero() {
 
   const [mounted, setMounted] = useState(false);
   const [slides, setSlides] = useState<HeroSlide[]>([]);
-  const [typedDynamicPart, setTypedDynamicPart] = useState('');
-  const [dynamicIndex, setDynamicIndex] = useState(0);
-  const [isDeleting, setIsDeleting] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
+  // Premium Bhutan images for carousel
+  const heroImages = [
+    'https://res.cloudinary.com/dxztrqjft/image/upload/v1776291879/tiger-nest-close_rm2bee.jpg',
+    'https://res.cloudinary.com/dxztrqjft/image/upload/v1776291902/buddha-point-view_skbl41.jpg',
+    'https://res.cloudinary.com/dxztrqjft/image/upload/v1776291877/dochula_r3uler.jpg',
+    'https://res.cloudinary.com/dxztrqjft/image/upload/v1776271223/tashichodzong_ddin28.jpg',
+  ];
 
   /* eslint-disable react-hooks/set-state-in-effect */
   useEffect(() => {
@@ -55,8 +62,8 @@ export default function Hero() {
         // Set default slide if no data exists
         setSlides([{
           id: 'default',
-          type: 'video',
-          url: 'https://res.cloudinary.com/dxztrqjft/video/upload/v1776271223/tashichodzong_ddin28.mp4',
+          type: 'image',
+          url: heroImages[0],
           isPrimary: true
         }]);
       }
@@ -66,83 +73,45 @@ export default function Hero() {
     fetchSlides();
   }, []);
 
+  // Auto-advance image carousel every 6 seconds
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentImageIndex((prev) => (prev + 1) % heroImages.length);
+    }, 6000);
+    return () => clearInterval(interval);
+  }, []);
+
   const isDark = mounted ? (resolvedTheme === 'dark' || theme === 'dark') : true;
 
   // Get primary slide or use first slide as fallback, then defaults
   const primarySlide = slides.find(s => s.isPrimary) || slides[0];
   const currentSlide = primarySlide;
   const heroLogo = currentSlide?.logo || 'https://res.cloudinary.com/dxztrqjft/image/upload/v1776332482/HMT_Logo_New_1_fwgpfy.png';
-  const heroSubtitle = currentSlide?.subtitle || 'Experience sacred landscapes, living traditions, and moments of stillness.';
+  const heroSubtitle = currentSlide?.subtitle || 'Luxury cultural, spiritual, and trekking journeys designed from within Bhutan.';
   const heroLink = currentSlide?.link || '/contact';
   const heroMediaUrl = currentSlide?.url || 'https://res.cloudinary.com/dxztrqjft/video/upload/v1776271223/tashichodzong_ddin28.mp4';
   const heroMediaType = currentSlide?.type || 'video';
-  const heroCtaText = currentSlide?.ctaText || 'Begin a conversation';
-
-  useEffect(() => {
-    setTypedDynamicPart('');
-    setDynamicIndex(0);
-    setIsDeleting(false);
-  }, [heroSubtitle, currentSlide?.id]);
-
-  const subtitleParts = heroSubtitle
-    .split(',')
-    .map((part) => part.trim())
-    .filter(Boolean);
-  const staticSubtitle = subtitleParts[0] || '';
-  const rotatingParts = subtitleParts.slice(1);
-  const activeDynamicText = rotatingParts.length
-    ? rotatingParts[dynamicIndex % rotatingParts.length]
-    : '';
-
-  useEffect(() => {
-    if (!rotatingParts.length) return;
-
-    const typingSpeed = isDeleting ? 45 : 70;
-    const pauseDuration = isDeleting ? 350 : 1400;
-
-    const timeout = setTimeout(() => {
-      if (!isDeleting) {
-        if (typedDynamicPart.length < activeDynamicText.length) {
-          setTypedDynamicPart(activeDynamicText.slice(0, typedDynamicPart.length + 1));
-        } else {
-          setTimeout(() => setIsDeleting(true), pauseDuration);
-        }
-      } else if (typedDynamicPart.length > 0) {
-        setTypedDynamicPart(activeDynamicText.slice(0, typedDynamicPart.length - 1));
-      } else {
-        setIsDeleting(false);
-        setDynamicIndex((prev) => (prev + 1) % rotatingParts.length);
-      }
-    }, typingSpeed);
-
-    return () => clearTimeout(timeout);
-  }, [activeDynamicText, isDeleting, rotatingParts.length, typedDynamicPart]);
+  const heroCtaText = currentSlide?.ctaText || 'Design Your Journey';
 
   return (
     <section
       ref={ref}
       className="relative h-[75vh] md:h-screen w-full overflow-hidden bg-[#0E140E]"
     >
-      {/* Video/Image Background */}
+      {/* Image Carousel Background */}
       <div className="absolute inset-0">
-        {heroMediaType === 'video' ? (
-          <video
-            key={heroMediaUrl}
-            autoPlay
-            muted
-            loop
-            playsInline
-            className="w-full h-full object-cover img-editorial"
-          >
-            <source src={heroMediaUrl} type="video/mp4" />
-          </video>
-        ) : (
-          <img
-            src={heroMediaUrl}
-            alt="Hero background"
-            className="w-full h-full object-cover img-editorial"
+        <AnimatePresence mode="wait">
+          <motion.img
+            key={currentImageIndex}
+            src={heroImages[currentImageIndex]}
+            alt="Bhutan landscape"
+            className="w-full h-full object-cover"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 1.5, ease: "easeInOut" }}
           />
-        )}
+        </AnimatePresence>
 
         {/* Cinematic dual-layer overlay */}
         <div className="absolute inset-0 bg-black/30" />
@@ -180,43 +149,55 @@ export default function Hero() {
             </div>
           </motion.div>
 
+          {/* Rating Badge - Top Left */}
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.3 }}
+            className="flex items-center gap-4 mb-6"
+            style={{ color: '#D4AF37' }}
+          >
+            <div className="flex items-center gap-2">
+              <span className="text-xl md:text-2xl font-bold">13+</span>
+              <span className="text-[10px] md:text-xs uppercase tracking-wider">Years</span>
+            </div>
+            <div className="w-px h-5" style={{ backgroundColor: 'rgba(212, 175, 55, 0.3)' }} />
+            <div className="flex items-center gap-2">
+              <span className="text-xl md:text-2xl font-bold">4.9</span>
+              <div className="flex gap-0.5">
+                {[...Array(5)].map((_, i) => (
+                  <svg key={i} className="w-3 h-3 md:w-4 md:h-4 fill-current" viewBox="0 0 24 24">
+                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                  </svg>
+                ))}
+              </div>
+            </div>
+          </motion.div>
+
           {/* Cinematic Heading - Typography First */}
           <motion.h1
             key={`heading-${currentSlide?.id || 'default'}`}
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1], delay: 0.2 }}
-            className="text-4xl md:text-7xl lg:text-8xl font-light text-white mb-8 tracking-tight"
+            className="text-3xl md:text-4xl lg:text-5xl font-light text-white mb-6 leading-tight"
             style={{ fontFamily: 'var(--font-playfair)' }}
           >
-            The Last{' '}
+            Private Bhutan Journeys Through{' '}
             <span className="italic" style={{ color: '#D4AF37' }}>
-              Shangri-La
+              Sacred Landscapes & Living Culture
             </span>
           </motion.h1>
 
-          {/* Subtitle with typing effect */}
+          {/* Subtitle - Static, No Animation */}
           <motion.p
             key={`subtitle-${currentSlide?.id || 'default'}`}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, ease: [0.16, 1, 0.3, 1], delay: 0.4 }}
-            className="text-base md:text-xl mb-14 max-w-2xl mx-auto leading-relaxed"
-            style={{ color: 'rgba(247, 247, 242, 0.8)' }}
+            className="text-base md:text-lg text-white/80 max-w-2xl mx-auto leading-relaxed mb-10"
           >
-            {staticSubtitle}
-            {rotatingParts.length > 0 && (
-              <>
-                {staticSubtitle ? ', ' : ''}
-                <span style={{ color: '#D4AF37' }}>{typedDynamicPart}</span>
-              </>
-            )}
-            <motion.span
-              animate={{ opacity: [1, 0] }}
-              transition={{ duration: 0.8, repeat: Infinity, repeatDelay: 0.4 }}
-              className="inline-block w-0.5 h-5 md:h-7 ml-1 align-middle rounded-full"
-              style={{ backgroundColor: 'rgba(212, 175, 55, 0.7)' }}
-            />
+            {heroSubtitle}
           </motion.p>
 
           {/* CTA Button */}
@@ -239,6 +220,16 @@ export default function Hero() {
               {heroCtaText}
               <ArrowRight className="w-4 h-4" />
             </motion.a>
+          </motion.div>
+
+          {/* Lead Capture Form - Below the Fold */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: 0.8 }}
+            className="mt-12 max-w-2xl mx-auto"
+          >
+            <LeadCaptureForm />
           </motion.div>
         </div>
       </motion.div>

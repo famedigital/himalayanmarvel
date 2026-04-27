@@ -41,7 +41,7 @@ export default function Footer() {
               className="text-xs uppercase tracking-[0.3em] mb-6"
               style={{ color: '#D4AF37' }}
             >
-              Begin Your Journey
+              Design Your Journey
             </p>
             <h3
               className="text-4xl md:text-5xl font-light text-white mb-6 tracking-tight"

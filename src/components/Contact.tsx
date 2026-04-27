@@ -5,11 +5,17 @@ import { Mail, Phone, MapPin, Send, ArrowRight, Compass } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { useTheme } from 'next-themes';
 import RevealOnScroll from './ui/RevealOnScroll';
+import { COUNTRY_OPTIONS, BUDGET_OPTIONS } from '@/lib/forms/lead-validation';
 
 export default function Contact() {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
+    travelMonth: '',
+    numberOfTravelers: '',
+    nationality: '',
+    tripStyle: '',
+    budget: '',
     message: '',
   });
   const [mounted, setMounted] = useState(false);
@@ -24,6 +30,7 @@ export default function Contact() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     console.log('Form submitted:', formData);
+    // TODO: Submit to Supabase leads table
   };
 
   const contactDetails = [
@@ -87,7 +94,7 @@ export default function Contact() {
               className="text-[0.65rem] font-semibold tracking-[0.3em] uppercase"
               style={{ color: '#D4AF37' }}
             >
-              Begin Your Journey
+              Design Your Journey
             </span>
             <div
               className="w-8 h-px"
@@ -303,6 +310,171 @@ export default function Contact() {
                     />
                   </div>
 
+                  {/* Travel Month */}
+                  <div className="space-y-2">
+                    <label
+                      htmlFor="travelMonth"
+                      className="text-[0.65rem] font-semibold tracking-[0.2em] uppercase block"
+                      style={{ color: isDark ? 'rgba(247, 247, 242, 0.4)' : 'rgba(26, 26, 26, 0.35)' }}
+                    >
+                      Travel Month
+                    </label>
+                    <select
+                      id="travelMonth"
+                      value={formData.travelMonth}
+                      onChange={(e) => setFormData({ ...formData, travelMonth: e.target.value })}
+                      className="w-full bg-transparent outline-none text-sm md:text-base py-3 border-b transition-colors cursor-pointer"
+                      style={{
+                        color: isDark ? '#F7F7F2' : '#1A1A1A',
+                        borderColor: isDark ? 'rgba(212, 175, 55, 0.1)' : 'rgba(0, 104, 56, 0.1)',
+                      }}
+                      onFocus={(e) => {
+                        (e.target as HTMLElement).style.borderColor = '#D4AF37';
+                      }}
+                      onBlur={(e) => {
+                        (e.target as HTMLElement).style.borderColor = isDark ? 'rgba(212, 175, 55, 0.1)' : 'rgba(0, 104, 56, 0.1)';
+                      }}
+                    >
+                      <option value="" disabled selected>Select month</option>
+                      {['January', 'February', 'March', 'April', 'May', 'June',
+                        'July', 'August', 'September', 'October', 'November', 'December'].map((month) => (
+                        <option key={month} value={month} style={{ color: '#1A1A1A' }}>{month}</option>
+                      ))}
+                    </select>
+                  </div>
+
+                  {/* Number of Travelers */}
+                  <div className="space-y-2">
+                    <label
+                      htmlFor="numberOfTravelers"
+                      className="text-[0.65rem] font-semibold tracking-[0.2em] uppercase block"
+                      style={{ color: isDark ? 'rgba(247, 247, 242, 0.4)' : 'rgba(26, 26, 26, 0.35)' }}
+                    >
+                      Number of Travelers
+                    </label>
+                    <input
+                      type="number"
+                      id="numberOfTravelers"
+                      min="1"
+                      max="20"
+                      value={formData.numberOfTravelers}
+                      onChange={(e) => setFormData({ ...formData, numberOfTravelers: e.target.value })}
+                      placeholder="How many travelers?"
+                      className="w-full bg-transparent outline-none text-sm md:text-base py-3 border-b transition-colors"
+                      style={{
+                        color: isDark ? '#F7F7F2' : '#1A1A1A',
+                        borderColor: isDark ? 'rgba(212, 175, 55, 0.1)' : 'rgba(0, 104, 56, 0.1)',
+                      }}
+                      onFocus={(e) => {
+                        (e.target as HTMLElement).style.borderColor = '#D4AF37';
+                      }}
+                      onBlur={(e) => {
+                        (e.target as HTMLElement).style.borderColor = isDark ? 'rgba(212, 175, 55, 0.1)' : 'rgba(0, 104, 56, 0.1)';
+                      }}
+                    />
+                  </div>
+
+                  {/* Nationality */}
+                  <div className="space-y-2">
+                    <label
+                      htmlFor="nationality"
+                      className="text-[0.65rem] font-semibold tracking-[0.2em] uppercase block"
+                      style={{ color: isDark ? 'rgba(247, 247, 242, 0.4)' : 'rgba(26, 26, 26, 0.35)' }}
+                    >
+                      Nationality / Passport Country
+                    </label>
+                    <select
+                      id="nationality"
+                      value={formData.nationality}
+                      onChange={(e) => setFormData({ ...formData, nationality: e.target.value })}
+                      className="w-full bg-transparent outline-none text-sm md:text-base py-3 border-b transition-colors cursor-pointer"
+                      style={{
+                        color: isDark ? '#F7F7F2' : '#1A1A1A',
+                        borderColor: isDark ? 'rgba(212, 175, 55, 0.1)' : 'rgba(0, 104, 56, 0.1)',
+                      }}
+                      onFocus={(e) => {
+                        (e.target as HTMLElement).style.borderColor = '#D4AF37';
+                      }}
+                      onBlur={(e) => {
+                        (e.target as HTMLElement).style.borderColor = isDark ? 'rgba(212, 175, 55, 0.1)' : 'rgba(0, 104, 56, 0.1)';
+                      }}
+                    >
+                      <option value="" disabled selected style={{ color: '#1A1A1A' }}>Select country</option>
+                      {COUNTRY_OPTIONS.map((country) => (
+                        <option key={country.value} value={country.value} style={{ color: '#1A1A1A' }}>
+                          {country.label}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  {/* Trip Style */}
+                  <div className="space-y-2">
+                    <label
+                      htmlFor="tripStyle"
+                      className="text-[0.65rem] font-semibold tracking-[0.2em] uppercase block"
+                      style={{ color: isDark ? 'rgba(247, 247, 242, 0.4)' : 'rgba(26, 26, 26, 0.35)' }}
+                    >
+                      Trip Style
+                    </label>
+                    <select
+                      id="tripStyle"
+                      value={formData.tripStyle}
+                      onChange={(e) => setFormData({ ...formData, tripStyle: e.target.value })}
+                      className="w-full bg-transparent outline-none text-sm md:text-base py-3 border-b transition-colors cursor-pointer"
+                      style={{
+                        color: isDark ? '#F7F7F2' : '#1A1A1A',
+                        borderColor: isDark ? 'rgba(212, 175, 55, 0.1)' : 'rgba(0, 104, 56, 0.1)',
+                      }}
+                      onFocus={(e) => {
+                        (e.target as HTMLElement).style.borderColor = '#D4AF37';
+                      }}
+                      onBlur={(e) => {
+                        (e.target as HTMLElement).style.borderColor = isDark ? 'rgba(212, 175, 55, 0.1)' : 'rgba(0, 104, 56, 0.1)';
+                      }}
+                    >
+                      <option value="" disabled selected style={{ color: '#1A1A1A' }}>Select trip style</option>
+                      <option value="culture" style={{ color: '#1A1A1A' }}>Culture</option>
+                      <option value="spiritual" style={{ color: '#1A1A1A' }}>Spiritual</option>
+                      <option value="trek" style={{ color: '#1A1A1A' }}>Trek</option>
+                      <option value="luxury" style={{ color: '#1A1A1A' }}>Luxury</option>
+                    </select>
+                  </div>
+
+                  {/* Budget Range */}
+                  <div className="space-y-2">
+                    <label
+                      htmlFor="budget"
+                      className="text-[0.65rem] font-semibold tracking-[0.2em] uppercase block"
+                      style={{ color: isDark ? 'rgba(247, 247, 242, 0.4)' : 'rgba(26, 26, 26, 0.35)' }}
+                    >
+                      Budget Range (per person)
+                    </label>
+                    <select
+                      id="budget"
+                      value={formData.budget}
+                      onChange={(e) => setFormData({ ...formData, budget: e.target.value })}
+                      className="w-full bg-transparent outline-none text-sm md:text-base py-3 border-b transition-colors cursor-pointer"
+                      style={{
+                        color: isDark ? '#F7F7F2' : '#1A1A1A',
+                        borderColor: isDark ? 'rgba(212, 175, 55, 0.1)' : 'rgba(0, 104, 56, 0.1)',
+                      }}
+                      onFocus={(e) => {
+                        (e.target as HTMLElement).style.borderColor = '#D4AF37';
+                      }}
+                      onBlur={(e) => {
+                        (e.target as HTMLElement).style.borderColor = isDark ? 'rgba(212, 175, 55, 0.1)' : 'rgba(0, 104, 56, 0.1)';
+                      }}
+                    >
+                      <option value="" disabled selected style={{ color: '#1A1A1A' }}>Select budget</option>
+                      {BUDGET_OPTIONS.map((budget) => (
+                        <option key={budget.value} value={budget.value} style={{ color: '#1A1A1A' }}>
+                          {budget.label}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
                   {/* Message field */}
                   <div className="space-y-2">
                     <label
@@ -348,7 +520,7 @@ export default function Contact() {
                         border: '1px solid rgba(212, 175, 55, 0.2)',
                       }}
                     >
-                      <span>Begin the Conversation</span>
+                      <span>Design Your Journey</span>
                       <ArrowRight className="w-4 h-4" />
                     </motion.button>
                   </div>

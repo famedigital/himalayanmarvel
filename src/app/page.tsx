@@ -1,7 +1,9 @@
 import Navigation from '@/components/Navigation';
 import Hero from '@/components/Hero';
+import DreamEscape from '@/components/DreamEscape';
 import WhyTravelWithUs from '@/components/WhyTravelWithUs';
 import TrustSection from '@/components/TrustSection';
+import TrustBadges from '@/components/TrustBadges';
 import SocialProof from '@/components/SocialProof';
 import BentoGrid from '@/components/BentoGrid';
 import FounderDynamic from '@/components/FounderDynamic';
@@ -16,8 +18,10 @@ export default function Home() {
     <main className="bg-alabaster dark:bg-dark-forest">
       <Navigation />
       <Hero />
+      <DreamEscape />
       <WhyTravelWithUs />
       <TrustSection />
+      <TrustBadges />
       <SocialProof />
       <BentoGrid />
       <FounderDynamic />

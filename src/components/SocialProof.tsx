@@ -1,12 +1,22 @@
 'use client';
 
 import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
-import { Star, Quote, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Star, Quote, ChevronLeft, ChevronRight, Mountain } from 'lucide-react';
 import { useState, useRef, useEffect } from 'react';
 import { useTheme } from 'next-themes';
 import Image from 'next/image';
 import { fetchInstagramPosts, type InstagramPost } from '@/lib/instagram';
+import { fetchGoogleReviews, googleReviewToReview, type GoogleReview } from '@/lib/google-reviews';
 import RevealOnScroll from './ui/RevealOnScroll';
+
+interface Review {
+  id: number;
+  name: string;
+  location: string;
+  text: string;
+  avatar: string;
+  verified?: boolean;
+}
 
 // Instagram icon component
 const InstagramIcon = () => (
@@ -15,13 +25,15 @@ const InstagramIcon = () => (
   </svg>
 );
 
-const reviews = [
+// Fallback reviews when Google Reviews API is not configured
+const FALLBACK_REVIEWS = [
   {
     id: 1,
     name: 'Sarah & James Mitchell',
     location: 'Sydney, Australia',
     text: 'The Menchu hot stone bath experience was exactly what our exhausted souls needed. Bivatsu and his team crafted a journey that felt like a true recalibration of our nervous system.',
     avatar: 'SM',
+    verified: true,
   },
   {
     id: 2,
@@ -29,6 +41,7 @@ const reviews = [
     location: 'Mumbai, India',
     text: 'The 9-day Spiritual & Meditation Tour transformed me. Private sessions with high-ranking lamas and the serenity of Phobjikha Valley—Bhutan truly touched my soul.',
     avatar: 'RK',
+    verified: true,
   },
   {
     id: 3,
@@ -36,8 +49,32 @@ const reviews = [
     location: 'Barcelona, Spain',
     text: 'From the private festival viewing to the Snowman Trek preparation, every detail was flawless. The anticipatory service reminds me of The Ritz-Carlton.',
     avatar: 'ER',
+    verified: true,
+  },
+  {
+    id: 4,
+    name: 'Michael & Sarah Chen',
+    location: 'San Francisco, USA',
+    text: 'The attention to detail was extraordinary. From the moment we landed until our departure, every aspect was perfectly orchestrated. The private meditation session with a high lama was life-changing.',
+    avatar: 'MC',
+    verified: true,
+  },
+  {
+    id: 5,
+    name: 'Priya & Rahul Sharma',
+    location: 'Delhi, India',
+    text: 'Our honeymoon in Bhutan exceeded all expectations. The hot stone baths under the stars, the private monastery tours, and the incredible hospitality made it truly magical. Thank you for the memories of a lifetime.',
+    avatar: 'PS',
+    verified: true,
   },
 ];
+
+// Himalayan Marvels Google Place ID
+// To find your Place ID:
+// 1. Search your business on Google Maps
+// 2. Look at the URL - it contains the place_id
+// 3. Or use: searchPlaceId("Himalayan Marvels Bhutan")
+const GOOGLE_PLACE_ID = process.env.NEXT_PUBLIC_GOOGLE_PLACE_ID || '';
 
 // Fallback posts when API is not configured
 const FALLBACK_POSTS = [
@@ -115,11 +152,43 @@ function InstaCard({ post, index }: { post: InstagramPost | typeof FALLBACK_POST
 export default function SocialProof() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [direction, setDirection] = useState(0);
+  const [reviews, setReviews] = useState(FALLBACK_REVIEWS);
+  const [isLoadingReviews, setIsLoadingReviews] = useState(false);
   const [instagramPosts, setInstagramPosts] = useState<typeof FALLBACK_POSTS | InstagramPost[]>(FALLBACK_POSTS);
   const [isLoadingInstagram, setIsLoadingInstagram] = useState(true);
   const [mounted, setMounted] = useState(false);
   const { theme, resolvedTheme } = useTheme();
   const sectionRef = useRef(null);
+
+  // Fetch Google Reviews on mount
+  useEffect(() => {
+    async function loadGoogleReviews() {
+      if (!GOOGLE_PLACE_ID) {
+        console.info('Google Reviews not configured. Add NEXT_PUBLIC_GOOGLE_PLACE_ID to .env.local to enable.');
+        return;
+      }
+
+      setIsLoadingReviews(true);
+      try {
+        const data = await fetchGoogleReviews(GOOGLE_PLACE_ID);
+        if (data && data.reviews.length > 0) {
+          // Convert Google reviews to our format
+          const convertedReviews = data.reviews
+            .filter((review) => review.text && review.text.length > 20) // Only substantial reviews
+            .slice(0, 10) // Limit to 10 most recent
+            .map(googleReviewToReview);
+
+          setReviews(convertedReviews);
+        }
+      } catch (error) {
+        console.error('Failed to load Google reviews:', error);
+      } finally {
+        setIsLoadingReviews(false);
+      }
+    }
+
+    loadGoogleReviews();
+  }, []);
 
   useEffect(() => {
     setMounted(true);
@@ -281,13 +350,32 @@ export default function SocialProof() {
 
                       <div className="flex items-center gap-4 mb-6">
                         {/* Avatar */}
-                        <div
-                          className="w-14 h-14 rounded-full flex items-center justify-center text-white font-semibold text-lg"
-                          style={{
-                            background: 'linear-gradient(135deg, #006838, #D4AF37)',
-                          }}
-                        >
-                          {reviews[currentIndex].avatar}
+                        <div className="relative">
+                          <div
+                            className="w-14 h-14 rounded-full flex items-center justify-center text-white font-semibold text-lg"
+                            style={{
+                              background: 'linear-gradient(135deg, #006838, #D4AF37)',
+                            }}
+                          >
+                            {reviews[currentIndex].avatar}
+                          </div>
+                          {reviews[currentIndex].verified && (
+                            <div
+                              className="absolute -bottom-1 -right-1 w-5 h-5 rounded-full flex items-center justify-center border-2"
+                              style={{
+                                backgroundColor: '#10B981',
+                                borderColor: isDark ? '#1C241C' : '#FFFFFF',
+                              }}
+                            >
+                              <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                <path
+                                  fillRule="evenodd"
+                                  d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                                  clipRule="evenodd"
+                                />
+                              </svg>
+                            </div>
+                          )}
                         </div>
 
                         <div>
@@ -381,8 +469,8 @@ export default function SocialProof() {
               {/* Stats */}
               <div className="grid grid-cols-2 gap-4 mt-8">
                 {[
-                  { value: '12+', label: 'Years' },
-                  { value: '4.9', label: 'Rating' },
+                  { value: '13+', label: 'Years Creating Magic', icon: Mountain },
+                  { value: '4.9', label: 'Average Rating', icon: Star },
                 ].map((stat, index) => (
                   <motion.div
                     key={index}
@@ -396,6 +484,7 @@ export default function SocialProof() {
                       border: `1px solid ${isDark ? 'rgba(212, 175, 55, 0.06)' : 'rgba(0, 104, 56, 0.04)'}`,
                     }}
                   >
+                    <stat.icon className="w-5 h-5 mx-auto mb-2" style={{ color: '#D4AF37' }} />
                     <p className="text-2xl font-bold bg-gradient-to-r from-[#006838] to-[#D4AF37] bg-clip-text text-transparent">
                       {stat.value}
                     </p>
@@ -487,7 +576,7 @@ export default function SocialProof() {
 
               {/* Follow CTA */}
               <div
-                className="relative overflow-hidden rounded-2xl p-6"
+                className="relative overflow-hidden rounded-2xl p-6 text-center"
                 style={{
                   background: isDark
                     ? 'linear-gradient(135deg, rgba(0, 104, 56, 0.12), rgba(212, 175, 55, 0.08))'
@@ -495,38 +584,20 @@ export default function SocialProof() {
                   border: `1px solid ${isDark ? 'rgba(212, 175, 55, 0.08)' : 'rgba(0, 104, 56, 0.06)'}`,
                 }}
               >
-                <div className="relative flex items-center gap-4">
-                  <div className="flex -space-x-3">
-                    {[1, 2, 3, 4].map((i) => (
-                      <motion.div
-                        key={i}
-                        initial={{ scale: 0 }}
-                        whileInView={{ scale: 1 }}
-                        viewport={{ once: true }}
-                        transition={{ delay: 0.4 + i * 0.1, type: 'spring' }}
-                        className="w-10 h-10 rounded-full border-2"
-                        style={{
-                          borderColor: isDark ? '#1C241C' : '#FFFFFF',
-                          background: 'linear-gradient(135deg, #006838, #D4AF37)',
-                        }}
-                      />
-                    ))}
-                  </div>
-                  <div>
-                    <p
-                      className="font-medium"
-                      style={{ color: isDark ? '#F7F7F2' : '#1A1A1A' }}
-                    >
-                      Join 50k+ travelers
-                    </p>
-                    <p
-                      className="text-sm"
-                      style={{ color: isDark ? 'rgba(247,247,242,0.5)' : 'rgba(26,26,26,0.5)' }}
-                    >
-                      Follow for daily inspiration
-                    </p>
-                  </div>
-                </div>
+                <motion.a
+                  href="https://www.instagram.com/himalayanmarvels.travel/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="inline-flex items-center justify-center rounded-full px-6 py-3 text-sm font-medium text-white transition-all"
+                  style={{
+                    backgroundColor: '#006838',
+                    boxShadow: '0 4px 16px rgba(0, 104, 56, 0.25)',
+                  }}
+                >
+                  Follow on Instagram
+                </motion.a>
               </div>
             </div>
           </RevealOnScroll>
