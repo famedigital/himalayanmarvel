@@ -23,7 +23,7 @@ export function FounderStoryCinematic() {
     offset: ['start end', 'end start'],
   });
   const y = useTransform(scrollYProgress, [0, 1], [0, -100]);
-  const opacity = useTransform(scrollYProgress, [0, 0.5, 1], [1, 0]);
+  const opacity = useTransform(scrollYProgress, [0, 0.5, 1], [1, 0.5, 0]);
 
   const timeline = [
     {
