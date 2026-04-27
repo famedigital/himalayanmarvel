@@ -64,8 +64,8 @@ export function CinematicScrollSection() {
   });
 
   const y = useTransform(scrollYProgress, [0, 1], [0, -300]);
-  const opacity = useTransform(scrollYProgress, [0, 0.2, 0.8], [1, 0]);
-  const scale = useTransform(scrollYProgress, [0, 0.5, 1], [1, 1.1]);
+  const opacity = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [1, 1, 0.5, 0]);
+  const scale = useTransform(scrollYProgress, [0, 0.5, 1], [1, 1.05, 1.1]);
 
   // CTA opacity at the end
   const ctaOpacity = useTransform(scrollYProgress, [0.9, 1], [0, 1]);
