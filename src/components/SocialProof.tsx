@@ -36,6 +36,7 @@ const FALLBACK_REVIEWS = [
     text: 'The Menchu hot stone bath experience was exactly what our exhausted souls needed. Bivatsu and his team crafted a journey that felt like a true recalibration of our nervous system.',
     avatar: 'SM',
     verified: true,
+    rating: 5,
   },
   {
     id: 2,
@@ -44,6 +45,7 @@ const FALLBACK_REVIEWS = [
     text: 'The 9-day Spiritual & Meditation Tour transformed me. Private sessions with high-ranking lamas and the serenity of Phobjikha Valley—Bhutan truly touched my soul.',
     avatar: 'RK',
     verified: true,
+    rating: 5,
   },
   {
     id: 3,
@@ -52,6 +54,7 @@ const FALLBACK_REVIEWS = [
     text: 'From the private festival viewing to the Snowman Trek preparation, every detail was flawless. The anticipatory service reminds me of The Ritz-Carlton.',
     avatar: 'ER',
     verified: true,
+    rating: 5,
   },
   {
     id: 4,
@@ -60,6 +63,7 @@ const FALLBACK_REVIEWS = [
     text: 'The attention to detail was extraordinary. From the moment we landed until our departure, every aspect was perfectly orchestrated. The private meditation session with a high lama was life-changing.',
     avatar: 'MC',
     verified: true,
+    rating: 5,
   },
   {
     id: 5,
@@ -68,6 +72,7 @@ const FALLBACK_REVIEWS = [
     text: 'Our honeymoon in Bhutan exceeded all expectations. The hot stone baths under the stars, the private monastery tours, and the incredible hospitality made it truly magical. Thank you for the memories of a lifetime.',
     avatar: 'PS',
     verified: true,
+    rating: 5,
   },
 ];
 
