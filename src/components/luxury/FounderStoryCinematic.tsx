@@ -2,7 +2,7 @@
 
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { Play, Quote, Award, Globe, ChevronRight } from 'lucide-react';
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import { useTheme } from 'next-themes';
 import Image from 'next/image';
 import { LuxuryButton } from './LuxuryButton';
@@ -17,6 +17,7 @@ export function FounderStoryCinematic() {
   const { theme, resolvedTheme } = useTheme();
   const isDark = resolvedTheme === 'dark' || theme === 'dark';
   const containerRef = useRef<HTMLDivElement>(null);
+  const [videoError, setVideoError] = useState(false);
 
   const { scrollYProgress } = useScroll({
     target: containerRef,
@@ -48,18 +49,30 @@ export function FounderStoryCinematic() {
 
   return (
     <section ref={containerRef} className="section-luxury relative overflow-hidden bg-black">
-      {/* Video Background */}
+      {/* Video Background with Fallback */}
       <div className="absolute inset-0">
-        <video
-          autoPlay
-          muted
-          loop
-          playsInline
-          className="w-full h-full object-cover"
-          style={{ filter: 'brightness(0.4)' }}
-        >
-          <source src="/founder-story/bivatsu-journey.mp4" type="video/mp4" />
-        </video>
+        {!videoError ? (
+          <video
+            autoPlay
+            muted
+            loop
+            playsInline
+            className="w-full h-full object-cover"
+            style={{ filter: 'brightness(0.4)' }}
+            onError={() => setVideoError(true)}
+          >
+            <source src="/founder-story/bivatsu-journey.mp4" type="video/mp4" />
+          </video>
+        ) : (
+          <Image
+            src="https://res.cloudinary.com/dxztrqjft/image/upload/v1776291879/tiger-nest-close_rm2bee.jpg"
+            alt="Bhutan landscape"
+            fill
+            className="object-cover"
+            style={{ filter: 'brightness(0.4)' }}
+            priority
+          />
+        )}
         <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black" />
       </div>
 

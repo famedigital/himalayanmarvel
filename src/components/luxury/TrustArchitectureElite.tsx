@@ -51,24 +51,6 @@ export function TrustArchitectureElite() {
     { name: 'Taj Hotels', logo: '/partners/taj.png', tier: 'premium' },
   ];
 
-  const pressMentions = [
-    {
-      publication: 'Travel + Leisure',
-      quote: 'Bhutan\'s premier private journey curator',
-      year: '2025',
-    },
-    {
-      publication: 'Condé Nast Traveler',
-      quote: 'The luxury standard for Himalayan travel',
-      year: '2025',
-    },
-    {
-      publication: 'Forbes',
-      quote: 'Transformative journeys worth every rupee',
-      year: '2024',
-    },
-  ];
-
   return (
     <section className="section-luxury relative overflow-hidden">
       {/* Background */}
@@ -219,55 +201,6 @@ export function TrustArchitectureElite() {
                 </div>
                 <p className="text-xs uppercase tracking-wider mt-2" style={{ color: isDark ? 'rgba(247, 247, 242, 0.4)' : 'rgba(26, 26, 26, 0.4)' }}>
                   {partner.tier}
-                </p>
-              </motion.div>
-            ))}
-          </div>
-        </motion.div>
-
-        {/* PRESS MENTIONS */}
-        <motion.div
-          initial={{ opacity: 0, y: 40 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8, delay: 0.6 }}
-        >
-          <div className="text-center mb-12">
-            <p className="text-xs uppercase tracking-[0.25em] font-semibold mb-3" style={{ color: '#D4AF37' }}>
-              Featured In
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-8">
-            {pressMentions.map((mention, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: 0.7 + index * 0.1 }}
-                whileHover={{ y: -8 }}
-                className="p-8 rounded-2xl"
-                style={{
-                  backgroundColor: isDark ? 'rgba(28, 36, 28, 0.6)' : 'rgba(255, 255, 255, 0.8)',
-                  border: `1px solid ${isDark ? 'rgba(212, 175, 55, 0.1)' : 'rgba(0, 104, 56, 0.08)'}`,
-                }}
-              >
-                <div className="flex items-center justify-between mb-4">
-                  <h4 className="font-display text-xl font-bold" style={{ color: isDark ? '#F7F7F2' : '#1A1A1A' }}>
-                    {mention.publication}
-                  </h4>
-                  <span className="text-xs px-2 py-1 rounded-full" style={{
-                    backgroundColor: isDark ? 'rgba(212, 175, 55, 0.15)' : 'rgba(0, 104, 56, 0.1)',
-                    color: '#D4AF37',
-                  }}>
-                    {mention.year}
-                  </span>
-                </div>
-                <p className="font-serif italic text-lg leading-relaxed" style={{
-                  color: isDark ? 'rgba(247, 247, 242, 0.7)' : 'rgba(26, 26, 26, 0.7)',
-                }}>
-                  &ldquo;{mention.quote}&rdquo;
                 </p>
               </motion.div>
             ))}

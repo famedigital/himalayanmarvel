@@ -1,10 +1,14 @@
+'use client';
+
+import { useEffect, useState } from 'react';
+
 /**
  * JsonLd Component
  *
  * Renders JSON-LD structured data as a script tag for SEO.
  * Supports multiple schema types including Organization, TouristTrip, Article, FAQ, and more.
  *
- * Note: This component only renders on the server to avoid hydration issues.
+ * Note: Uses client-side rendering to avoid hydration issues.
  */
 
 interface JsonLdProps {
@@ -12,12 +16,17 @@ interface JsonLdProps {
 }
 
 export default function JsonLd({ data }: JsonLdProps) {
-  // Only render on server to avoid hydration warnings
-  if (typeof window !== 'undefined') {
-    return null
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  if (!isMounted) {
+    return null;
   }
 
-  const schemas = Array.isArray(data) ? data : [data]
+  const schemas = Array.isArray(data) ? data : [data];
 
   return (
     <>
@@ -32,5 +41,5 @@ export default function JsonLd({ data }: JsonLdProps) {
         />
       ))}
     </>
-  )
+  );
 }

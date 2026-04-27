@@ -194,7 +194,7 @@ export default function Navigation() {
                       className="relative group"
                     >
                       <span
-                        className="text-[0.7rem] font-semibold tracking-[0.18em] uppercase py-1 inline-block transition-colors"
+                        className="text-[0.7rem] font-semibold tracking-[0.18em] uppercase py-1 inline-block transition-colors focus:outline-none focus:ring-2 focus:ring-champagne-gold focus:ring-offset-2 rounded"
                         style={{ color: isDark ? 'rgba(247, 247, 242, 0.9)' : 'rgba(0, 104, 56, 0.85)' }}
                       >
                         {item.name}
@@ -235,7 +235,7 @@ export default function Navigation() {
             <motion.a
               whileHover={{ y: -1, boxShadow: '0 4px 16px rgba(0, 104, 56, 0.3)' }}
               whileTap={{ scale: 0.97 }}
-              href="#contact"
+              href="/concierge"
               className="px-5 py-2 text-[0.65rem] font-semibold tracking-[0.15em] uppercase hidden md:block rounded-full transition-all"
               style={{
                 color: '#FFFFFF',
@@ -251,6 +251,8 @@ export default function Navigation() {
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               className="md:hidden p-1"
               style={{ color: isDark ? '#F7F7F2' : '#1A1A1A' }}
+              aria-label={isMobileMenuOpen ? 'Close menu' : 'Open menu'}
+              aria-expanded={isMobileMenuOpen}
             >
               {isMobileMenuOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
             </motion.button>
@@ -365,12 +367,12 @@ export default function Navigation() {
                   Login
                 </a>
                 <a
-                  href="#contact"
+                  href="/concierge"
                   onClick={() => setIsMobileMenuOpen(false)}
                   className="px-5 py-2 text-[0.6rem] font-medium tracking-[0.15em] uppercase rounded-full"
                   style={{ color: '#FFFFFF', backgroundColor: '#006838', border: '1px solid rgba(212, 175, 55, 0.2)' }}
                 >
-                  Request Consultation
+                  Inquire
                 </a>
               </motion.div>
             </div>

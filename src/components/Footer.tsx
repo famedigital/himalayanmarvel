@@ -5,9 +5,22 @@ import { Mail, Phone, MapPin, ArrowUpRight } from 'lucide-react';
 import RevealOnScroll from './ui/RevealOnScroll';
 
 const footerLinks = {
-  explore: ['Tour Packages', 'Destinations', 'Experiences', 'Travel Guide'],
-  company: ['About Us', 'Our Story', 'Careers', 'Press Kit'],
-  support: ['Help Center', 'Contact Us', 'Privacy Policy', 'Terms'],
+  explore: [
+    { name: 'Tour Packages', href: '/tours' },
+    { name: 'Cultural Journeys', href: '/tours?type=cultural' },
+    { name: 'Spiritual Retreats', href: '/tours?type=spiritual' },
+    { name: 'Himalayan Treks', href: '/tours?type=trek' },
+  ],
+  company: [
+    { name: 'About Us', href: '/about' },
+    { name: 'Our Story', href: '/about#story' },
+    { name: 'Concierge Service', href: '/concierge' },
+    { name: 'Journal', href: '/blog' },
+  ],
+  legal: [
+    { name: 'Privacy Policy', href: '/privacy' },
+    { name: 'Terms of Service', href: '/terms' },
+  ],
 };
 
 const socialLinks = [
@@ -106,17 +119,17 @@ export default function Footer() {
             {Object.entries(footerLinks).map(([title, links], index) => (
               <RevealOnScroll key={title} delay={index * 0.1}>
                 <p className="text-white font-medium mb-5 capitalize text-sm tracking-wide">
-                  {title}
+                  {title === 'legal' ? 'Legal' : title}
                 </p>
                 <ul className="space-y-3">
                   {links.map((link) => (
-                    <li key={link}>
+                    <li key={link.name}>
                       <motion.a
-                        href="#"
+                        href={link.href}
                         whileHover={{ x: 2 }}
                         className="text-stone-400 hover:text-[#D4AF37] transition-colors text-base inline-block"
                       >
-                        {link}
+                        {link.name}
                       </motion.a>
                     </li>
                   ))}
