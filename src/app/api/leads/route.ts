@@ -38,8 +38,8 @@ export async function POST(request: NextRequest) {
     // Validate with Zod schema
     const validatedData: LeadFormData = leadSchema.parse(body);
 
-    // Format dates for Supabase
-    const formattedData = {
+    // Format dates for Supabase and include optional UTM parameters
+    const formattedData: Record<string, any> = {
       name: validatedData.name,
       email: validatedData.email,
       country: validatedData.country,

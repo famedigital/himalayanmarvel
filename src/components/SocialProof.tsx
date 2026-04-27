@@ -16,6 +16,7 @@ interface Review {
   text: string;
   avatar: string;
   verified?: boolean;
+  rating?: number;
 }
 
 // Instagram icon component

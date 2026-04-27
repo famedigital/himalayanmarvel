@@ -9,14 +9,8 @@ export const leadSchema = z.object({
   email: z.string().email('Invalid email address'),
   country: z.string().min(1, 'Please select your country'),
   travelDates: z.object({
-    from: z.date({
-      required_error: 'Please select your travel start date',
-      invalid_type_error: 'Invalid date format',
-    }),
-    to: z.date({
-      required_error: 'Please select your travel end date',
-      invalid_type_error: 'Invalid date format',
-    }),
+    from: z.coerce.date(),
+    to: z.coerce.date(),
   }).refine(
     (data) => data.to > data.from,
     { message: 'End date must be after start date' }

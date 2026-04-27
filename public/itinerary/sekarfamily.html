@@ -1,0 +1,1808 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bhutan Family Discovery | Sekar Family | 7 Days</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&family=Open+Sans:wght@400;500;600;700;800&family=Playfair+Display:wght@400;500;600;700;800;900&display=swap');
+
+        /* EARTH TONE COLOR PALETTE */
+        :root {
+            --forest-green: #2d5a3d;
+            --warm-brown: #8b7355;
+            --tan: #a0826d;
+            --cream: #faf8f5;
+            --beige: #f5f1e8;
+            --dark-brown: #4a3728;
+            --sage: #7a8b7a;
+            --gold: #c9a961;
+            --burgundy: #8b1538;
+        }
+
+        @page {
+            size: A4 portrait;
+            margin: 0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Open Sans', sans-serif;
+            background: var(--cream);
+            color: #000000;
+            line-height: 1.6;
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+        }
+
+        .page {
+            width: 210mm;
+            height: 297mm;
+            margin: 0 auto;
+            background: var(--beige);
+            position: relative;
+            page-break-after: always;
+            break-after: page;
+            overflow: hidden;
+        }
+
+        /* ========== RUNNING HEADER ========== */
+        .running-header {
+            position: absolute;
+            top: 18px;
+            left: 35px;
+            right: 35px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 9px;
+            letter-spacing: 2px;
+            color: var(--forest-green);
+            text-transform: uppercase;
+            z-index: 10;
+            font-weight: 700;
+        }
+
+        .running-footer {
+            position: absolute;
+            bottom: 20px;
+            left: 35px;
+            right: 35px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-family: 'Open Sans', sans-serif;
+            font-size: 8px;
+            color: var(--warm-brown);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            z-index: 10;
+            padding-top: 10px;
+            border-top: 1px solid var(--tan);
+        }
+
+        .page-number {
+            width: 26px;
+            height: 26px;
+            background: var(--forest-green);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 10px;
+            color: #fff;
+            font-weight: 700;
+        }
+
+        /* ========== COVER PAGE ========== */
+        .cover-page {
+            width: 210mm;
+            height: 297mm;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cover-bg {
+            position: absolute;
+            inset: 0;
+            background: url('https://www.atj.com/wp-content/uploads/2023/09/Bhutan-2.jpg') center/cover;
+        }
+
+        .cover-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg,
+                rgba(45,90,61,0.60) 0%,
+                rgba(45,90,61,0.35) 40%,
+                rgba(74,55,40,0.50) 100%);
+        }
+
+        .cover-content {
+            position: relative;
+            z-index: 2;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 60px;
+        }
+
+        .cover-logo {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 10px;
+            letter-spacing: 6px;
+            color: var(--gold);
+            margin-bottom: 80px;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        .cover-title {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 72px;
+            color: #fff;
+            font-weight: 900;
+            letter-spacing: 6px;
+            line-height: 1;
+            text-shadow: 2px 2px 30px rgba(0,0,0,0.5);
+            margin-bottom: 25px;
+        }
+
+        .cover-subtitle {
+            font-family: 'Open Sans', sans-serif;
+            font-size: 26px;
+            color: rgba(255,255,255,0.95);
+            font-weight: 700;
+            letter-spacing: 4px;
+            font-style: italic;
+            margin-bottom: 60px;
+        }
+
+        .cover-divider {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin: 40px 0 60px;
+        }
+
+        .cover-divider-line {
+            width: 100px;
+            height: 1px;
+            background: linear-gradient(to right, transparent, var(--gold), transparent);
+        }
+
+        .cover-divider-diamond {
+            width: 12px;
+            height: 12px;
+            background: var(--gold);
+            transform: rotate(45deg);
+        }
+
+        .cover-guest {
+            font-family: 'Open Sans', sans-serif;
+            font-size: 24px;
+            color: #fff;
+            font-weight: 700;
+            letter-spacing: 2px;
+            margin-bottom: 15px;
+        }
+
+        .cover-dates {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 12px;
+            color: var(--gold);
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        /* ========== SECTION OPENER ========== */
+        .section-opener {
+            width: 210mm;
+            height: 297mm;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .opener-bg {
+            position: absolute;
+            inset: 0;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .opener-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg,
+                rgba(45,90,61,0.50) 0%,
+                rgba(45,90,61,0.25) 50%,
+                rgba(74,55,40,0.45) 100%);
+        }
+
+        .opener-content {
+            position: relative;
+            z-index: 2;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 60px;
+        }
+
+        .opener-section {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 10px;
+            letter-spacing: 4px;
+            color: var(--gold);
+            text-transform: uppercase;
+            margin-bottom: 30px;
+            font-weight: 600;
+        }
+
+        .opener-title {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 64px;
+            color: #fff;
+            font-weight: 900;
+            text-shadow: 2px 2px 25px rgba(0,0,0,0.5);
+            letter-spacing: 3px;
+            line-height: 1.1;
+            margin-bottom: 20px;
+        }
+
+        .opener-subtitle {
+            font-family: 'Open Sans', sans-serif;
+            font-size: 24px;
+            color: rgba(255,255,255,0.9);
+            font-weight: 600;
+        }
+
+        .opener-page-num {
+            position: absolute;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 45px;
+            height: 45px;
+            background: var(--forest-green);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 20px;
+            color: #fff;
+            font-weight: 700;
+        }
+
+        /* ========== INNER PAGE ========== */
+        .inner-page {
+            padding: 55px 40px 105px;
+            min-height: 297mm;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ========== DAY STYLES ========== */
+        .day-section {
+            margin-bottom: 12px;
+            page-break-inside: avoid;
+        }
+
+        .day-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .day-number-circle {
+            width: 50px;
+            height: 50px;
+            background: var(--forest-green);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            margin-right: 15px;
+            box-shadow: 0 2px 8px rgba(45,90,61,0.3);
+        }
+
+        .day-number-circle span {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 24px;
+            color: #fff;
+            font-weight: 800;
+        }
+
+        .day-title-block {
+            flex: 1;
+        }
+
+        .day-title {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 16px;
+            color: var(--forest-green);
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+            line-height: 1.2;
+        }
+
+        .day-meta {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .day-meta-item {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 10px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: var(--warm-brown);
+            font-weight: 600;
+        }
+
+        .day-meta-item strong {
+            color: var(--forest-green);
+            font-weight: 700;
+        }
+
+        .day-content {
+            display: flex;
+            gap: 25px;
+            margin-top: 15px;
+        }
+
+        .day-text {
+            flex: 1;
+        }
+
+        .day-description {
+            font-family: 'Open Sans', sans-serif;
+            font-size: 13px;
+            color: #000000;
+            line-height: 1.3;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .day-description.drop-cap::first-letter {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 42px;
+            float: left;
+            margin-right: 10px;
+            margin-top: 2px;
+            line-height: 0.85;
+            color: var(--forest-green);
+            font-weight: 800;
+        }
+
+        .day-image {
+            width: 160px;
+            flex-shrink: 0;
+        }
+
+        .day-image img {
+            width: 100%;
+            height: 140px;
+            object-fit: cover;
+            border-radius: 4px;
+        }
+
+        .day-subsection {
+            margin-bottom: 8px;
+        }
+
+        .day-subsection-title {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 10px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: var(--forest-green);
+            margin-bottom: 6px;
+            font-weight: 700;
+        }
+
+        .day-highlights {
+            background: linear-gradient(135deg, rgba(45,90,61,0.06), rgba(160,130,109,0.04));
+            padding: 12px 16px;
+            border-radius: 6px;
+            margin-top: 12px;
+        }
+
+        .day-highlights-title {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 10px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--forest-green);
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .day-highlights-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px 15px;
+        }
+
+        .day-highlights-list span {
+            font-family: 'Open Sans', sans-serif;
+            font-size: 13px;
+            color: #000000;
+            padding-left: 14px;
+            position: relative;
+            font-weight: 600;
+        }
+
+        .day-highlights-list span::before {
+            content: '✦';
+            position: absolute;
+            left: 0;
+            color: var(--forest-green);
+            font-size: 12px;
+        }
+
+        .day-menu-list {
+            list-style: none;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px 20px;
+        }
+
+        .day-menu-list li {
+            font-family: 'Open Sans', sans-serif;
+            font-size: 13px;
+            color: #000000;
+            padding-left: 16px;
+            position: relative;
+            font-weight: 600;
+        }
+
+        .day-menu-list li::before {
+            content: '◆';
+            position: absolute;
+            left: 0;
+            color: var(--forest-green);
+            font-size: 8px;
+            top: 6px;
+        }
+
+        /* ========== PULL QUOTE ========== */
+        .pull-quote {
+            font-family: 'Open Sans', sans-serif;
+            font-size: 12px;
+            font-style: italic;
+            color: var(--dark-brown);
+            padding: 10px 14px;
+            margin: 8px 0;
+            position: relative;
+            background: linear-gradient(135deg, rgba(45,90,61,0.08), rgba(160,130,109,0.06));
+            border-left: 3px solid var(--forest-green);
+            line-height: 1.3;
+            font-weight: 600;
+        }
+
+        .pull-quote::before {
+            content: '"';
+            position: absolute;
+            top: 5px;
+            left: 12px;
+            font-size: 48px;
+            color: var(--forest-green);
+            font-family: 'Montserrat', sans-serif;
+            line-height: 1;
+            opacity: 0.3;
+        }
+
+        /* ========== DIVIDER ========== */
+        .royal-divider {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin: 14px 0;
+        }
+
+        .royal-divider-line {
+            flex: 1;
+            height: 1px;
+            background: linear-gradient(to right, transparent, var(--tan), transparent);
+        }
+
+        .royal-divider-diamond {
+            width: 10px;
+            height: 10px;
+            background: var(--forest-green);
+            transform: rotate(45deg);
+        }
+
+        /* ========== LETTER PAGE ========== */
+        .letter-page {
+            padding: 55px 55px 120px;
+        }
+
+        .letter-header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .letter-logo {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 18px;
+            letter-spacing: 4px;
+            color: var(--forest-green);
+            margin-bottom: 8px;
+            font-weight: 700;
+        }
+
+        .letter-date {
+            font-family: 'Open Sans', sans-serif;
+            font-size: 14px;
+            color: var(--warm-brown);
+            font-style: italic;
+            font-weight: 600;
+        }
+
+        .letter-salutation {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 18px;
+            color: var(--forest-green);
+            margin-bottom: 12px;
+            font-weight: 700;
+        }
+
+        .letter-body {
+            font-family: 'Open Sans', sans-serif;
+            font-size: 14px;
+            color: #000000;
+            line-height: 1.4;
+            margin-bottom: 8px;
+            text-align: justify;
+            font-weight: 600;
+        }
+
+        .letter-signature {
+            margin-top: 20px;
+        }
+
+        .letter-sign-name {
+            font-family: 'Playfair Display', serif;
+            font-size: 20px;
+            color: var(--burgundy);
+            font-weight: 700;
+        }
+
+        .letter-sign-title {
+            font-size: 21px;
+            color: #888;
+            margin-top: 5px;
+        }
+
+        /* ========== RESPONSE BOX ========== */
+        .response-box {
+            background: linear-gradient(135deg, rgba(45,90,61,0.06), rgba(160,130,109,0.04));
+            border-left: 3px solid var(--forest-green);
+            padding: 12px 16px;
+            margin: 12px 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .response-title {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 14px;
+            color: var(--forest-green);
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .response-box p {
+            font-family: 'Open Sans', sans-serif;
+            font-size: 13px;
+            color: #000000;
+            line-height: 1.4;
+            margin-bottom: 6px;
+            font-weight: 600;
+        }
+
+        /* ========== PRICING PAGE ========== */
+        .pricing-page {
+            padding: 55px 45px 110px;
+        }
+
+        .pricing-header {
+            text-align: center;
+            margin-bottom: 35px;
+        }
+
+        .pricing-label {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 10px;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: var(--forest-green);
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+
+        .pricing-title {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 28px;
+            color: var(--forest-green);
+            font-weight: 800;
+            letter-spacing: 1px;
+        }
+
+        /* ========== TERMS ========== */
+        .terms-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin: 12px 0;
+        }
+
+        .terms-card {
+            background: #fff;
+            padding: 12px;
+            border-radius: 4px;
+            border: 1px solid var(--tan);
+        }
+
+        .terms-title {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 14px;
+            color: var(--forest-green);
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .terms-text {
+            font-family: 'Open Sans', sans-serif;
+            font-size: 12px;
+            color: #000000;
+            line-height: 1.4;
+            font-weight: 600;
+        }
+
+        /* ========== CHECKLIST ========== */
+        .checklist-section {
+            margin-top: 10px;
+            padding: 10px;
+            background: linear-gradient(135deg, rgba(45,90,61,0.05), rgba(160,130,109,0.03));
+            border-radius: 8px;
+        }
+
+        .checklist-title {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 14px;
+            color: var(--forest-green);
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+
+        .checklist-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 18px;
+        }
+
+        .checklist-category-title {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 11px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--forest-green);
+            margin-bottom: 12px;
+            font-weight: 700;
+        }
+
+        .checklist-list {
+            list-style: none;
+        }
+
+        .checklist-list li {
+            font-family: 'Open Sans', sans-serif;
+            font-size: 11px;
+            color: #000000;
+            padding: 2px 0;
+            padding-left: 16px;
+            position: relative;
+            font-weight: 600;
+        }
+
+        .checklist-list li::before {
+            content: '☐';
+            position: absolute;
+            left: 0;
+            color: var(--forest-green);
+            font-size: 12px;
+        }
+
+        /* ========== FAMILY INFO BOX ========== */
+        .family-info-box {
+            background: linear-gradient(135deg, rgba(45,90,61,0.08), rgba(201,169,97,0.06));
+            border: 1px solid var(--gold);
+            padding: 16px 20px;
+            margin: 15px 0;
+            border-radius: 8px;
+        }
+
+        .family-info-title {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 12px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--forest-green);
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .family-info-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+        }
+
+        .family-info-item {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .family-info-label {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 9px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: var(--warm-brown);
+            font-weight: 600;
+        }
+
+        .family-info-value {
+            font-family: 'Open Sans', sans-serif;
+            font-size: 14px;
+            color: var(--forest-green);
+            font-weight: 700;
+        }
+
+        /* ========== SPECIAL HIGHLIGHT BOX ========== */
+        .tiger-box {
+            background: linear-gradient(135deg, rgba(45,90,61,0.1), rgba(201,169,97,0.08));
+            border: 2px solid var(--gold);
+            padding: 16px 20px;
+            margin: 15px 0;
+            border-radius: 8px;
+        }
+
+        .tiger-badge {
+            display: inline-block;
+            background: var(--gold);
+            color: var(--dark-brown);
+            font-family: 'Montserrat', sans-serif;
+            font-size: 10px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        /* ========== BACK COVER ========== */
+        .back-cover {
+            width: 210mm;
+            height: 297mm;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .back-cover-bg {
+            position: absolute;
+            inset: 0;
+            background: var(--forest-green) url('https://images.unsplash.com/photo-1578301978018-3005759f48f7?q=80&w=2000') center/cover;
+        }
+
+        .back-cover-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg,
+                rgba(45,90,61,0.9) 0%,
+                rgba(74,55,40,0.85) 100%);
+        }
+
+        .back-cover-content {
+            position: relative;
+            z-index: 2;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 60px;
+        }
+
+        .back-cover-logo {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 18px;
+            letter-spacing: 6px;
+            color: var(--gold);
+            margin-bottom: 50px;
+            font-weight: 600;
+        }
+
+        .back-cover-title {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 52px;
+            color: #fff;
+            font-weight: 900;
+            letter-spacing: 3px;
+            margin-bottom: 60px;
+        }
+
+        .contact-info {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .contact-item {
+            font-family: 'Open Sans', sans-serif;
+            font-size: 22px;
+            color: rgba(255,255,255,0.95);
+            font-weight: 600;
+        }
+
+        .contact-item strong {
+            color: var(--gold);
+            font-weight: 700;
+        }
+
+        /* ========== FLIGHT DETAILS BOX ========== */
+        .flight-box {
+            background: linear-gradient(135deg, rgba(45,90,61,0.1), rgba(201,169,97,0.08));
+            border: 2px solid var(--gold);
+            padding: 16px 20px;
+            margin: 15px 0;
+            border-radius: 8px;
+        }
+
+        .flight-badge {
+            display: inline-block;
+            background: var(--gold);
+            color: var(--dark-brown);
+            font-family: 'Montserrat', sans-serif;
+            font-size: 10px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        @media print {
+            .page { box-shadow: none !important; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- PAGE 1: COVER -->
+    <div class="page cover-page">
+        <div class="cover-bg"></div>
+        <div class="cover-overlay"></div>
+        <div class="cover-content">
+            <div class="cover-logo">Silverpine Bhutan</div>
+            <div class="cover-title">BHUTAN FAMILY<br>DISCOVERY</div>
+            <div class="cover-subtitle">A Journey to the Land of Happiness</div>
+            <div class="cover-divider">
+                <div class="cover-divider-line"></div>
+                <div class="cover-divider-diamond"></div>
+                <div class="cover-divider-line"></div>
+            </div>
+            <div class="cover-guest">Sekar Family</div>
+            <div class="cover-dates">May 16 – May 22, 2026</div>
+        </div>
+    </div>
+
+    <!-- PAGE 2: LETTER -->
+    <div class="page inner-page letter-page">
+        <div class="running-header">
+            <span>Silverpine Bhutan</span>
+            <span>Bhutan Family Discovery</span>
+        </div>
+
+        <div class="letter-header">
+            <div class="letter-logo">SILVERPINE BHUTAN</div>
+            <p class="letter-date">May 2026</p>
+        </div>
+
+        <p class="letter-salutation">Namaste, Sekar Family</p>
+
+        <p class="letter-body">
+            Welcome to Bhutan – the Land of Gross National Happiness! We are absolutely delighted to curate this unforgettable 7-day journey for your family. From the sacred temples of Thimphu to the majestic Tiger's Nest, get ready for an adventure that will transform your understanding of happiness and peace.
+        </p>
+
+        <p class="letter-body">
+            Your journey begins with an early morning flight from Bangalore to Bagdogra, followed by immigration at Phuentsholing where our English-speaking guide will be waiting at a location near to your drop point. You'll travel in comfort in a Hyundai Santa Fe or similar premium SUV throughout your trip.
+        </p>
+
+        <div class="response-box">
+            <div class="response-title">Your Journey Highlights</div>
+            <p><strong>Luxury Accommodation:</strong> Ama's Farmstay in Guma (near Punakha) and Paro – authentic Bhutanese hospitality with modern comforts.</p>
+            <p><strong>Sacred Tiger's Nest:</strong> The legendary monastery hike – Bhutan's most iconic landmark.</p>
+            <p><strong>Cultural Immersion:</strong> Buddha Point, Takin Zoo, Punakha Dzong, Simply Bhutan museum, and more.</p>
+            <p><strong>Border Stay:</strong> Overnight at Phuentsholing on Day 6 before your return journey.</p>
+        </div>
+
+        <p class="letter-body">
+            We've crafted every detail to ensure your family experiences the very best of Bhutan. From your morning flight from Bangalore to the final drop-off at Bagdogra, every day promises new discoveries and cherished memories.
+        </p>
+
+        <p class="letter-body">
+            We look forward to welcoming you to our Himalayan kingdom.
+        </p>
+
+        <div class="letter-signature" style="margin-top: 25px; text-align: center;">
+            <p style="font-size: 11px; letter-spacing: 3px; color: #2d5a3d; text-transform: uppercase; margin-bottom: 8px;">Silverpine Bhutan</p>
+            <p class="letter-sign-name">Tshering Lhamo</p>
+            <p class="letter-sign-title">COO</p>
+        </div>
+
+        <div class="running-footer">
+            <span>Silverpine Bhutan</span>
+            <span>www.silverpinebhutan.com | +975 77773737</span>
+            <div class="page-number">2</div>
+        </div>
+    </div>
+
+    <!-- PAGE 3: FAMILY INFO & FLIGHT DETAILS -->
+    <div class="page inner-page">
+        <div class="running-header">
+            <span>Silverpine Bhutan</span>
+            <span>Bhutan Family Discovery</span>
+        </div>
+
+        <div class="letter-header">
+            <div class="pricing-label">Booking Details</div>
+            <div class="pricing-title">Family Profile & Travel</div>
+        </div>
+
+        <div class="family-info-box">
+            <div class="family-info-title">Traveling Party</div>
+            <div class="family-info-grid">
+                <div class="family-info-item">
+                    <div class="family-info-label">Guest Family</div>
+                    <div class="family-info-value">Sekar Family</div>
+                </div>
+                <div class="family-info-item">
+                    <div class="family-info-label">Duration</div>
+                    <div class="family-info-value">7 Days / 7 Nights</div>
+                </div>
+                <div class="family-info-item">
+                    <div class="family-info-label">Travel Dates</div>
+                    <div class="family-info-value">May 16-22, 2026</div>
+                </div>
+                <div class="family-info-item">
+                    <div class="family-info-label">Transport</div>
+                    <div class="family-info-value">Hyundai Santa Fe</div>
+                </div>
+                <div class="family-info-item">
+                    <div class="family-info-label">Guide</div>
+                    <div class="family-info-value">English-Speaking</div>
+                </div>
+                <div class="family-info-item">
+                    <div class="family-info-label">Meeting Point</div>
+                    <div class="family-info-value">Near Drop Point</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="flight-box">
+            <div class="flight-badge">✈ Flight Details</div>
+            <div style="font-family: 'Montserrat', sans-serif; font-size: 14px; color: var(--forest-green); font-weight: 700; margin-bottom: 8px;">Akasa Air – Bangalore to Bagdogra</div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 12px;">
+                <div>
+                    <div style="font-size: 11px; color: #666; margin-bottom: 4px;">OUTBOUND – 16 May 2026</div>
+                    <div style="font-family: 'Montserrat', sans-serif; font-size: 14px; color: var(--forest-green); font-weight: 700;">QP-1850</div>
+                    <div style="font-size: 12px; color: #000; font-weight: 600;">Bangalore (BLR) T-1</div>
+                    <div style="font-size: 12px; color: #000; font-weight: 600;">Departure: 05:30</div>
+                    <div style="font-size: 11px; color: #666; margin-top: 4px;">Arrives Bagdogra (IXB) at 13:20</div>
+                </div>
+                <div>
+                    <div style="font-size: 11px; color: #666; margin-bottom: 4px;">FINAL NIGHT STAY</div>
+                    <div style="font-family: 'Montserrat', sans-serif; font-size: 14px; color: var(--forest-green); font-weight: 700;">Phuentsholing</div>
+                    <div style="font-size: 12px; color: #000; font-weight: 600;">Border Town Hotel</div>
+                    <div style="font-size: 12px; color: #000; font-weight: 600;">1 Night (May 21)</div>
+                    <div style="font-size: 11px; color: #666; margin-top: 4px;">Convenient for airport departure</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="tiger-box" style="margin-top: 12px;">
+            <div class="tiger-badge">★ Guide Meeting Point</div>
+            <div style="font-family: 'Montserrat', sans-serif; font-size: 13px; color: var(--forest-green); font-weight: 700; margin-bottom: 6px;">Your English-Speaking Guide Awaits</div>
+            <div style="font-family: 'Open Sans', sans-serif; font-size: 12px; color: #000; font-weight: 600; line-height: 1.3;">
+                Your guide will be waiting at a location near to your drop point to assist with immigration formalities.
+            </div>
+        </div>
+
+        <div class="pricing-header" style="margin-top: 15px; margin-bottom: 12px;">
+            <div class="pricing-label">Quick Overview</div>
+            <div class="pricing-title" style="font-size: 18px;">What Awaits Your Family</div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+            <div style="background: #fff; padding: 12px; border-radius: 6px; border: 1px solid var(--tan);">
+                <div style="font-family: 'Montserrat', sans-serif; font-size: 10px; letter-spacing: 1px; text-transform: uppercase; color: var(--forest-green); margin-bottom: 6px; font-weight: 700;">Day 1-2</div>
+                <div style="font-family: 'Open Sans', sans-serif; font-size: 12px; color: #000; font-weight: 600;">Flight from Bangalore, Phuentsholing immigration, drive to Thimphu. City exploration including Buddha Point, Takin Zoo, Simply Bhutan, Farmers Market, and Changyul Park.</div>
+            </div>
+            <div style="background: #fff; padding: 12px; border-radius: 6px; border: 1px solid var(--tan);">
+                <div style="font-family: 'Montserrat', sans-serif; font-size: 10px; letter-spacing: 1px; text-transform: uppercase; color: var(--forest-green); margin-bottom: 6px; font-weight: 700;">Day 3-4</div>
+                <div style="font-family: 'Open Sans', sans-serif; font-size: 12px; color: #000; font-weight: 600;">Punakha Dzong visit, 30-min drive to Ama's Farmstay at Guma. Next day drive to Paro, stroll through the charming town.</div>
+            </div>
+            <div style="background: #fff; padding: 12px; border-radius: 6px; border: 1px solid var(--tan);">
+                <div style="font-family: 'Montserrat', sans-serif; font-size: 10px; letter-spacing: 1px; text-transform: uppercase; color: var(--gold); margin-bottom: 6px; font-weight: 700;">Day 5 ★ HIGHLIGHT</div>
+                <div style="font-family: 'Open Sans', sans-serif; font-size: 12px; color: #000; font-weight: 600;">The sacred Tiger's Nest trek – Bhutan's most iconic monastery perched dramatically on a cliff 900m above the valley.</div>
+            </div>
+            <div style="background: #fff; padding: 12px; border-radius: 6px; border: 1px solid var(--tan);">
+                <div style="font-family: 'Montserrat', sans-serif; font-size: 10px; letter-spacing: 1px; text-transform: uppercase; color: var(--forest-green); margin-bottom: 6px; font-weight: 700;">Day 6-7</div>
+                <div style="font-family: 'Open Sans', sans-serif; font-size: 12px; color: #000; font-weight: 600;">Paro to Phuentsholing (5hrs), exit immigration, overnight at Phuentsholing. On May 22, drive to Bagdogra airport for return flight to Bangalore.</div>
+            </div>
+        </div>
+
+        <div class="running-footer">
+            <span>Silverpine Bhutan</span>
+            <span>www.silverpinebhutan.com</span>
+            <div class="page-number">3</div>
+        </div>
+    </div>
+
+    <!-- PAGE 4: SECTION OPENER -->
+    <div class="page section-opener">
+        <div class="opener-bg" style="background-image: url('https://scontent.fpbh2-1.fna.fbcdn.net/v/t39.30808-6/606265855_1291141999719160_3376584168833227975_n.jpg?stp=cp6_dst-jpg_tt6&_nc_cat=106&ccb=1-7&_nc_sid=7b2446&_nc_ohc=iKOhprIuwxgQ7kNvwG8ccwQ&_nc_oc=AdoBOHf9CNVoM0MT-Y12Swj5y18icebYOtCIFzhm99TBB3ltgYgzlcA33chqLHGPyzI&_nc_zt=23&_nc_ht=scontent.fpbh2-1.fna&_nc_gid=CmMroEa6xZISOi20DkQ-DQ&_nc_ss=7b289&oh=00_Af2ketFlvaFu-mU_I9HvQ-2Yp9_1e3j3CS5UclV2n7pfwQ&oe=69F4FE9D');"></div>
+        <div class="opener-overlay"></div>
+        <div class="opener-content">
+            <div class="opener-section">Itinerary</div>
+            <div class="opener-title">THE JOURNEY<br>BEGINS</div>
+            <div class="opener-subtitle">Bangalore • Bagdogra • Thimphu</div>
+        </div>
+        <div class="opener-page-num">4</div>
+    </div>
+
+    <!-- PAGE 5: DAY 1 -->
+    <div class="page inner-page">
+        <div class="running-header">
+            <span>Silverpine Bhutan</span>
+            <span>Bhutan Family Discovery</span>
+        </div>
+
+        <!-- DAY 1 -->
+        <div class="day-section">
+            <div class="day-header">
+                <div class="day-number-circle"><span>01</span></div>
+                <div class="day-title-block">
+                    <div class="day-title">Bangalore to Thimphu • The Adventure Begins</div>
+                    <div class="day-meta">
+                        <div class="day-meta-item"><strong>Date:</strong> May 16, 2026</div>
+                        <div class="day-meta-item"><strong>Flight:</strong> Akasa Air QP-1850 (05:30)</div>
+                        <div class="day-meta-item"><strong>Night:</strong> Thimphu</div>
+                    </div>
+                </div>
+            </div>
+            <div class="day-content">
+                <div class="day-text">
+                    <p class="day-description drop-cap">Early morning departure from Bangalore at 05:30 on Akasa Air flight QP-1850. Arrive at Bagdogra Airport at 13:20. Your driver will pick you up and proceed to Phuentsholing (approximately 4-hour drive through scenic Dooars region). Complete immigration formalities at the Bhutanese border office – your guide will be waiting at <strong>Jaigaon</strong> to welcome you and assist with all formalities. After immigration, begin the beautiful ascent to Thimphu, winding through terraced fields and mountain villages. Arrive in Thimphu by evening and check into your hotel. A long but exciting day as you enter the Land of Happiness!</p>
+
+                    <div style="margin: 12px 0;">
+                        <img src="https://bhutannewsnetwork.com/wp-content/uploads/sites/2/2022/09/Screen-Shot-2022-09-24-at-12.49.37-pm.png" alt="Phuentsholing Immigration" style="width: 100%; height: 180px; object-fit: cover; border-radius: 4px;">
+                    </div>
+
+                    <div class="pull-quote">"From the bustling tech city of Bangalore to the serene peaks of Bhutan – today you leave the modern world behind and enter a realm where time stands still."</div>
+                    <div class="day-subsection">
+                        <div class="day-subsection-title">Today's Schedule</div>
+                        <ul class="day-menu-list">
+                            <li>05:30: Depart Bangalore (Akasa Air QP-1850)</li>
+                            <li>13:20: Arrive Bagdogra, drive to Phuentsholing</li>
+                            <li>17:00: Immigration at Phuentsholing (meet guide at Jaigaon)</li>
+                            <li>18:00: Drive to Thimphu through mountains</li>
+                            <li>21:00: Arrive Thimphu, check-in & dinner</li>
+                        </ul>
+                    </div>
+                    <div class="day-highlights">
+                        <div class="day-highlights-title">Today's Highlights</div>
+                        <div class="day-highlights-list">
+                            <span>Early Morning Flight</span>
+                            <span>Scenic Dooars Drive</span>
+                            <span>Immigration at Phuentsholing</span>
+                            <span>Guide Welcomes at Jaigaon</span>
+                            <span>Mountain Ascent to Thimphu</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="day-image">
+                    <img src="https://www.darjeeling-tourism.com/darj_i000209.jpg" alt="Himalayan Mountains">
+                </div>
+            </div>
+        </div>
+
+        <div class="running-footer">
+            <span>Silverpine Bhutan</span>
+            <span>www.silverpinebhutan.com</span>
+            <div class="page-number">5</div>
+        </div>
+    </div>
+
+    <!-- PAGE 6: SECTION OPENER -->
+    <div class="page section-opener">
+        <div class="opener-bg" style="background-image: url('https://scontent.fpbh2-1.fna.fbcdn.net/v/t39.30808-6/484996524_1062415295921391_2163630259581809224_n.jpg?_nc_cat=101&ccb=1-7&_nc_sid=13d280&_nc_ohc=YA09lCGw0K8Q7kNvwFVvRQ4&_nc_oc=AdpVNrrAUTxQDES238KC_1WVOn4cOxrky5K-MkdFNZCiGTSd4Q2-uwlB7JSN1yQ6zP4&_nc_zt=23&_nc_ht=scontent.fpbh2-1.fna&_nc_gid=SpU8FrN-HbWBwVDpt9k4GQ&_nc_ss=7b289&oh=00_Af28Xkaplgmv6J9oZ-h_0M6-1veY8pu6tW-NjuMFfLS9tg&oe=69F4D44C');"></div>
+        <div class="opener-overlay"></div>
+        <div class="opener-content">
+            <div class="opener-section">Itinerary</div>
+            <div class="opener-title">THIMPHU<br>DISCOVERY</div>
+            <div class="opener-subtitle">Cultural Exploration Day</div>
+        </div>
+        <div class="opener-page-num">6</div>
+    </div>
+
+    <!-- PAGE 7: DAY 2 -->
+    <div class="page inner-page">
+        <div class="running-header">
+            <span>Silverpine Bhutan</span>
+            <span>Bhutan Family Discovery</span>
+        </div>
+
+        <!-- DAY 2 -->
+        <div class="day-section">
+            <div class="day-header">
+                <div class="day-number-circle"><span>02</span></div>
+                <div class="day-title-block">
+                    <div class="day-title">Thimphu Exploration • Cultural Immersion</div>
+                    <div class="day-meta">
+                        <div class="day-meta-item"><strong>Date:</strong> May 17, 2026</div>
+                        <div class="day-meta-item"><strong>Activity:</strong> Full Day Sightseeing</div>
+                        <div class="day-meta-item"><strong>Night:</strong> Thimphu</div>
+                    </div>
+                </div>
+            </div>
+            <div class="day-content">
+                <div class="day-text">
+                    <p class="day-description drop-cap">Full day exploring Thimphu's cultural treasures with your English-speaking guide. Start at <strong>Buddha Point (Kuensel Phodrang)</strong> to see the massive Golden Buddha statue overlooking the valley. Visit the <strong>Takin Reserve</strong> where you can see Bhutan's national animal – a unique creature that looks like a cross between a cow and a goat! Experience <strong>Simply Bhutan</strong>, a living museum where you can try traditional archery and dress up in Bhutanese costumes. Stroll through the vibrant <strong>Farmers Market</strong> (if available) to see local produce and Bhutanese culture. End the day at the peaceful <strong>Changyul Park</strong> along the Thimphu Chu river – perfect for a family evening walk. A perfect cultural immersion day!</p>
+                    <div class="pull-quote">"Where else can children meet mythical animals, dress like princes, see a Buddha the size of a building, and walk along riverside gardens – all in one day?"</div>
+                    <div class="day-subsection">
+                        <div class="day-subsection-title">Today's Menu</div>
+                        <ul class="day-menu-list">
+                            <li>Breakfast: Hotel buffet</li>
+                            <li>Lunch: Local restaurant – try Momos!</li>
+                            <li>Dinner: Bhutanese specialty dinner</li>
+                        </ul>
+                    </div>
+                    <div class="day-highlights">
+                        <div class="day-highlights-title">Today's Highlights</div>
+                        <div class="day-highlights-list">
+                            <span>Giant Golden Buddha</span>
+                            <span>Takin Reserve Visit</span>
+                            <span>Simply Bhutan Museum</span>
+                            <span>Farmers Market</span>
+                            <span>Changyul Park Evening</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="day-image">
+                    <img src="https://ucarecdn.com/f0daf896-9b67-425a-a09d-97bebd5e6e67/-/resize/600x/" alt="Buddha Dordenma">
+                </div>
+            </div>
+        </div>
+
+        <div class="running-footer">
+            <span>Silverpine Bhutan</span>
+            <span>www.silverpinebhutan.com</span>
+            <div class="page-number">7</div>
+        </div>
+    </div>
+
+    <!-- PAGE 8: SECTION OPENER -->
+    <div class="page section-opener">
+        <div class="opener-bg" style="background-image: url('https://drukcdn.blob.core.windows.net/www/images/media/punakha-dzong2.jpg');"></div>
+        <div class="opener-overlay"></div>
+        <div class="opener-content">
+            <div class="opener-section">Itinerary</div>
+            <div class="opener-title">VALLEYS OF<br>WONDER</div>
+            <div class="opener-subtitle">Punakha • Guma • Ama's Farmstay</div>
+        </div>
+        <div class="opener-page-num">8</div>
+    </div>
+
+    <!-- PAGE 9: DAY 3 -->
+    <div class="page inner-page">
+        <div class="running-header">
+            <span>Silverpine Bhutan</span>
+            <span>Bhutan Family Discovery</span>
+        </div>
+
+        <!-- DAY 3 -->
+        <div class="day-section">
+            <div class="day-header">
+                <div class="day-number-circle"><span>03</span></div>
+                <div class="day-title-block">
+                    <div class="day-title">Thimphu to Punakha & Ama's Farmstay • Guma Valley Adventure</div>
+                    <div class="day-meta">
+                        <div class="day-meta-item"><strong>Date:</strong> May 18, 2026</div>
+                        <div class="day-meta-item"><strong>Drive:</strong> ~3 hours total</div>
+                        <div class="day-meta-item"><strong>Night:</strong> Ama's Farmstay, Guma (near Punakha)</div>
+                    </div>
+                </div>
+            </div>
+            <div class="day-content">
+                <div class="day-text">
+                    <p class="day-description drop-cap">Morning drive directly to Punakha without intermediate stops. Head straight to the magnificent <strong>Punakha Dzong</strong> – arguably Bhutan's most beautiful fortress, situated at the confluence of two rivers. Walk across the dramatic suspension bridge for thrilling views and family photos. For lunch, you have two options: enjoy a traditional homemade meal at <strong>Ama's Farmstay</strong> (₹600 per person) or dine at a local restaurant in Punakha. <strong>Please decide in the morning with your guide</strong> so Ama can prepare fresh lunch if you choose the farmstay option. After lunch, take a short 30-minute scenic drive to <strong>Guma</strong> and check into the charming <strong>Ama's Farmstay</strong> – a traditional Bhutanese farmhouse offering authentic hospitality with modern comforts. Upon arrival, take a tour of the property and settle in. Evening at leisure to relax and enjoy the peaceful surroundings.</p>
+                    <div class="pull-quote">"Where rivers meet and happiness flows – Punakha Dzong stands as a testament to Bhutan's sacred beauty."</div>
+                    <div class="day-subsection">
+                        <div class="day-subsection-title">Today's Menu</div>
+                        <ul class="day-menu-list">
+                            <li>Breakfast: Hotel Thimphu</li>
+                            <li>Lunch: Ama's Farmstay (₹600/person) OR Local restaurant – decide in morning!</li>
+                            <li>Dinner: Ama's Farmstay – traditional Bhutanese</li>
+                        </ul>
+                    </div>
+                    <div class="day-highlights">
+                        <div class="day-highlights-title">Today's Highlights</div>
+                        <div class="day-highlights-list">
+                            <span>Scenic Drive to Punakha</span>
+                            <span>Punakha Dzong Visit</span>
+                            <span>Suspension Bridge Walk</span>
+                            <span>Lunch at Ama's OR Local Restaurant</span>
+                            <span>Ama's Farmstay Tour</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="day-image">
+                    <img src="https://yeegetaway.com/wp-content/uploads/2023/03/homestayinPunakha-1024x655.jpg" alt="Ama's Farmstay">
+                </div>
+            </div>
+        </div>
+
+        <div class="tiger-box" style="margin-top: 12px;">
+            <div class="tiger-badge">★ Special Note from Ama</div>
+            <div style="font-family: 'Montserrat', sans-serif; font-size: 12px; color: var(--forest-green); font-weight: 700; margin-bottom: 6px;">Property Information</div>
+            <div style="font-size: 11px; color: #000; line-height: 1.4;">
+                Ama wanted us to convey that there will be <strong>1 more couple staying at the farmstay on May 18</strong>. You'll have the opportunity to meet fellow travelers during your stay – a wonderful way to share experiences and stories about your Bhutan adventures!
+            </div>
+        </div>
+
+        <div class="running-footer">
+            <span>Silverpine Bhutan</span>
+            <span>www.silverpinebhutan.com</span>
+            <div class="page-number">9</div>
+        </div>
+    </div>
+
+    <!-- PAGE 10: SECTION OPENER -->
+    <div class="page section-opener">
+        <div class="opener-bg" style="background-image: url('https://scontent.fpbh2-1.fna.fbcdn.net/v/t39.30808-6/493174133_1093858149443772_2484001306497428332_n.jpg?_nc_cat=102&ccb=1-7&_nc_sid=13d280&_nc_ohc=6sHieJp_tEcQ7kNvwE1jd-x&_nc_oc=Adq-inR6NWm5PSPXIfa8VMefeEtZV6W4VeXgJW6ZvCjsxUf1vnowe4YUwsgusTnWh8U&_nc_zt=23&_nc_ht=scontent.fpbh2-1.fna&_nc_gid=5kpLogRGxF71n-bEnbXfBQ&_nc_ss=7b289&oh=00_Af0Gi5jiKMJd7iA9zdZBY9SRmECQwh-u4qNUz24md2hRKA&oe=69F50B69');"></div>
+        <div class="opener-overlay"></div>
+        <div class="opener-content">
+            <div class="opener-section">Itinerary</div>
+            <div class="opener-title">PARO<br>VALLEY</div>
+            <div class="opener-subtitle">Traditional Town & Culture</div>
+        </div>
+        <div class="opener-page-num">10</div>
+    </div>
+
+    <!-- PAGE 11: DAY 4 -->
+    <div class="page inner-page">
+        <div class="running-header">
+            <span>Silverpine Bhutan</span>
+            <span>Bhutan Family Discovery</span>
+        </div>
+
+        <!-- DAY 4 -->
+        <div class="day-section">
+            <div class="day-header">
+                <div class="day-number-circle"><span>04</span></div>
+                <div class="day-title-block">
+                    <div class="day-title">Paro Town Exploration • Leisure Day</div>
+                    <div class="day-meta">
+                        <div class="day-meta-item"><strong>Date:</strong> May 19, 2026</div>
+                        <div class="day-meta-item"><strong>Activity:</strong> Town Stroll & Shopping</div>
+                        <div class="day-meta-item"><strong>Night:</strong> Ama's Farmstay</div>
+                    </div>
+                </div>
+            </div>
+            <div class="day-content">
+                <div class="day-text">
+                    <p class="day-description drop-cap">Enjoy a leisurely morning at Ama's Farmstay. After breakfast, take a short drive to Paro town for a relaxed day of exploration. Stroll through the charming streets lined with traditional architecture, colorful shops, and cozy cafes. Visit local handicraft stores to pick up souvenirs – Bhutanese textiles, handmade paper, traditional paintings, and prayer flags. Explore the main street and experience the relaxed pace of life in this beautiful valley. Your guide can recommend the best local restaurants for a delicious Bhutanese lunch. Afternoon return to the farmstay to relax, enjoy the peaceful surroundings, and prepare for tomorrow's big adventure – the Tiger's Nest trek!</p>
+                    <div class="pull-quote">"In Paro, time flows like the gentle river – slow, steady, and sweet. Today you discover the art of doing nothing, Bhutanese style."</div>
+                    <div class="day-subsection">
+                        <div class="day-subsection-title">Today's Menu</div>
+                        <ul class="day-menu-list">
+                            <li>Breakfast: Ama's Farmstay</li>
+                            <li>Lunch: Paro town restaurant</li>
+                            <li>Dinner: Farmstay dinner with local flavors</li>
+                        </ul>
+                    </div>
+                    <div class="day-highlights">
+                        <div class="day-highlights-title">Today's Highlights</div>
+                        <div class="day-highlights-list">
+                            <span>Paro Town Stroll</span>
+                            <span>Traditional Architecture</span>
+                            <span>Local Shopping</span>
+                            <span>Relaxed Farm Stay</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="day-image">
+                    <img src="https://dynamic-media-cdn.tripadvisor.com/media/photo-o/11/b8/eb/9f/ama-s-farmstay.jpg?w=1000&h=1000&s=1" alt="Ama's Farmstay Paro">
+                </div>
+            </div>
+        </div>
+
+        <div class="running-footer">
+            <span>Silverpine Bhutan</span>
+            <span>www.silverpinebhutan.com</span>
+            <div class="page-number">11</div>
+        </div>
+    </div>
+
+    <!-- PAGE 12: SECTION OPENER -->
+    <div class="page section-opener">
+        <div class="opener-bg" style="background-image: url('https://www.aliveoutdoors.com/wp-content/uploads/2023/03/Library-11-of-57-scaled.jpeg');"></div>
+        <div class="opener-overlay"></div>
+        <div class="opener-content">
+            <div class="opener-section">Itinerary</div>
+            <div class="opener-title">THE SACRED<br>HIKE</div>
+            <div class="opener-subtitle">Tiger's Nest • A Spiritual Journey</div>
+        </div>
+        <div class="opener-page-num">12</div>
+    </div>
+
+    <!-- PAGE 13: DAY 5 -->
+    <div class="page inner-page">
+        <div class="running-header">
+            <span>Silverpine Bhutan</span>
+            <span>Bhutan Family Discovery</span>
+        </div>
+
+        <!-- DAY 5 -->
+        <div class="day-section">
+            <div class="day-header">
+                <div class="day-number-circle"><span>05</span></div>
+                <div class="day-title-block">
+                    <div class="day-title">Tiger's Nest Trek • The Sacred Journey</div>
+                    <div class="day-meta">
+                        <div class="day-meta-item"><strong>Date:</strong> May 20, 2026</div>
+                        <div class="day-meta-item"><strong>Hike:</strong> 4-5 hours</div>
+                        <div class="day-meta-item"><strong>Night:</strong> Ama's Farmstay</div>
+                    </div>
+                </div>
+            </div>
+            <div class="day-content">
+                <div class="day-text">
+                    <p class="day-description drop-cap">The most anticipated day of your journey! Today you'll trek to Bhutan's most iconic landmark – <strong>Taktsang Palphug Monastery (Tiger's Nest)</strong>, perched dramatically on a cliff 900 meters above the valley floor. Legend says Guru Rinpoche flew here on the back of a tigress. The hike takes about 4-5 hours round trip through beautiful pine forests. Your experienced English-speaking guide will set a comfortable pace with plenty of rest stops. At the top, visit the main temple, photograph breathtaking views, and enjoy lunch at the cafeteria. A truly transformative experience! Evening return to Ama's Farmstay for a well-deserved rest and celebration dinner.</p>
+                    <div class="pull-quote">"To reach the Tiger's Nest is to touch the sacred – a journey that transforms not just the body, but the soul."</div>
+                    <div class="day-subsection">
+                        <div class="day-subsection-title">Today's Menu</div>
+                        <ul class="day-menu-list">
+                            <li>Breakfast: Early energizing breakfast</li>
+                            <li>Lunch: Taktsang cafeteria with mountain views</li>
+                            <li>Dinner: Celebration dinner at farmstay</li>
+                        </ul>
+                    </div>
+                    <div class="day-highlights">
+                        <div class="day-highlights-title">Today's Highlights</div>
+                        <div class="day-highlights-list">
+                            <span>Legendary Tiger's Nest Trek</span>
+                            <span>Sacred Temple Visit</span>
+                            <span>Panoramic Valley Views</span>
+                            <span>Lifetime Achievement!</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="day-image">
+                    <img src="https://www.firefoxtours.com/sites/default/files/styles/red_panda_watermark/public/media/bhutan_gallery/1633.jpg" alt="Tiger's Nest">
+                </div>
+            </div>
+        </div>
+
+        <div class="tiger-box">
+            <div class="tiger-badge">★ Congratulations!</div>
+            <div style="font-family: 'Montserrat', sans-serif; font-size: 13px; color: var(--forest-green); font-weight: 700; margin-bottom: 6px;">You Made It!</div>
+            <div style="font-size: 12px; color: #000; line-height: 1.4;">
+                Completing the Tiger's Nest trek is a life-changing experience. Your family has achieved something special today – memories that will last forever!
+            </div>
+        </div>
+
+        <div class="running-footer">
+            <span>Silverpine Bhutan</span>
+            <span>www.silverpinebhutan.com</span>
+            <div class="page-number">13</div>
+        </div>
+    </div>
+
+    <!-- PAGE 14: DAYS 6-7 -->
+    <div class="page inner-page">
+        <div class="running-header">
+            <span>Silverpine Bhutan</span>
+            <span>Bhutan Family Discovery</span>
+        </div>
+
+        <!-- DAY 6 -->
+        <div class="day-section">
+            <div class="day-header">
+                <div class="day-number-circle"><span>06</span></div>
+                <div class="day-title-block">
+                    <div class="day-title">Paro to Phuentsholing • Border Stay</div>
+                    <div class="day-meta">
+                        <div class="day-meta-item"><strong>Date:</strong> May 21, 2026</div>
+                        <div class="day-meta-item"><strong>Drive:</strong> 5 hours</div>
+                        <div class="day-meta-item"><strong>Night:</strong> Phuentsholing</div>
+                    </div>
+                </div>
+            </div>
+            <div class="day-content">
+                <div class="day-text">
+                    <p class="day-description drop-cap">Morning checkout from Ama's Farmstay after breakfast. Begin the scenic descent from Paro to Phuentsholing (approximately 5-hour drive), passing through ever-changing landscapes – from mountain peaks to subtropical forests. Complete exit formalities and immigration checkout at Phuentsholing. Your Bhutanese guide will bid farewell at the border. Cross over to Jaigaon and check into your hotel in Phuentsholing for a comfortable overnight stay. Spend the evening relaxing and reflecting on your Bhutan adventure – a perfect transition point before your journey back to India.</p>
+                    <div class="pull-quote">"As the mountains fade behind you, the memories remain forever etched in your heart – until we meet again in the Land of Happiness."</div>
+                    <div class="day-subsection">
+                        <div class="day-subsection-title">Journey Breakdown</div>
+                        <ul class="day-menu-list">
+                            <li>Morning: Paro to Phuentsholing (5 hours)</li>
+                            <li>Afternoon: Exit immigration at Phuentsholing</li>
+                            <li>Evening: Farewell to guide at border</li>
+                            <li>Night: Overnight stay at Phuentsholing</li>
+                        </ul>
+                    </div>
+                    <div class="day-highlights">
+                        <div class="day-highlights-title">Today's Highlights</div>
+                        <div class="day-highlights-list">
+                            <span>Scenic 5-Hour Descent</span>
+                            <span>Immigration Checkout</span>
+                            <span>Farewell to Guide</span>
+                            <span>Border Town Stay</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="day-image">
+                    <img src="https://bhutantravelexp.com/wp-content/uploads/2023/05/Zangtopelri-Phuntsholing.jpg" alt="Phuentsholing Border">
+                </div>
+            </div>
+        </div>
+
+        <div class="royal-divider">
+            <div class="royal-divider-line"></div>
+            <div class="royal-divider-diamond"></div>
+            <div class="royal-divider-line"></div>
+        </div>
+
+        <!-- DAY 7 -->
+        <div class="day-section">
+            <div class="day-header">
+                <div class="day-number-circle"><span>07</span></div>
+                <div class="day-title-block">
+                    <div class="day-title">Phuentsholing to Bagdogra • Farewell</div>
+                    <div class="day-meta">
+                        <div class="day-meta-item"><strong>Date:</strong> May 22, 2026</div>
+                        <div class="day-meta-item"><strong>Drive:</strong> ~4 hours</div>
+                        <div class="day-meta-item"><strong>Flight:</strong> QP-1851 (13:20)</div>
+                    </div>
+                </div>
+            </div>
+            <div class="day-content">
+                <div class="day-text">
+                    <p class="day-description">Morning checkout from Phuentsholing hotel after breakfast. Begin your journey to Bagdogra Airport (approximately 4-hour drive through the Dooars region). Arrive by noon for your return flight. Bid farewell to the beautiful Himalayan region as you head to the airport. Board <strong>Akasa Air flight QP-1851</strong> departing at 13:20, carrying with you memories of the golden Buddha, the sacred Tiger's Nest, majestic fortresses, and the warmth of Bhutanese hospitality. <strong>Tashi Delek</strong> – may your journey home be safe, and may the blessings of Bhutan remain with your family always!</p>
+                    <div class="day-subsection">
+                        <div class="day-subsection-title">Final Schedule</div>
+                        <ul class="day-menu-list">
+                            <li>Breakfast: Phuentsholing hotel</li>
+                            <li>08:00: Depart for Bagdogra Airport</li>
+                            <li>12:00: Airport arrival & check-in</li>
+                            <li>13:20: Flight QP-1851 to Bangalore</li>
+                        </ul>
+                    </div>
+                    <div class="day-highlights">
+                        <div class="day-highlights-title">Journey Complete</div>
+                        <div class="day-highlights-list">
+                            <span>Morning Departure</span>
+                            <span>Scenic Dooars Drive</span>
+                            <span>Return Flight</span>
+                            <span>Lifelong Memories</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="day-image">
+                    <img src="https://zoartsglobal.com/wp-content/uploads/2020/08/Bhutan-Phuntsholing-1.jpeg" alt="Farewell">
+                </div>
+            </div>
+        </div>
+
+        <div class="running-footer">
+            <span>Silverpine Bhutan</span>
+            <span>www.silverpinebhutan.com</span>
+            <div class="page-number">14</div>
+        </div>
+    </div>
+
+    <!-- PAGE 15: PRICING -->
+    <div class="page inner-page pricing-page">
+        <div class="running-header">
+            <span>Silverpine Bhutan</span>
+            <span>Bhutan Family Discovery</span>
+        </div>
+
+        <div class="pricing-header" style="margin-bottom: 20px;">
+            <div class="pricing-label">Cost Details</div>
+            <div class="pricing-title">Family Package Pricing</div>
+        </div>
+
+        <div style="background: linear-gradient(135deg, #2d5a3d 0%, #4a3728 100%); padding: 18px 25px; border-radius: 8px; margin-bottom: 18px; text-align: center;">
+            <div style="font-family: 'Montserrat', sans-serif; font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 6px; font-weight: 600;">Premium Package</div>
+            <div style="font-family: 'Montserrat', sans-serif; font-size: 28px; color: #fff; font-weight: 700; margin-top: 6px;">₹ 1,21,250 INR</div>
+            <div style="font-family: 'Open Sans', sans-serif; font-size: 11px; color: rgba(255,255,255,0.9); margin-top: 6px; font-weight: 600;">Total Package Price</div>
+        </div>
+
+        <div style="background: #fff; border: 2px solid var(--gold); border-radius: 8px; padding: 15px; margin-bottom: 15px;">
+            <div style="font-family: 'Montserrat', sans-serif; font-size: 12px; color: var(--forest-green); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 12px; font-weight: 700; text-align: center;">Package Inclusions</div>
+
+            <!-- Luxury Accommodation -->
+            <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid #e0e0e0;">
+                <div>
+                    <div style="font-family: 'Montserrat', sans-serif; font-size: 13px; color: var(--forest-green); font-weight: 700;">Luxury Accommodation</div>
+                    <div style="font-size: 11px; color: #666; margin-top: 3px;">Ama's Farmstay Guma & Paro (4 nights) + Premium Hotels (2 nights) + Phuentsholing (1 night)</div>
+                </div>
+                <div style="font-family: 'Montserrat', sans-serif; font-size: 14px; color: var(--dark-brown); font-weight: 700;">✓</div>
+            </div>
+
+            <!-- Meals -->
+            <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid #e0e0e0;">
+                <div>
+                    <div style="font-family: 'Montserrat', sans-serif; font-size: 13px; color: var(--forest-green); font-weight: 700;">Meals</div>
+                    <div style="font-size: 11px; color: #666; margin-top: 3px;">Daily breakfast & dinner (MAP plan)</div>
+                </div>
+                <div style="font-family: 'Montserrat', sans-serif; font-size: 14px; color: var(--dark-brown); font-weight: 700;">✓</div>
+            </div>
+
+            <!-- Transport -->
+            <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid #e0e0e0;">
+                <div>
+                    <div style="font-family: 'Montserrat', sans-serif; font-size: 13px; color: var(--forest-green); font-weight: 700;">Premium Transport</div>
+                    <div style="font-size: 11px; color: #666; margin-top: 3px;">Hyundai Santa Fe or similar SUV with experienced driver</div>
+                </div>
+                <div style="font-family: 'Montserrat', sans-serif; font-size: 14px; color: var(--dark-brown); font-weight: 700;">✓</div>
+            </div>
+
+            <!-- Guide -->
+            <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px 0;">
+                <div>
+                    <div style="font-family: 'Montserrat', sans-serif; font-size: 13px; color: var(--forest-green); font-weight: 700;">English-Speaking Guide</div>
+                    <div style="font-size: 11px; color: #666; margin-top: 3px;">Licensed, knowledgeable guide throughout Bhutan</div>
+                </div>
+                <div style="font-family: 'Montserrat', sans-serif; font-size: 14px; color: var(--dark-brown); font-weight: 700;">✓</div>
+            </div>
+        </div>
+
+        <div style="margin-top: 15px; padding-top: 12px; border-top: 2px solid #2d5a3d;">
+            <div style="font-family: 'Montserrat', sans-serif; font-size: 12px; color: #2d5a3d; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 2px; font-weight: 700;">What's Included</div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 4px;">
+                <div style="font-size: 11px; color: #000; font-weight: 600;">✓ Premium Accommodation (7 nights)</div>
+                <div style="font-size: 11px; color: #000; font-weight: 600;">✓ English-Speaking Guide</div>
+                <div style="font-size: 11px; color: #000; font-weight: 600;">✓ Hyundai Santa Fe or Similar</div>
+                <div style="font-size: 11px; color: #000; font-weight: 600;">✓ Tiger's Nest Entry Fee</div>
+                <div style="font-size: 11px; color: #000; font-weight: 600;">✓ All Monument Entrance Fees</div>
+                <div style="font-size: 11px; color: #000; font-weight: 600;">✓ Bagdogra Airport Transfers</div>
+                <div style="font-size: 11px; color: #000; font-weight: 600;">✓ All SDF Fees</div>
+                <div style="font-size: 11px; color: #000; font-weight: 600;">✓ Visa Processing & Immigration</div>
+                <div style="font-size: 11px; color: #000; font-weight: 600;">✓ Daily Breakfast & Dinner</div>
+                <div style="font-size: 11px; color: #000; font-weight: 600;">✓ Bottled Water During Tours</div>
+            </div>
+        </div>
+
+        <div style="margin-top: 12px; padding: 10px; background: linear-gradient(135deg, rgba(139,21,56,0.08), rgba(139,21,56,0.03)); border-left: 3px solid var(--burgundy); border-radius: 0 6px 6px 0;">
+            <div style="font-family: 'Montserrat', sans-serif; font-size: 11px; color: var(--burgundy); font-weight: 700; margin-bottom: 4px;">Exclusions</div>
+            <div style="font-size: 10px; color: #000; font-weight: 600; line-height: 1.4;">
+                • Lunch and snacks during journey • Airfare (Bangalore-Bagdogra-Bangalore) • Personal expenses, tips, and gratuities • Travel insurance (recommended) • Items not mentioned in inclusions
+            </div>
+        </div>
+
+        <div class="running-footer">
+            <span>Silverpine Bhutan</span>
+            <span>www.silverpinebhutan.com</span>
+            <div class="page-number">15</div>
+        </div>
+    </div>
+
+    <!-- PAGE 16: TERMS -->
+    <div class="page inner-page">
+        <div class="running-header">
+            <span>Silverpine Bhutan</span>
+            <span>Bhutan Family Discovery</span>
+        </div>
+
+        <div class="pricing-header">
+            <div class="pricing-label">Important Information</div>
+            <div class="pricing-title">Terms & Conditions</div>
+        </div>
+
+        <div class="terms-grid">
+            <div class="terms-card">
+                <div class="terms-title">Booking & Payment</div>
+                <p class="terms-text">A 30% non-refundable deposit is required to confirm your booking. The remaining balance must be paid 30 days before your arrival date. We accept wire transfers, UPI, and all major credit cards. For Indian guests, payments can be made in INR equivalent.</p>
+            </div>
+            <div class="terms-card">
+                <div class="terms-title">Cancellation Policy</div>
+                <p class="terms-text">Full refund (minus deposit) for cancellations made 60+ days before departure. 50% refund for cancellations 30-60 days before. No refund within 30 days of departure unless covered by travel insurance.</p>
+            </div>
+        </div>
+
+        <div class="terms-grid">
+            <div class="terms-card">
+                <div class="terms-title">Tiger's Nest Trek</div>
+                <p class="terms-text">The Tiger's Nest trek is suitable for families with moderate fitness levels. Our experienced English-speaking guide will ensure a safe, enjoyable journey at a comfortable pace. Horses can be arranged for uphill climb if needed (additional cost applies).</p>
+            </div>
+            <div class="terms-card">
+                <div class="terms-title">Travel Documents</div>
+                <p class="terms-text">Valid passports (minimum 6 months validity) are required for all travelers, including children. Indian nationals can travel with Voter ID or Passport for entry into Bhutan via land. Our guide assists with all immigration formalities at Phuentsholing.</p>
+            </div>
+        </div>
+
+        <div class="terms-grid">
+            <div class="terms-card">
+                <div class="terms-title">Health & Fitness</div>
+                <p class="terms-text">A reasonable level of fitness is required for the Tiger's Nest trek. We recommend consulting your doctor before undertaking high-altitude trekking. Inform us of any medical conditions in advance.</p>
+            </div>
+            <div class="terms-card">
+                <div class="terms-title">Liability</div>
+                <p class="terms-text">Silverpine Bhutan acts as an agent for hotels, transport, and service providers. We shall not be liable for any injury, damage, loss, delay, or irregularity caused by defects in services or acts of God.</p>
+            </div>
+        </div>
+
+        <div class="running-footer">
+            <span>Silverpine Bhutan</span>
+            <span>www.silverpinebhutan.com</span>
+            <div class="page-number">16</div>
+        </div>
+    </div>
+
+    <!-- PAGE 17: CHECKLIST -->
+    <div class="page inner-page">
+        <div class="running-header">
+            <span>Silverpine Bhutan</span>
+            <span>Bhutan Family Discovery</span>
+        </div>
+
+        <div class="pricing-header">
+            <div class="pricing-label">Prepare for Your Journey</div>
+            <div class="pricing-title">Family Packing Checklist</div>
+        </div>
+
+        <div class="checklist-section">
+            <div class="checklist-title">Essential Documents</div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                <ul class="checklist-list">
+                    <li>Valid Passports (6 months validity)</li>
+                    <li>Voter ID (for Indian nationals)</li>
+                    <li>Travel insurance documents</li>
+                    <li>Flight tickets (QP-1850/QP-1851)</li>
+                </ul>
+                <ul class="checklist-list">
+                    <li>Passport size photos (4 copies)</li>
+                    <li>Children's school ID/birth certificate</li>
+                    <li>Emergency contact numbers</li>
+                    <li>Medical prescriptions</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="checklist-section" style="margin-top: 15px;">
+            <div class="checklist-title">Trekking Essentials (For Tiger's Nest)</div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px;">
+                <ul class="checklist-list">
+                    <li>Sturdy hiking shoes</li>
+                    <li>Comfortable socks (2 pairs)</li>
+                    <li>Light backpack</li>
+                    <li>Water bottle (1L)</li>
+                </ul>
+                <ul class="checklist-list">
+                    <li>Sunscreen & hat</li>
+                    <li>Light rain jacket</li>
+                    <li>Trekking poles (optional)</li>
+                    <li>Energy snacks</li>
+                </ul>
+                <ul class="checklist-list">
+                    <li>Camera/phone charger</li>
+                    <li>Small first aid kit</li>
+                    <li>Wet wipes</li>
+                    <li>Hand sanitizer</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="checklist-section" style="margin-top: 15px;">
+            <div class="checklist-title">Clothing & Gear</div>
+            <div class="checklist-grid">
+                <div>
+                    <div class="checklist-category-title">For Adults</div>
+                    <ul class="checklist-list">
+                        <li>Comfortable walking shoes</li>
+                        <li>Light woolens/sweaters</li>
+                        <li>Windproof jacket</li>
+                        <li>Casual cotton clothes</li>
+                        <li>Sunglasses & sun hat</li>
+                    </ul>
+                </div>
+                <div>
+                    <div class="checklist-category-title">For Children</div>
+                    <ul class="checklist-list">
+                        <li>Sturdy walking/trekking shoes</li>
+                        <li>Warm jacket/sweater</li>
+                        <li>Comfortable pants (no jeans for trek)</li>
+                        <li>Cap/hat</li>
+                        <li>Extra layer for evenings</li>
+                    </ul>
+                </div>
+                <div>
+                    <div class="checklist-category-title">Essentials</div>
+                    <ul class="checklist-list">
+                        <li>Sunscreen SPF 50+</li>
+                        <li>Lip balm</li>
+                        <li>Moisturizer</li>
+                        <li>Wet wipes & sanitizer</li>
+                        <li>Reusable water bottles</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div style="margin-top: 20px; padding: 15px; background: linear-gradient(135deg, rgba(45,90,61,0.08), rgba(160,130,109,0.05)); border-radius: 6px;">
+            <div style="font-family: 'Montserrat', sans-serif; font-size: 12px; color: var(--forest-green); font-weight: 700; margin-bottom: 8px;">Family Travel Tips</div>
+            <div style="font-size: 12px; color: #000; line-height: 1.5;">
+                • Pack light – laundry services available at hotels<br>
+                • Carry snacks for children during drives and trek<br>
+                • Bhutanese food is mildly spiced – perfect for families<br>
+                • Weather can change quickly – pack layers<br>
+                • For the trek: start early, take breaks, keep hydrated<br>
+                • Electricity is 230V – carry universal adapters
+            </div>
+        </div>
+
+        <div class="running-footer">
+            <span>Silverpine Bhutan</span>
+            <span>www.silverpinebhutan.com</span>
+            <div class="page-number">17</div>
+        </div>
+    </div>
+
+    <!-- PAGE 18: BACK COVER -->
+    <div class="page back-cover">
+        <div class="back-cover-bg"></div>
+        <div class="back-cover-overlay"></div>
+        <div class="back-cover-content">
+            <div class="back-cover-logo">SILVERPINE BHUTAN</div>
+            <div class="back-cover-title">JOURNEY AWAITS</div>
+            <div class="contact-info">
+                <div class="contact-item"><strong>Contact:</strong> +975 77773737</div>
+                <div class="contact-item"><strong>Email:</strong> info@silverpinebhutan.com</div>
+                <div class="contact-item"><strong>Website:</strong> www.silverpinebhutan.com</div>
+                <div class="contact-item"><strong>Location:</strong> Thimphu, Bhutan</div>
+            </div>
+            <div style="margin-top: 40px; padding-top: 20px; border-top: 1px solid rgba(201,169,97,0.3);">
+                <p style="font-family: 'Open Sans', sans-serif; font-size: 14px; color: rgba(255,255,255,0.8); font-style: italic;">"Tashi Delek – May you be blessed with goodness and prosperity"</p>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

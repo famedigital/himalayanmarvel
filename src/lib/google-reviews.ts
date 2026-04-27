@@ -156,6 +156,7 @@ export function useGoogleReviews(placeId: string) {
  * Convert Google review to our Review interface
  */
 export function googleReviewToReview(googleReview: GoogleReview): {
+  id: number;
   name: string;
   location: string;
   text: string;
@@ -172,6 +173,7 @@ export function googleReviewToReview(googleReview: GoogleReview): {
     .slice(0, 2);
 
   return {
+    id: googleReview.time, // Use timestamp as unique ID
     name: googleReview.author_name,
     location: 'Verified Google Reviewer', // Google doesn't provide location
     text: googleReview.text,
