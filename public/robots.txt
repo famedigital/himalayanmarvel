@@ -1,0 +1,12 @@
+# robots.txt for Himalayan Marvels
+
+# Allow all crawlers
+User-agent: *
+Allow: /
+
+# Block admin panel from indexing
+Disallow: /admin/
+Disallow: /api/
+
+# Sitemap location
+Sitemap: https://himalayanmarvel.vercel.app/sitemap.xml

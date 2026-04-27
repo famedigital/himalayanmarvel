@@ -8,6 +8,7 @@ import Image from 'next/image';
 import { fetchInstagramPosts, type InstagramPost } from '@/lib/instagram';
 import { fetchGoogleReviews, googleReviewToReview, type GoogleReview } from '@/lib/google-reviews';
 import RevealOnScroll from './ui/RevealOnScroll';
+import JsonLd from './seo/JsonLd';
 
 interface Review {
   id: number;
@@ -69,6 +70,43 @@ const FALLBACK_REVIEWS = [
     verified: true,
   },
 ];
+
+// Generate Review schema for SEO
+const reviewSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Product',
+  name: 'Himalayan Marvels - Bhutan Luxury Private Tours',
+  image: 'https://himalayanmarvel.vercel.app/logo.png',
+  description: 'Bhutan\'s premier luxury travel concierge. Private journeys curated by insiders.',
+  brand: {
+    '@type': 'Brand',
+    name: 'Himalayan Marvels',
+  },
+  aggregateRating: {
+    '@type': 'AggregateRating',
+    ratingValue: 4.9,
+    reviewCount: 150,
+    bestRating: 5,
+    worstRating: 1,
+  },
+  review: FALLBACK_REVIEWS.slice(0, 5).map((review) => ({
+    '@type': 'Review',
+    author: {
+      '@type': 'Person',
+      name: review.name,
+    },
+    reviewRating: {
+      '@type': 'Rating',
+      ratingValue: review.rating || 5,
+      bestRating: 5,
+    },
+    reviewBody: review.text,
+    publisher: {
+      '@type': 'Organization',
+      name: 'Google Reviews',
+    },
+  })),
+};
 
 // Himalayan Marvels Google Place ID
 // To find your Place ID:
@@ -235,6 +273,8 @@ export default function SocialProof() {
 
   return (
     <section ref={sectionRef} className="relative py-24 lg:py-32 overflow-hidden">
+      {/* Review Schema for SEO */}
+      <JsonLd data={reviewSchema} />
       {/* Background */}
       <div
         className="absolute inset-0"

@@ -5,6 +5,7 @@ import { Plus } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { useTheme } from 'next-themes';
 import RevealOnScroll from './ui/RevealOnScroll';
+import JsonLd from './seo/JsonLd';
 
 const faqs = [
   {
@@ -29,6 +30,20 @@ const faqs = [
   },
 ];
 
+// Generate FAQ schema for SEO
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqs.map((faq) => ({
+    '@type': 'Question',
+    name: faq.question,
+    acceptedAnswer: {
+      '@type': 'Answer',
+      text: faq.answer,
+    },
+  })),
+};
+
 export default function FAQ() {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
   const [mounted, setMounted] = useState(false);
@@ -46,6 +61,8 @@ export default function FAQ() {
       className="section-padding relative overflow-hidden"
       style={{ backgroundColor: isDark ? '#0E140E' : '#F7F7F2' }}
     >
+      {/* FAQ Schema for SEO */}
+      <JsonLd data={faqSchema} />
       {/* Ambient background glow */}
       <div className="absolute inset-0 pointer-events-none">
         <div
