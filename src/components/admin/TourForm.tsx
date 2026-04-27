@@ -412,6 +412,7 @@ export default function TourForm({ tour, isEdit = false }: TourFormProps) {
               value={heroImage}
               label="Upload hero image"
               folder="himalayanmarvel/tours"
+              size="md"
             />
           </div>
 

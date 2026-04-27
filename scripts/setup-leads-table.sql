@@ -202,7 +202,7 @@ RETURNS TABLE (
         ROUND((COUNT(*) FILTER (WHERE status = 'booked')::NUMERIC / COUNT(*)::NUMERIC) * 100, 2)
       ELSE 0
     END as conversion_rate
-  FROM leads;
+  FROM leads
 $$ LANGUAGE SQL SECURITY DEFINER;
 
 -- Function to update lead status

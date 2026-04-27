@@ -291,6 +291,7 @@ export default function BlogEditor({ blog, isEdit = false }: BlogEditorProps) {
           value={featuredImage}
           label="Upload featured image"
           folder="himalayanmarvel/blog"
+          size="md"
         />
       </div>
 

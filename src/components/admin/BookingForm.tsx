@@ -562,6 +562,7 @@ export default function BookingForm({ booking, isEdit = false }: BookingFormProp
                   value={newReceiptUrl}
                   label="Upload receipt"
                   folder="himalayanmarvel/receipts"
+                  size="sm"
                 />
                 {newReceiptUrl && newReceiptAmount && (
                   <button

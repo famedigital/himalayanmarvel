@@ -215,7 +215,7 @@ export default function HeroManager({ initialSlides, initialSettingId = null }: 
                     label="Upload hero image"
                     folder="himalayanmarvel/hero"
                     aspect="video"
-                    size="lg"
+                    size="md"
                   />
                 ) : (
                   <div className="space-y-2">
@@ -250,7 +250,7 @@ export default function HeroManager({ initialSlides, initialSettingId = null }: 
                     label="Upload thumbnail"
                     folder="himalayanmarvel/hero/thumbnails"
                     aspect="video"
-                    size="lg"
+                    size="sm"
                   />
                 </div>
               )}

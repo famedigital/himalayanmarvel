@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import { usePathname } from 'next/navigation';
 import { Menu, Bell, Search, User, ChevronDown, LogOut } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 import { useRouter } from 'next/navigation';
@@ -18,7 +17,6 @@ export default function Header({
   onMobileMenuToggle,
   sidebarCollapsed = false,
 }: HeaderProps) {
-  const pathname = usePathname();
   const router = useRouter();
   const supabase = createClient();
   const [userMenuOpen, setUserMenuOpen] = useState(false);
@@ -37,29 +35,29 @@ export default function Header({
         sidebarCollapsed ? 'lg:ml-16' : 'lg:ml-64'
       )}
     >
-      <div className="relative flex h-16 w-full items-center gap-4 px-4 lg:px-6">
+      <div className="flex h-16 w-full items-center justify-between gap-4 px-4 lg:px-6">
         {/* Left: Mobile menu trigger + Breadcrumbs */}
-        <div className="flex items-center gap-4 min-w-0 pr-4">
+        <div className="flex items-center gap-4 flex-1 min-w-0">
           {/* Mobile menu button - shown on all screens for consistency */}
           <button
             onClick={onMobileMenuToggle}
-            className="lg:hidden p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-white/5 transition-colors"
+            className="lg:hidden p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-white/5 transition-colors flex-shrink-0"
             aria-label="Toggle sidebar"
           >
             <Menu className="w-5 h-5 text-gray-600 dark:text-gray-400" />
           </button>
 
           {/* Breadcrumbs */}
-          <div className="hidden md:block min-w-0">
-            <Breadcrumbs pathname={pathname} />
+          <div className="hidden md:block">
+            <Breadcrumbs />
           </div>
         </div>
 
         {/* Right: Search + Actions */}
-        <div className="absolute right-4 lg:right-6 top-1/2 -translate-y-1/2 flex items-center gap-2 lg:gap-3">
+        <div className="flex items-center gap-2 lg:gap-3 flex-shrink-0">
           {/* Search (desktop/tablet) */}
           <div className="hidden md:block">
-            <div className="relative w-72 lg:w-80">
+            <div className="relative w-64 lg:w-72">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
               <input
                 type="search"
@@ -70,7 +68,9 @@ export default function Header({
           </div>
 
           {/* Theme Toggle */}
-          <ThemeToggle />
+          <div className="relative z-30">
+            <ThemeToggle />
+          </div>
 
           {/* Notifications */}
           <div className="relative">

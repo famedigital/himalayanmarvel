@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Himalayan Marvels - Bhutan Luxury Journeys</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;900&family=Montserrat:wght@300;400;500;600;700&family=Cormorant+Garamond:wght@300;400;500;600&display=swap"
+        rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: #1a1a1a;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        /* A4 Page */
+        .catalog-page {
+            width: 210mm;
+            height: 297mm;
+            background: white;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Hero Section - Punakha Dzong River */
+        .hero {
+            position: relative;
+            height: 68%;
+            background-image: url('images/punakha-dzong-river.jpg');
+            background-size: cover;
+            background-position: center;
+        }
+
+        .hero-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(0, 0, 0, 0.3) 0%, rgba(0, 0, 0, 0.5) 50%, rgba(0, 0, 0, 0.7) 100%);
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 10;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 0mm 15mm 20mm;
+        }
+
+        /* Top Brand Section */
+        .brand-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            padding-top: 5mm;
+        }
+
+        .logo {
+            height: 50mm;
+            filter: brightness(0) invert(1);
+        }
+
+        .brand-tagline {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 11px;
+            letter-spacing: 0.4em;
+            color: #c9a227;
+            font-weight: 600;
+            text-transform: uppercase;
+            margin-bottom: 3mm;
+        }
+
+        .brand-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 62px;
+            font-weight: 900;
+            color: white;
+            line-height: 0.95;
+            text-shadow: 3px 3px 12px rgba(0, 0, 0, 0.9);
+        }
+
+        .brand-subtitle {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 16px;
+            font-style: italic;
+            color: rgba(255, 255, 255, 0.9);
+            margin-top: 3mm;
+            text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.8);
+        }
+
+        /* Small Images - Location Cards with Apple Liquid Metal */
+        .small-images {
+            display: flex;
+            gap: 3mm;
+            position: absolute;
+            right: 15mm;
+            top: 76%;
+            transform: translateY(-100%);
+        }
+
+        .location-card {
+            width: 42mm;
+            background: linear-gradient(135deg,
+                    rgba(255, 255, 255, 0.9) 0%,
+                    rgba(255, 255, 255, 0.75) 100%);
+            backdrop-filter: blur(30px) saturate(150%);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow:
+                0 20px 50px rgba(0, 0, 0, 0.5),
+                inset 0 2px 0 rgba(255, 255, 255, 0.9),
+                inset 0 -2px 0 rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+        }
+
+        .location-img {
+            width: 100%;
+            height: 20mm;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .tigernest-img {
+            background-image: url('images/tigers-nest.jpg');
+        }
+
+        .buddha-img {
+            background-image: url('images/buddha-point-view.jpg');
+        }
+
+        .paro-img {
+            background-image: url('images/paro-bridge.jpg');
+        }
+
+        .dochula-img {
+            background-image: url('images/dochula.jpg');
+        }
+
+        .punakha-img {
+            background-image: url('images/By Matt Dutile37.jpg');
+        }
+
+        .location-info {
+            padding: 2mm;
+            text-align: center;
+        }
+
+        .location-label {
+            font-family: 'Playfair Display', serif;
+            font-size: 10px;
+            font-weight: 700;
+            color: #000000;
+            margin-bottom: 1mm;
+        }
+
+        .location-desc {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 8px;
+            color: #2a2a2a;
+            font-style: italic;
+        }
+
+        /* Bottom Content Section */
+        .bottom-content {
+            position: absolute;
+            bottom: 11mm;
+            left: 0;
+            right: 0;
+            height: 23%;
+            background: linear-gradient(180deg, #f8f6f3 0%, #ffffff 100%);
+            padding: 4mm 15mm;
+            display: flex;
+            gap: 6mm;
+        }
+
+        .content-left {
+            flex: 1;
+        }
+
+        .content-right {
+            width: 50mm;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 19px;
+            font-weight: 700;
+            color: #000000;
+            margin-bottom: 3mm;
+        }
+
+        .journey-card {
+            background: linear-gradient(135deg,
+                    rgba(255, 251, 240, 0.75) 0%,
+                    rgba(255, 249, 230, 0.6) 100%);
+            backdrop-filter: blur(20px);
+            border-left: 3px solid #c9a227;
+            padding: 3mm 4mm;
+            margin-bottom: 2mm;
+            border-radius: 0 8px 8px 0;
+            box-shadow:
+                0 4px 16px rgba(0, 0, 0, 0.1),
+                inset 0 1px 0 rgba(255, 255, 255, 0.5);
+        }
+
+        .journey-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 13px;
+            font-weight: 700;
+            color: #000000;
+            margin-bottom: 1mm;
+        }
+
+        .journey-details {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 11px;
+            color: #2a2a2a;
+            line-height: 1.4;
+        }
+
+        .journey-highlight {
+            color: #c9a227;
+            font-weight: 700;
+            font-size: 10px;
+        }
+
+        /* Pricing Badge */
+        .pricing-section {
+            display: flex;
+            gap: 3mm;
+            align-items: center;
+        }
+
+        .price-box {
+            background: linear-gradient(135deg,
+                    rgba(201, 162, 39, 0.9) 0%,
+                    rgba(245, 158, 11, 0.85) 100%);
+            backdrop-filter: blur(20px);
+            color: #0a0a0a;
+            padding: 4mm 8mm;
+            border-radius: 25px;
+            text-align: center;
+            box-shadow:
+                0 10px 30px rgba(0, 0, 0, 0.4),
+                inset 0 2px 0 rgba(255, 255, 255, 0.3),
+                inset 0 -2px 0 rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .price-label {
+            font-size: 7px;
+            letter-spacing: 0.15em;
+            font-weight: 600;
+            margin-bottom: 1mm;
+        }
+
+        .price-value {
+            font-family: 'Playfair Display', serif;
+            font-size: 24px;
+            font-weight: 700;
+            line-height: 1;
+        }
+
+        .price-unit {
+            font-size: 9px;
+            margin-top: 1mm;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+        }
+
+        /* QR Code */
+        .qr-section {
+            text-align: center;
+        }
+
+        .qr-code {
+            width: 38mm;
+            height: 38mm;
+            background: linear-gradient(135deg,
+                    rgba(255, 255, 255, 0.9) 0%,
+                    rgba(255, 255, 255, 0.7) 100%);
+            backdrop-filter: blur(20px);
+            border: 2px solid rgba(201, 162, 39, 0.3);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 2mm;
+            box-shadow:
+                0 4px 16px rgba(0, 0, 0, 0.2),
+                inset 0 1px 0 rgba(255, 255, 255, 0.8);
+            overflow: hidden;
+        }
+
+        .qr-code img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .qr-placeholder {
+            font-size: 10px;
+            color: #c9a227;
+            text-align: center;
+        }
+
+        .qr-label {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 9px;
+            font-weight: 600;
+            color: #2c1810;
+            margin-bottom: 1mm;
+        }
+
+        .qr-handle {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 8px;
+            color: #5a5a5a;
+        }
+
+        /* Contact Bar */
+        .contact-bar {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(135deg, #2c1810, #1a0f0a);
+            padding: 3mm 15mm;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 3mm;
+        }
+
+        .cta-btn {
+            background: linear-gradient(135deg,
+                    rgba(201, 162, 39, 0.9) 0%,
+                    rgba(245, 158, 11, 0.85) 100%);
+            backdrop-filter: blur(15px);
+            color: #0a0a0a;
+            padding: 3mm 10mm;
+            border-radius: 25px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-decoration: none;
+            box-shadow:
+                0 4px 16px rgba(0, 0, 0, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.3),
+                inset 0 -1px 0 rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .cta-btn.purple {
+            background: linear-gradient(135deg,
+                    rgba(107, 70, 193, 0.9) 0%,
+                    rgba(147, 51, 234, 0.85) 100%);
+        }
+
+        .contact-info {
+            display: flex;
+            gap: 4mm;
+            font-size: 11px;
+            color: #ffffff;
+            font-weight: 600;
+            letter-spacing: 0.02em;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 1mm;
+        }
+
+        /* Print */
+        @media print {
+            @page {
+                size: A4;
+                margin: 0;
+            }
+
+            body {
+                background: white;
+                padding: 0;
+                display: block;
+                margin: 0;
+            }
+
+            .catalog-page {
+                box-shadow: none;
+                margin: 0;
+                width: 210mm;
+                height: 297mm;
+                page-break-after: always;
+            }
+
+            .catalog-page *,
+            .hero-overlay,
+            .content-overlay::before {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="catalog-page">
+        <!-- Hero Section - Punakha Dzong River -->
+        <div class="hero">
+            <div class="hero-overlay"></div>
+            <div class="hero-content">
+                <!-- Brand Section -->
+                <div class="brand-section">
+                    <div>
+                        <div class="brand-tagline">Luxury Retreats in the Kingdom of Bhutan</div>
+                        <h1 class="brand-title">A Journey<br>Beyond<br>Travel</h1>
+                        <p class="brand-subtitle">Discover the serene beauty of the Himalayas with our premium
+                            collection of handcrafted journey</p>
+                    </div>
+                    <img src="images/HMT Logo New.PNG" alt="Himalayan Marvels" class="logo">
+                </div>
+
+                <!-- Pricing -->
+                <div class="pricing-section">
+                    <div class="price-box">
+                        <div class="price-label">STARTING FROM</div>
+                        <div class="price-value">$2,200</div>
+                        <div class="price-unit">Booking CODE: DICA</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Small Images - Location Cards -->
+            <div class="small-images">
+                <div class="location-card">
+                    <div class="location-img tigernest-img"></div>
+                    <div class="location-info">
+                        <div class="location-label">Tiger's Nest</div>
+                        <div class="location-desc">Sacred monastery on a cliffside</div>
+                    </div>
+                </div>
+
+                <div class="location-card">
+                    <div class="location-img buddha-img"></div>
+                    <div class="location-info">
+                        <div class="location-label">Buddha Point</div>
+                        <div class="location-desc">Giant Buddha overlooking Thimphu valley</div>
+                    </div>
+                </div>
+
+                <div class="location-card">
+                    <div class="location-img dochula-img"></div>
+                    <div class="location-info">
+                        <div class="location-label">Dochula Pass</div>
+                        <div class="location-desc">108 chortels with Himalayan views</div>
+                    </div>
+                </div>
+
+                <div class="location-card">
+                    <div class="location-img punakha-img"></div>
+                    <div class="location-info">
+                        <div class="location-label">Punakha Dzong</div>
+                        <div class="location-desc">Historic riverside fortress</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom Content -->
+        <div class="bottom-content">
+            <div class="content-left">
+                <h3 class="section-title">Signature Journeys</h3>
+
+                <div class="journey-card">
+                    <div class="journey-title">1. The Path of Gentle Awakening (7–8 Days)</div>
+                    <div class="journey-details">
+                        Paro, Thimphu, Punakha • Tiger's Nest hike • Cultural immersion • Scenic valleys and monasteries
+                        <br><span class="journey-highlight">✨ *Private session with monks</span>
+                    </div>
+                </div>
+
+                <div class="journey-card">
+                    <div class="journey-title">2. Bhutan in Depth (10–12 Days)</div>
+                    <div class="journey-details">
+                        Includes Phobjikha / Bumthang • Deeper cultural and spiritual experiences • Nature, monasteries,
+                        and local life
+                    </div>
+                </div>
+            </div>
+
+            <div class="content-right">
+                <div class="qr-section">
+                    <div class="qr-code">
+                        <img src="images/IG_QR.jpeg" alt="Instagram QR Code">
+                    </div>
+                    <div class="qr-label">Follow Us on Instagram</div>
+                    <div class="qr-handle">@himalayanmarvels.travel</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Contact Bar -->
+        <div class="contact-bar">
+            <div class="cta-buttons">
+                <a href="#" class="cta-btn">BOOK NOW </a>
+
+            </div>
+            <div class="contact-info">
+                <div class="contact-item">📞 +975 77270465</div>
+                <div class="contact-item">✉️ info@himalayanmarvels.com</div>
+                <div class="contact-item">www.himalayanmarvels.com</div>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>
