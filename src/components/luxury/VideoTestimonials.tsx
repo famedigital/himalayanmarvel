@@ -170,8 +170,7 @@ export function VideoTestimonials() {
 
             {/* Play/Pause Overlay */}
             <motion.div
-              className="absolute inset-0 flex items-center justify-center bg-black/40 cursor-pointer"
-              whileHover={{ bg: 'black/30' }}
+              className="absolute inset-0 flex items-center justify-center bg-black/40 hover:bg-black/30 cursor-pointer transition-colors"
               onClick={handlePlayPause}
             >
               <motion.div
