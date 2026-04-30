@@ -155,8 +155,8 @@ export default function HeroLuxury() {
         />
       </div>
 
-      {/* LOGO - Top right corner - Badge positioned below logo */}
-      <div className="absolute top-12 right-4 md:right-8 z-40 flex flex-col items-center">
+      {/* LOGO - Top right corner (desktop/tablet) */}
+      <div className="hidden md:flex absolute top-12 right-4 md:right-8 z-40 flex-col items-center">
         {/* Logo */}
         <motion.div
           initial={{ opacity: 0, x: 20 }}
@@ -228,6 +228,23 @@ export default function HeroLuxury() {
         transition={{ duration: 1, ease: [0.16, 1, 0.3, 1], delay: 0.4 }}
         className="absolute bottom-28 md:bottom-24 left-4 md:left-8 flex flex-col items-start gap-2 md:gap-3 z-20"
       >
+        {/* Mobile-only: Logo + Founder badge on left above CTA */}
+        <div className="md:hidden flex flex-col items-start gap-2 mb-1">
+          <div className="relative w-24 h-24">
+            <Image
+              src={heroLogo}
+              alt="Himalayan Marvels"
+              fill
+              sizes="96px"
+              className="object-contain"
+              style={{ filter: 'drop-shadow(0 0 22px rgba(212, 175, 55, 0.45))' }}
+            />
+          </div>
+          <LuxuryBadge variant="gold" size="sm">
+            Ex-Ritz-Carlton Leadership
+          </LuxuryBadge>
+        </div>
+
         <LuxuryButton
           variant="primary"
           size="lg"
