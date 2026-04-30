@@ -4,6 +4,8 @@
  * Based on the Sekhar family itinerary sample
  */
 
+import { getCompanySettings } from '@/lib/hooks/useCompanySettings';
+
 export interface ItineraryDay {
   day: number;
   title: string;
@@ -86,7 +88,10 @@ export interface ItineraryData {
   contact_website?: string;
 }
 
-export function generateItineraryHTML(data: ItineraryData): string {
+export async function generateItineraryHTML(data: ItineraryData): Promise<string> {
+  // Fetch company settings
+  const settings = await getCompanySettings();
+
   // Format dates for display
   const formatDate = (dateStr: string) => {
     const date = new Date(dateStr);
@@ -103,6 +108,16 @@ export function generateItineraryHTML(data: ItineraryData): string {
     month: 'long',
     year: 'numeric'
   });
+
+  // Use company settings with fallbacks
+  const companyName = settings?.company_name || 'HIMALAYAN MARVELS';
+  const companyLogo = settings?.logo_url || '';
+  const companyLicense = settings?.license_number || '';
+  const companyPhone = settings?.mobile || data.contact_phone || '+975 17111111';
+  const companyEmail = settings?.email || data.contact_email || 'info@himalayanmarvels.com';
+  const companyWebsite = settings?.website || data.contact_website || 'www.himalayanmarvels.com';
+  const companyAddress = settings?.address || 'Thimphu, Bhutan';
+  const companyTagline = 'Tours & Treks';
 
   // Build letter body paragraphs
   const letterBodyParagraphs = data.letter_body.map(paragraph =>
@@ -207,7 +222,7 @@ export function generateItineraryHTML(data: ItineraryData): string {
     <!-- PAGE ${currentPage++}: DAY ${day.day} -->
     <div class="page inner-page">
         <div class="running-header">
-            <span>HIMALAYAN MARVELS</span>
+            <span>${companyName}</span>
             <span>${data.title.toUpperCase()}</span>
         </div>
 
@@ -229,7 +244,7 @@ export function generateItineraryHTML(data: ItineraryData): string {
                     <p class="day-description drop-cap">${day.description}</p>
                     ${day.image_url ? `
                     <div style="margin: 12px 0;">
-                        <img src="${day.image_url}" alt="Day ${day.day}" style="width: 100%; height: 180px; object-fit: cover; border-radius: 4px;">
+                        <img src="${day.image_url}" alt="${day.title ? `Day ${day.day}: ${day.title}` : `Day ${day.day}`}" style="width: 100%; height: 180px; object-fit: cover; border-radius: 4px;">
                     </div>
                     ` : ''}
                     ${scheduleItems ? `
@@ -267,8 +282,8 @@ export function generateItineraryHTML(data: ItineraryData): string {
         </div>
 
         <div class="running-footer">
-            <span>HIMALAYAN MARVELS</span>
-            <span>${data.contact_website || 'www.himalayanmarvels.com'}</span>
+            <span>${companyName}</span>
+            <span>${companyWebsite}</span>
             <div class="page-number">${currentPage - 1}</div>
         </div>
     </div>
@@ -1163,7 +1178,13 @@ export function generateItineraryHTML(data: ItineraryData): string {
         <div class="cover-bg"></div>
         <div class="cover-overlay"></div>
         <div class="cover-content">
-            <div class="cover-logo">HIMALAYAN MARVELS</div>
+            ${companyLogo ? `
+            <div style="margin-bottom: 60px;">
+                <img src="${companyLogo}" alt="${companyName}" style="max-width: 200px; height: auto;">
+            </div>
+            ` : `
+            <div class="cover-logo">${companyName}</div>
+            `}
             <div class="cover-title">${data.title.toUpperCase().replace(/ /g, '<br>')}</div>
             ${data.subtitle ? `<div class="cover-subtitle">${data.subtitle}</div>` : ''}
             <div class="cover-divider">
@@ -1179,12 +1200,18 @@ export function generateItineraryHTML(data: ItineraryData): string {
     <!-- PAGE 2: LETTER -->
     <div class="page inner-page letter-page">
         <div class="running-header">
-            <span>HIMALAYAN MARVELS</span>
+            <span>${companyName}</span>
             <span>${data.title.toUpperCase()}</span>
         </div>
 
         <div class="letter-header">
-            <div class="letter-logo">HIMALAYAN MARVELS</div>
+            ${companyLogo ? `
+            <div style="margin-bottom: 15px;">
+                <img src="${companyLogo}" alt="${companyName}" style="max-width: 150px; height: auto;">
+            </div>
+            ` : `
+            <div class="letter-logo">${companyName}</div>
+            `}
             <p class="letter-date">${letterDate}</p>
         </div>
 
@@ -1195,14 +1222,14 @@ ${letterBodyParagraphs}
 ${letterHighlightsHTML}
 
         <div class="letter-signature" style="margin-top: 25px; text-align: center;">
-            <p style="font-size: 11px; letter-spacing: 3px; color: #2d5a3d; text-transform: uppercase; margin-bottom: 8px;">Himalayan Marvels</p>
+            <p style="font-size: 11px; letter-spacing: 3px; color: #2d5a3d; text-transform: uppercase; margin-bottom: 8px;">${companyName}</p>
             <p class="letter-sign-name">${data.letter_signature_name || 'Tshering Lhamo'}</p>
             <p class="letter-sign-title">${data.letter_signature_title || 'COO'}</p>
         </div>
 
         <div class="running-footer">
-            <span>HIMALAYAN MARVELS</span>
-            <span>${data.contact_website || 'www.himalayanmarvels.com'} | ${data.contact_phone || '+975 17111111'}</span>
+            <span>${companyName}</span>
+            <span>${companyWebsite} | ${companyPhone}</span>
             <div class="page-number">2</div>
         </div>
     </div>
@@ -1210,7 +1237,7 @@ ${letterHighlightsHTML}
     <!-- PAGE 3: FAMILY INFO & FLIGHT DETAILS -->
     <div class="page inner-page">
         <div class="running-header">
-            <span>HIMALAYAN MARVELS</span>
+            <span>${companyName}</span>
             <span>${data.title.toUpperCase()}</span>
         </div>
 
@@ -1251,7 +1278,7 @@ ${daysHTML}
     <!-- PAGE ${currentPage++}: PRICING -->
     <div class="page inner-page pricing-page">
         <div class="running-header">
-            <span>HIMALAYAN MARVELS</span>
+            <span>${companyName}</span>
             <span>${data.title.toUpperCase()}</span>
         </div>
 
@@ -1289,8 +1316,8 @@ ${paymentTermsHTML}
         ` : ''}
 
         <div class="running-footer">
-            <span>HIMALAYAN MARVELS</span>
-            <span>${data.contact_website || 'www.himalayanmarvels.com'}</span>
+            <span>${companyName}</span>
+            <span>${companyWebsite}</span>
             <div class="page-number">${currentPage - 1}</div>
         </div>
     </div>
@@ -1298,7 +1325,7 @@ ${paymentTermsHTML}
     <!-- PAGE ${currentPage++}: TERMS -->
     <div class="page inner-page">
         <div class="running-header">
-            <span>HIMALAYAN MARVELS</span>
+            <span>${companyName}</span>
             <span>${data.title.toUpperCase()}</span>
         </div>
 
@@ -1312,8 +1339,8 @@ ${termsCardsHTML}
         </div>
 
         <div class="running-footer">
-            <span>HIMALAYAN MARVELS</span>
-            <span>${data.contact_website || 'www.himalayanmarvels.com'}</span>
+            <span>${companyName}</span>
+            <span>${companyWebsite}</span>
             <div class="page-number">${currentPage - 1}</div>
         </div>
     </div>
@@ -1321,7 +1348,7 @@ ${termsCardsHTML}
     <!-- PAGE ${currentPage++}: CHECKLIST -->
     <div class="page inner-page">
         <div class="running-header">
-            <span>HIMALAYAN MARVELS</span>
+            <span>${companyName}</span>
             <span>${data.title.toUpperCase()}</span>
         </div>
 
@@ -1333,8 +1360,8 @@ ${termsCardsHTML}
 ${checklistHTML}
 
         <div class="running-footer">
-            <span>HIMALAYAN MARVELS</span>
-            <span>${data.contact_website || 'www.himalayanmarvels.com'}</span>
+            <span>${companyName}</span>
+            <span>${companyWebsite}</span>
             <div class="page-number">${currentPage - 1}</div>
         </div>
     </div>
@@ -1344,13 +1371,19 @@ ${checklistHTML}
         <div class="cover-bg"></div>
         <div class="cover-overlay"></div>
         <div class="back-cover">
-            <div class="back-cover-logo">HIMALAYAN MARVELS</div>
-            <div class="back-cover-tagline">Tours & Treks</div>
+            ${companyLogo ? `
+            <div style="margin-bottom: 30px;">
+                <img src="${companyLogo}" alt="${companyName}" style="max-width: 250px; height: auto;">
+            </div>
+            ` : `
+            <div class="back-cover-logo">${companyName}</div>
+            `}
+            <div class="back-cover-tagline">${companyTagline}</div>
             <div class="back-cover-contact">
-                Thimphu, Bhutan<br><br>
-                ${data.contact_email ? `<a href="mailto:${data.contact_email}">${data.contact_email}</a><br>` : ''}
-                ${data.contact_phone || '+975 17111111'}<br><br>
-                ${data.contact_website ? `<a href="https://${data.contact_website}" target="_blank">${data.contact_website}</a>` : 'www.himalayanmarvels.com'}
+                ${companyAddress}<br><br>
+                <a href="mailto:${companyEmail}">${companyEmail}</a><br>
+                ${companyPhone}<br><br>
+                <a href="https://${companyWebsite.replace(/^https?:\/\//, '')}" target="_blank">${companyWebsite.replace(/^https?:\/\//, '')}</a>
             </div>
         </div>
     </div>

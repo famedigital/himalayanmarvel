@@ -14,14 +14,14 @@ const organizationSchema = {
   name: 'Himalayan Marvels',
   alternateName: 'Himalayan Marvels Bhutan',
   url: 'https://himalayanmarvel.vercel.app',
-  logo: 'https://res.cloudinary.com/dxztrqjft/image/upload/v1776332482/HMT_Logo_New_1_fwgpfy.png',
+  logo: '/logo/HMT-Logo.png',
   description: 'Bhutan\'s premier luxury travel concierge. Private journeys curated by insiders, not tours designed for tourists. Founded by ex-Ritz-Carlton leadership.',
   foundingDate: '2014',
   foundingLocation: 'Thimphu, Bhutan',
   founder: {
     '@type': 'Person',
     name: 'Bivatsu Giri',
-    jobTitle: 'Founder & CEO',
+    jobTitle: 'Founder',
     alumniOf: ['Les Roches Spain', 'International College of Hotel Management, Australia', 'University of Canberra'],
     knowsAbout: ['Luxury Hospitality', 'Travel Management', 'Bhutan Tourism'],
   },
@@ -76,13 +76,12 @@ export default function AboutContent() {
               </p>
               <h1 className="text-5xl md:text-7xl lg:text-8xl font-serif text-white mb-8 leading-none">
                 The Man Who Left<br />
-                <em className="text-champagne-gold">Ritz-Carlton</em><br />
+                <em className="text-champagne-gold">Global Luxury</em><br />
                 For Bhutan
               </h1>
               <p className="text-xl md:text-2xl text-gray-300 leading-relaxed font-light max-w-2xl">
-                In 2014, Bivatsu Giri made a decision that puzzled his colleagues
-                at the world's finest hotels. He walked away from luxury hospitality
-                to build something different in the Himalayan Kingdom.
+                In 2014, Bivatsu Giri stepped away from a career in global luxury hospitality
+                to build something more personal in his home country of Bhutan.
               </p>
             </RevealOnScroll>
           </div>
@@ -107,19 +106,19 @@ export default function AboutContent() {
               <div>
                 <p className="text-champagne-gold text-sm tracking-[0.2em] uppercase mb-4">Since 2014</p>
                 <h2 className="text-4xl font-light mb-6 text-dark-forest dark:text-alabaster">
-                  Our Philosophy: High-Value, Low-Volume
+                  High Value, Low Volume
                 </h2>
                 <p className="text-gray-600 dark:text-gray-300 mb-4 leading-relaxed">
-                  Established in 2014 and fully registered with the Department of Tourism in Bhutan,
-                  we have spent over a decade perfecting the art of the private tour.
+                  We operate on a simple principle: fewer journeys, done exceptionally well.
                 </p>
                 <p className="text-gray-600 dark:text-gray-300 mb-4 leading-relaxed">
-                  We believe that luxury and sustainability are two sides of the same coin.
-                  By charging the Sustainable Development Fee (SDF), we contribute directly to
-                  Bhutan's carbon-negative status and free healthcare/education systems.
+                  As a licensed Bhutanese operator since 2014, we focus exclusively on private,
+                  thoughtfully paced travel.
                 </p>
                 <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
-                  When you travel with us, your luxury is a force for global good.
+                  Bhutan's Sustainable Development Fee ensures that tourism supports the country's
+                  environment, culture, and public systems, allowing your journey to contribute
+                  meaningfully while remaining deeply personal.
                 </p>
               </div>
               <div className="relative h-[400px] rounded-2xl overflow-hidden">
@@ -151,14 +150,12 @@ export default function AboutContent() {
               </div>
               <div className="space-y-6 text-lg text-gray-600 dark:text-gray-300 leading-relaxed">
                 <p>
-                  In a world obsessed with GDP, Bhutan measures GNH — Gross National Happiness.
-                  It's the only carbon-negative country on Earth. Where traffic lights don't exist,
-                  but monks meditating in caves do.
+                  Bhutan remains one of the few places in the world where tradition and modern
+                  life exist in quiet balance.
                 </p>
                 <p>
-                  This is where Bivatsu chose to build Himalayan Marvels. Not in Geneva, not
-                  in Dubai — but in the Last Shangri-La, where every journey contributes to
-                  a nation's vision of mindful development.
+                  It is the only carbon-negative country on Earth and the only nation to measure
+                  Gross National Happiness, a reflection of its deeper priorities.
                 </p>
               </div>
             </div>
@@ -174,7 +171,7 @@ export default function AboutContent() {
               <div className="relative h-[500px] rounded-2xl overflow-hidden order-2 md:order-1 bg-gradient-to-br from-champagne-gold/20 to-dark-forest">
                 <Image
                   src="/founder-bivatsu.jpg"
-                  alt="Bivatsu Giri - Founder & CEO"
+                  alt="Bivatsu Giri - Founder"
                   fill
                   className="object-cover"
                   priority
@@ -182,7 +179,7 @@ export default function AboutContent() {
               </div>
               <div className="order-1 md:order-2">
                 <p className="text-champagne-gold text-sm tracking-[0.2em] uppercase mb-4">
-                  Founder & CEO
+                  Founder
                 </p>
                 <h2 className="text-4xl font-light mb-3 text-dark-forest dark:text-alabaster">
                   Bivatsu <span className="italic font-serif">Giri</span>
@@ -193,14 +190,13 @@ export default function AboutContent() {
 
                 <div className="space-y-4 text-gray-600 dark:text-gray-300">
                   <p>
-                    Trust is the most important luxury. Himalayan Marvels was founded by
-                    Bivatsu Giri, a hospitality visionary whose professional DNA was forged
-                    in the world's most demanding luxury environments.
+                    Himalayan Marvels is led by Bivatsu Giri, whose background in international
+                    luxury hospitality shapes every journey we design.
                   </p>
                   <p>
-                    After elite training at <strong>Les Roches, Spain</strong> and the
+                    Trained at <strong>Les Roches, Spain</strong> and the
                     <strong>International College of Hotel Management, Australia</strong>,
-                    Bivatsu honed his craft within the leadership circles of global icons:
+                    he has worked with globally recognized brands including:
                   </p>
                   <ul className="list-disc list-inside space-y-2 ml-4">
                     <li>The Ritz-Carlton</li>
@@ -208,15 +204,13 @@ export default function AboutContent() {
                     <li>Kempinski</li>
                   </ul>
                   <p>
-                    This background means that our service standards aren't just local;
-                    they are world-class. When we promise "Bespoke," we mean the anticipatory
-                    service of a five-star concierge applied to the rugged, spiritual landscape
-                    of the Himalayas.
+                    This experience translates into a level of detail, service, and anticipation
+                    rarely found in destination travel, ensuring that every journey feels effortless,
+                    considered, and personal.
                   </p>
                   <p>
-                    With an MBA from the <strong>University of Canberra</strong> and over
-                    12 years of specialized experience, Bivatsu ensures that every itinerary
-                    is a masterpiece of logistics and luxury.
+                    Today, Bivatsu oversees each itinerary closely, combining global standards
+                    with deep local understanding of Bhutan.
                   </p>
                 </div>
 
@@ -331,7 +325,7 @@ export default function AboutContent() {
                   Tourism Council of Bhutan
                 </h3>
                 <p className="text-gray-600 dark:text-gray-300">
-                  Licensed Tour Operator #20753
+                  Licensed Tour Operator #1030624
                 </p>
               </div>
 
@@ -346,10 +340,10 @@ export default function AboutContent() {
 
               <div className="bg-white dark:bg-black rounded-xl p-6 border border-champagne-gold/10">
                 <h3 className="text-lg font-light text-dark-forest dark:text-alabaster mb-2">
-                  Fully Insured
+                  Airline Partnerships
                 </h3>
                 <p className="text-gray-600 dark:text-gray-300">
-                  Comprehensive travel and medical insurance coverage
+                  Member of Drukair & Bhutan Airlines
                 </p>
               </div>
 

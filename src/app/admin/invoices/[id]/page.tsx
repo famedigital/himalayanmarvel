@@ -46,6 +46,8 @@ export default function InvoiceFormPage({ params }: { params: { id?: string[] } 
   const [loading, setLoading] = useState(!isNew);
   const [saving, setSaving] = useState(false);
   const [previewMode, setPreviewMode] = useState(false);
+  const [previewHtml, setPreviewHtml] = useState<string>('');
+  const [loadingPreview, setLoadingPreview] = useState(false);
   const [invoice, setInvoice] = useState<InvoiceData>({
     guest_name: '',
     package_name: '',
@@ -122,7 +124,7 @@ export default function InvoiceFormPage({ params }: { params: { id?: string[] } 
       setSaving(true);
 
       // Generate HTML template
-      const invoiceTemplate = generateInvoiceHTML({
+      const invoiceTemplate = await generateInvoiceHTML({
         invoice_number: invoice.invoice_number || '',
         guest_name: invoice.guest_name,
         guest_email: invoice.guest_email,
@@ -171,16 +173,23 @@ export default function InvoiceFormPage({ params }: { params: { id?: string[] } 
     }
   };
 
-  const handlePreview = () => {
-    // Ensure invoice_number is set for preview
-    const invoiceForPreview = {
-      ...invoice,
-      invoice_number: invoice.invoice_number || 'DRAFT',
-    };
-    const html = generateInvoiceHTML(invoiceForPreview);
-    const blob = new Blob([html], { type: 'text/html' });
-    const url = URL.createObjectURL(blob);
-    window.open(url, '_blank');
+  const handlePreview = async () => {
+    setLoadingPreview(true);
+    try {
+      // Ensure invoice_number is set for preview
+      const invoiceForPreview = {
+        ...invoice,
+        invoice_number: invoice.invoice_number || 'DRAFT',
+      };
+      const html = await generateInvoiceHTML(invoiceForPreview);
+      setPreviewHtml(html);
+      setPreviewMode(true);
+    } catch (error) {
+      console.error('Error generating preview:', error);
+      alert('Failed to generate preview');
+    } finally {
+      setLoadingPreview(false);
+    }
   };
 
   if (loading) {
@@ -213,15 +222,18 @@ export default function InvoiceFormPage({ params }: { params: { id?: string[] } 
             </button>
           </div>
         </div>
-        <div
-          dangerouslySetInnerHTML={{
-            __html: generateInvoiceHTML({
-              ...invoice,
-              invoice_number: invoice.invoice_number || 'DRAFT',
-            })
-          }}
-          className="bg-white p-8 rounded-lg shadow"
-        />
+        {loadingPreview ? (
+          <div className="flex items-center justify-center h-64">
+            <Loader2 className="w-8 h-8 animate-spin text-gray-400" />
+          </div>
+        ) : (
+          <div
+            dangerouslySetInnerHTML={{
+              __html: previewHtml
+            }}
+            className="bg-white p-8 rounded-lg shadow"
+          />
+        )}
       </div>
     );
   }
@@ -250,9 +262,10 @@ export default function InvoiceFormPage({ params }: { params: { id?: string[] } 
         <div className="flex gap-2">
           <button
             onClick={handlePreview}
-            className="inline-flex items-center gap-2 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700"
+            disabled={loadingPreview}
+            className="inline-flex items-center gap-2 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50"
           >
-            <Eye className="w-4 h-4" />
+            {loadingPreview ? <Loader2 className="w-4 h-4 animate-spin" /> : <Eye className="w-4 h-4" />}
             Preview
           </button>
           <button

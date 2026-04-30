@@ -1,155 +1,151 @@
 'use client';
 
-import { useState } from 'react';
-import { Menu, Bell, Search, User, ChevronDown, LogOut } from 'lucide-react';
-import { createClient } from '@/lib/supabase/client';
-import { useRouter } from 'next/navigation';
-import { cn } from '@/lib/utils';
 import { ThemeToggle } from '@/components/ThemeToggle';
 import Breadcrumbs from './Breadcrumbs';
+import { SearchCommand } from './SearchCommand';
+import { Separator } from '@/components/ui/separator';
+import { Button } from '@/components/ui/button';
+import { Bell, Search, Settings, LogOut, User } from 'lucide-react';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { createClient } from '@/lib/supabase/client';
+import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 
-interface HeaderProps {
-  onMobileMenuToggle: () => void;
-  sidebarCollapsed?: boolean;
+interface UserProfile {
+  role: 'admin' | 'reservation_staff' | 'account_staff';
 }
 
-export default function Header({
-  onMobileMenuToggle,
-  sidebarCollapsed = false,
-}: HeaderProps) {
+export default function Header() {
+  const [user, setUser] = useState<any>(null);
+  const [userRole, setUserRole] = useState<UserProfile['role'] | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
   const supabase = createClient();
-  const [userMenuOpen, setUserMenuOpen] = useState(false);
-  const [notificationsOpen, setNotificationsOpen] = useState(false);
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      const { data: { user: authUser } } = await supabase.auth.getUser();
+
+      if (authUser) {
+        setUser(authUser);
+
+        // Fetch user role from user_profiles
+        const { data: profile } = await supabase
+          .from('user_profiles')
+          .select('role')
+          .eq('id', authUser.id)
+          .single();
+
+        setUserRole(profile?.role || null);
+      }
+
+      setIsLoading(false);
+    };
+
+    fetchUser();
+  }, [supabase]);
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
     router.push('/admin/login');
-    setUserMenuOpen(false);
   };
 
-  return (
-    <header
-      className={cn(
-        'sticky top-0 z-20 w-full bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl border-b border-gray-200 dark:border-white/10 transition-all duration-300',
-        sidebarCollapsed ? 'lg:ml-16' : 'lg:ml-64'
-      )}
-    >
-      <div className="flex h-16 w-full items-center justify-between gap-4 px-4 lg:px-6">
-        {/* Left: Mobile menu trigger + Breadcrumbs */}
-        <div className="flex items-center gap-4 flex-1 min-w-0">
-          {/* Mobile menu button - shown on all screens for consistency */}
-          <button
-            onClick={onMobileMenuToggle}
-            className="lg:hidden p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-white/5 transition-colors flex-shrink-0"
-            aria-label="Toggle sidebar"
-          >
-            <Menu className="w-5 h-5 text-gray-600 dark:text-gray-400" />
-          </button>
+  const userInitials = user?.email
+    ? user.email
+        .split('@')[0]
+        .split('.')
+        .map((n: string) => n[0].toUpperCase())
+        .join('')
+    : 'U';
 
-          {/* Breadcrumbs */}
+  const canAccessSettings = userRole === 'admin' || userRole === 'account_staff';
+
+  return (
+    <header className="w-full">
+      <div className="flex h-16 w-full items-center justify-between gap-4 px-4 md:px-6">
+        {/* Left: Breadcrumbs */}
+        <div className="flex-1 min-w-0">
           <div className="hidden md:block">
             <Breadcrumbs />
           </div>
         </div>
 
         {/* Right: Search + Actions */}
-        <div className="flex items-center gap-2 lg:gap-3 flex-shrink-0">
-          {/* Search (desktop/tablet) */}
-          <div className="hidden md:block">
-            <div className="relative w-64 lg:w-72">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-              <input
-                type="search"
-                placeholder="Search..."
-                className="w-full pl-10 pr-4 py-2 rounded-xl bg-gray-100 dark:bg-white/5 border border-transparent focus:border-orange-500/50 focus:bg-white dark:focus:bg-white/10 focus:ring-2 focus:ring-orange-500/20 transition-all outline-none text-sm text-gray-900 dark:text-white placeholder-gray-500"
-              />
-            </div>
+        <div className="flex items-center gap-2 flex-shrink-0">
+          {/* Desktop Search */}
+          <div className="hidden md:flex">
+            <SearchCommand />
           </div>
+
+          {/* Mobile Search Button */}
+          <Button variant="ghost" size="icon" className="md:hidden">
+            <Search className="h-4 w-4" />
+            <span className="sr-only">Search</span>
+          </Button>
+
+          {/* Notifications (placeholder) */}
+          <Button variant="ghost" size="icon" className="relative">
+            <Bell className="h-4 w-4" />
+            <span className="sr-only">Notifications</span>
+            <span className="absolute top-1 right-1 h-2 w-2 rounded-full bg-destructive" />
+          </Button>
+
+          <Separator orientation="vertical" className="h-6 mx-1" />
 
           {/* Theme Toggle */}
           <div className="relative z-30">
             <ThemeToggle />
           </div>
 
-          {/* Notifications */}
-          <div className="relative">
-            <button
-              onClick={() => setNotificationsOpen(!notificationsOpen)}
-              className="relative p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-white/5 transition-colors"
-              aria-label="Notifications"
-            >
-              <Bell className="w-5 h-5 text-gray-600 dark:text-gray-400" />
-              <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-orange-500 rounded-full border-2 border-white dark:border-gray-900" />
-            </button>
-
-            {/* Notifications Dropdown */}
-            {notificationsOpen && (
-              <>
-                <div
-                  className="fixed inset-0 z-10"
-                  onClick={() => setNotificationsOpen(false)}
-                />
-                <div className="absolute right-0 top-full mt-2 w-80 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-white/10 shadow-lg overflow-hidden z-20">
-                  <div className="p-4 border-b border-gray-200 dark:border-white/10">
-                    <h3 className="font-semibold text-gray-900 dark:text-white">
-                      Notifications
-                    </h3>
-                  </div>
-                  <div className="p-4 text-center text-sm text-gray-500 dark:text-gray-400">
-                    No new notifications
-                  </div>
-                </div>
-              </>
-            )}
-          </div>
-
           {/* User Menu */}
-          <div className="relative">
-            <button
-              onClick={() => setUserMenuOpen(!userMenuOpen)}
-              className="flex items-center gap-2 p-1 pr-3 rounded-full hover:bg-gray-100 dark:hover:bg-white/5 transition-colors"
-            >
-              <div className="relative w-8 h-8 rounded-full bg-gradient-to-br from-orange-500 to-pink-500 p-0.5">
-                <div className="w-full h-full rounded-full bg-white dark:bg-gray-800 flex items-center justify-center overflow-hidden">
-                  <User className="w-4 h-4 text-gray-600 dark:text-gray-400" />
+          <DropdownMenu>
+            <DropdownMenuTrigger className="relative h-9 w-9 rounded-full inline-flex items-center justify-center hover:bg-accent transition-colors outline-hidden focus-visible:ring-2 focus-visible:ring-ring">
+              {isLoading ? (
+                <div className="h-8 w-8 rounded-full bg-muted animate-pulse" />
+              ) : (
+                <Avatar className="h-8 w-8">
+                  <AvatarImage src={user?.user_metadata?.avatar_url} alt={user?.email} />
+                  <AvatarFallback className="bg-primary text-primary-foreground text-xs">
+                    {userInitials}
+                  </AvatarFallback>
+                </Avatar>
+              )}
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="w-56" align="end">
+              <div className="px-4 py-3 text-sm font-normal">
+                <div className="flex flex-col space-y-1">
+                  <p className="text-sm font-medium leading-none">
+                    {user?.user_metadata?.full_name || user?.email?.split('@')[0]}
+                  </p>
+                  <p className="text-xs leading-none text-muted-foreground">
+                    {user?.email}
+                  </p>
                 </div>
               </div>
-              <span className="hidden lg:block text-sm font-medium text-gray-700 dark:text-gray-300">
-                Admin
-              </span>
-              <ChevronDown className="hidden lg:block w-4 h-4 text-gray-500" />
-            </button>
-
-            {/* User Dropdown */}
-            {userMenuOpen && (
-              <>
-                <div
-                  className="fixed inset-0 z-10"
-                  onClick={() => setUserMenuOpen(false)}
-                />
-                <div className="absolute right-0 top-full mt-2 w-56 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-white/10 shadow-lg overflow-hidden z-20">
-                  <div className="p-4 border-b border-gray-200 dark:border-white/10">
-                    <p className="text-sm font-medium text-gray-900 dark:text-white">
-                      Admin User
-                    </p>
-                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
-                      admin@himalayanmarvels.com
-                    </p>
-                  </div>
-                  <div className="p-2">
-                    <button
-                      onClick={handleLogout}
-                      className="flex items-center gap-3 w-full px-3 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-red-500/10 rounded-lg transition-colors"
-                    >
-                      <LogOut className="w-4 h-4" />
-                      Sign out
-                    </button>
-                  </div>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem>
+                <a href="/admin/settings" className="flex items-center gap-2 text-sm">
+                  <Settings className="h-4 w-4" />
+                  <span>Settings</span>
+                </a>
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem className="text-destructive" onSelect={handleLogout}>
+                <div className="flex items-center gap-2 text-sm">
+                  <LogOut className="h-4 w-4" />
+                  <span>Log out</span>
                 </div>
-              </>
-            )}
-          </div>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </div>
     </header>

@@ -110,7 +110,7 @@ export default function HeroLuxury() {
   const primarySlide = slides.find(s => s.isPrimary) || slides[0];
   const currentSlide = primarySlide;
 
-  const heroLogo = currentSlide?.logo || 'https://res.cloudinary.com/dxztrqjft/image/upload/v1776332482/HMT_Logo_New_1_fwgpfy.png';
+  const heroLogo = currentSlide?.logo || '/logo/HMT-Logo.png';
 
   // EMOTIONAL, CINEMATIC COPY — Not functional description
   const heroSubtitle = currentSlide?.subtitle || 'Private cultural journeys, festival experiences, and Himalayan adventures — designed around your travel style by the team who\'s hosted 2,500+ guests since 2014.';
@@ -140,7 +140,7 @@ export default function HeroLuxury() {
         ) : (
           <img
             src={heroMediaUrl}
-            alt="Bhutan landscape"
+            alt="Tashichho Dzong fortress at sunset with traditional Bhutanese architecture, Thimphu"
             className="w-full h-full object-cover"
             style={{ filter: 'brightness(0.7)' }}
           />
@@ -155,45 +155,46 @@ export default function HeroLuxury() {
         />
       </div>
 
-      {/* LOGO - Top right corner - Below menu bar - 3x bigger on mobile */}
-      <motion.div
-        initial={{ opacity: 0, x: 20 }}
-        animate={{ opacity: 1, x: 0 }}
-        transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
-        className="absolute top-28 right-4 md:top-6 md:right-12 z-40"
-      >
-        <div className="relative w-40 h-40 md:w-40 md:h-40 lg:w-96 lg:h-96">
+      {/* LOGO - Top right corner - Badge positioned below logo */}
+      <div className="absolute top-12 right-4 md:right-8 z-40 flex flex-col items-center">
+        {/* Logo */}
+        <motion.div
+          initial={{ opacity: 0, x: 20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+          className="relative w-36 h-36 md:w-44 md:h-44 lg:w-56 lg:h-56"
+        >
           <Image
             src={heroLogo}
             alt="Himalayan Marvels"
             fill
-            sizes="(max-width: 768px) 160px, (max-width: 1024px) 160px, 384px"
+            sizes="(max-width: 768px) 144px, (max-width: 1024px) 176px, 224px"
             className="object-contain"
             style={{ filter: 'drop-shadow(0 0 30px rgba(212, 175, 55, 0.5))' }}
           />
-        </div>
-      </motion.div>
+        </motion.div>
+
+        {/* Founder Badge - Below logo, aligned to right of logo */}
+        <motion.div
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.5, ease: [0.16, 1, 0.3, 1] }}
+          className="mt-2"
+        >
+          <LuxuryBadge variant="gold" size="sm">
+            <span className="hidden md:inline">Founded by Ex-Ritz-Carlton Leadership</span>
+            <span className="md:hidden">Ex-Ritz-Carlton Leadership</span>
+          </LuxuryBadge>
+        </motion.div>
+      </div>
 
       {/* HERO CONTENT - All on left side, center empty for building view */}
       <motion.div
         style={{ opacity, scale }}
         className="relative h-full px-4 md:px-12"
       >
-        {/* LEFT SIDE - Badge, Headline, Subheadline - Mobile: Below floating menu */}
-        <div className="absolute left-4 md:left-12 top-36 md:top-24 max-w-md z-10">
-          {/* FOUNDER CREDENTIALS BADGE - Show on mobile with smaller size */}
-          <motion.div
-            initial={{ opacity: 0, x: -30 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-            className="mb-4 md:mb-6"
-          >
-            <LuxuryBadge variant="gold" size="sm">
-              <span className="hidden md:inline">Founded by Ex-Ritz-Carlton Leadership</span>
-              <span className="md:hidden">Ex-Ritz-Carlton Leadership</span>
-            </LuxuryBadge>
-          </motion.div>
-
+        {/* LEFT SIDE - Headline, Subheadline - Mobile: Below floating menu */}
+        <div className="absolute left-4 md:left-8 top-28 md:top-24 max-w-md z-10">
           {/* CINEMATIC HEADLINE with Typewriter - Much larger mobile font */}
           <motion.h1
             key={`heading-${currentSlide?.id || 'default'}`}
@@ -215,7 +216,7 @@ export default function HeroLuxury() {
             transition={{ duration: 1, ease: [0.16, 1, 0.3, 1], delay: 0.3 }}
             className="text-sm md:text-sm lg:text-base text-white/90 leading-relaxed font-light md:mb-6 max-w-xs"
           >
-            <TypewriterText text="Experience sacred landscapes & living traditions." delay={1500} speed={25} />
+            <TypewriterText text="Experience sacred landscapes, living culture, and journeys that stay with you." delay={1500} speed={25} />
           </motion.p>
         </div>
       </motion.div>
@@ -225,7 +226,7 @@ export default function HeroLuxury() {
         initial={{ opacity: 0, x: -30 }}
         animate={{ opacity: 1, x: 0 }}
         transition={{ duration: 1, ease: [0.16, 1, 0.3, 1], delay: 0.4 }}
-        className="absolute bottom-40 md:bottom-24 left-4 md:left-12 flex flex-col items-start gap-2 md:gap-3 z-20"
+        className="absolute bottom-28 md:bottom-24 left-4 md:left-8 flex flex-col items-start gap-2 md:gap-3 z-20"
       >
         <LuxuryButton
           variant="primary"
@@ -257,8 +258,8 @@ export default function HeroLuxury() {
           transition={{ duration: 0.8, delay: 0.7 }}
           className="mt-2 md:mt-4 flex items-center justify-start gap-2 md:gap-4 text-[10px] md:text-xs text-white/60 uppercase tracking-[0.1em] md:tracking-[0.15em]"
         >
-          <span className="hidden md:inline">Licensed Operator #20753</span>
-          <span className="md:hidden">Licensed #20753</span>
+          <span className="hidden md:inline">Licensed Operator #1030624</span>
+          <span className="md:hidden">Licensed #1030624</span>
           <span className="w-px h-3 md:h-4 bg-white/20" />
           <span>4.9★ Rating</span>
         </motion.div>
@@ -269,7 +270,7 @@ export default function HeroLuxury() {
         initial={{ opacity: 0, x: 30 }}
         animate={{ opacity: 1, x: 0 }}
         transition={{ duration: 0.8, delay: 0.5, ease: [0.16, 1, 0.3, 1] }}
-        className="absolute bottom-40 right-4 md:right-12 flex items-center gap-3 md:gap-6"
+        className="absolute bottom-28 right-4 md:right-8 flex items-center gap-3 md:gap-6"
       >
         {/* Years */}
         <div className="text-center">

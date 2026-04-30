@@ -26,7 +26,7 @@ export async function GET(
     }
 
     // Generate HTML
-    const html = generateItineraryHTML(itinerary);
+    const html = await generateItineraryHTML(itinerary);
 
     return new NextResponse(html, {
       headers: {

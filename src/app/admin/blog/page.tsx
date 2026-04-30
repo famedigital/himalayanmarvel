@@ -18,18 +18,18 @@ export default async function BlogsPage() {
   const blogs = await getBlogs();
 
   return (
-    <div>
+    <>
       {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8">
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Blog Posts</h1>
-          <p className="text-gray-900/50">Manage your travel blog content</p>
+          <h1 className="text-xl font-semibold text-foreground tracking-wide">Blog Posts</h1>
+          <p className="text-muted-foreground text-sm mt-1">Manage your travel blog content</p>
         </div>
         <Link
           href="/admin/blog/new"
-          className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-orange-500 to-pink-500 text-gray-900 font-semibold rounded-xl hover:opacity-90 transition-opacity"
+          className="inline-flex items-center gap-2 px-4 py-2 bg-amber-600 text-white rounded-lg hover:bg-amber-700 transition-all shadow-sm font-medium text-sm"
         >
-          <Plus className="w-5 h-5" />
+          <Plus className="w-4 h-4" />
           Write Blog
         </Link>
       </div>
@@ -37,19 +37,17 @@ export default async function BlogsPage() {
       {/* Search Bar */}
       <div className="mb-6">
         <div className="relative">
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-900/30" />
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
           <input
             type="text"
             placeholder="Search blog posts..."
-            className="w-full pl-12 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 placeholder:text-gray-900/30 focus:outline-none focus:ring-2 focus:ring-orange-500/50 focus:border-transparent transition-all"
+            className="w-full pl-10 pr-4 py-2 bg-muted border border-border rounded-lg text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-transparent transition-all text-sm"
           />
         </div>
       </div>
 
       {/* Blogs Table */}
-      <div className="bg-white backdrop-blur-xl border border-gray-200 rounded-2xl overflow-hidden">
-        <BlogsTable blogs={blogs} />
-      </div>
-    </div>
+      <BlogsTable blogs={blogs} />
+    </>
   );
 }

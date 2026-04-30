@@ -8,9 +8,11 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { ArrowLeft, Save, Eye, Plus, Trash2, Loader2, Calendar, Users } from 'lucide-react';
+import { ArrowLeft, Save, Eye, Plus, Trash2, Loader2, Calendar, Users, CheckCircle, XCircle, Receipt } from 'lucide-react';
 import { generateItineraryHTML, ItineraryData, ItineraryDay } from '@/lib/templates/itinerary-template';
 import CloudinaryUpload from '@/components/admin/CloudinaryUpload';
+import { InvoiceGeneratorModal } from '@/components/admin/InvoiceGeneratorModal';
+import { createClient } from '@/lib/supabase/client';
 
 interface ItineraryForm {
   id?: string;
@@ -54,6 +56,8 @@ export default function ItineraryFormPage({ params }: { params: { id?: string[] 
   const [saving, setSaving] = useState(false);
   const [previewMode, setPreviewMode] = useState(false);
   const [activeTab, setActiveTab] = useState<'basics' | 'letter' | 'days' | 'pricing' | 'terms' | 'checklist'>('basics');
+  const [showInvoiceModal, setShowInvoiceModal] = useState(false);
+  const [fullItinerary, setFullItinerary] = useState<any>(null);
   const [form, setForm] = useState<ItineraryForm>({
     title: '',
     guest_name: '',
@@ -76,21 +80,25 @@ export default function ItineraryFormPage({ params }: { params: { id?: string[] 
 
   const fetchItinerary = async (id: string) => {
     try {
-      const response = await fetch(`/api/admin/itineraries/${id}`);
-      const result = await response.json();
+      const supabase = createClient();
+      const { data, error } = await supabase
+        .from('itineraries')
+        .select('*')
+        .eq('id', id)
+        .single();
 
-      if (result.success) {
-        const data = result.data;
-        setForm({
-          ...data,
-          letter_body: data.letter_body ? JSON.parse(data.letter_body as string) : [''],
-          itinerary_days: data.itinerary_days || [],
-          price_inclusions: data.price_inclusions ? JSON.parse(data.price_inclusions as string) : undefined,
-          inclusions_list: data.inclusions_list ? JSON.parse(data.inclusions_list as string) : undefined,
-          terms: data.terms_conditions ? JSON.parse(data.terms_conditions as string) : undefined,
-          packing_checklist: data.packing_checklist ? (typeof data.packing_checklist === 'string' ? JSON.parse(data.packing_checklist) : data.packing_checklist) : undefined,
-        });
-      }
+      if (error) throw error;
+
+      setFullItinerary(data);
+      setForm({
+        ...data,
+        letter_body: data.letter_body ? JSON.parse(data.letter_body as string) : [''],
+        itinerary_days: data.itinerary_days || [],
+        price_inclusions: data.price_inclusions ? JSON.parse(data.price_inclusions as string) : undefined,
+        inclusions_list: data.inclusions_list ? JSON.parse(data.inclusions_list as string) : undefined,
+        terms: data.terms_conditions ? JSON.parse(data.terms_conditions as string) : undefined,
+        packing_checklist: data.packing_checklist ? (typeof data.packing_checklist === 'string' ? JSON.parse(data.packing_checklist) : data.packing_checklist) : undefined,
+      });
     } catch (error) {
       console.error('Error fetching itinerary:', error);
     } finally {
@@ -137,7 +145,7 @@ export default function ItineraryFormPage({ params }: { params: { id?: string[] 
       setSaving(true);
 
       // Generate HTML template
-      const itineraryTemplate = generateItineraryHTML({
+      const itineraryTemplate = await generateItineraryHTML({
         title: form.title,
         subtitle: form.subtitle,
         guest_name: form.guest_name,
@@ -209,8 +217,8 @@ export default function ItineraryFormPage({ params }: { params: { id?: string[] 
     }
   };
 
-  const handlePreview = () => {
-    const html = generateItineraryHTML({
+  const handlePreview = async () => {
+    const html = await generateItineraryHTML({
       title: form.title,
       subtitle: form.subtitle,
       guest_name: form.guest_name,
@@ -231,6 +239,26 @@ export default function ItineraryFormPage({ params }: { params: { id?: string[] 
     const blob = new Blob([html], { type: 'text/html' });
     const url = URL.createObjectURL(blob);
     window.open(url, '_blank');
+  };
+
+  const handleStatusChange = async (newStatus: 'draft' | 'final' | 'cancelled') => {
+    if (!itineraryId) return;
+
+    try {
+      const supabase = createClient();
+      const { error } = await supabase
+        .from('itineraries')
+        .update({ status: newStatus })
+        .eq('id', itineraryId);
+
+      if (error) throw error;
+
+      setForm({ ...form, status: newStatus });
+      alert(`Status updated to ${newStatus}`);
+    } catch (error) {
+      console.error('Error updating status:', error);
+      alert('Failed to update status');
+    }
   };
 
   if (loading) {
@@ -273,6 +301,40 @@ export default function ItineraryFormPage({ params }: { params: { id?: string[] 
           </div>
         </div>
         <div className="flex gap-2">
+          {!isNew && (
+            <>
+              {/* Status Actions */}
+              {form.status === 'draft' && (
+                <button
+                  onClick={() => handleStatusChange('final')}
+                  className="inline-flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700"
+                  title="Mark as accepted by client"
+                >
+                  <CheckCircle className="w-4 h-4" />
+                  Accept
+                </button>
+              )}
+              {(form.status === 'draft' || form.status === 'final') && (
+                <button
+                  onClick={() => handleStatusChange('cancelled')}
+                  className="inline-flex items-center gap-2 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700"
+                  title="Cancel this itinerary"
+                >
+                  <XCircle className="w-4 h-4" />
+                  Cancel
+                </button>
+              )}
+              {/* Invoice Button */}
+              <button
+                onClick={() => setShowInvoiceModal(true)}
+                className="inline-flex items-center gap-2 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700"
+                title="Generate invoice for this itinerary"
+              >
+                <Receipt className="w-4 h-4" />
+                Generate Invoice
+              </button>
+            </>
+          )}
           <button
             onClick={handlePreview}
             className="inline-flex items-center gap-2 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700"
@@ -767,6 +829,15 @@ export default function ItineraryFormPage({ params }: { params: { id?: string[] 
           </div>
         </div>
       </div>
+
+      {/* Invoice Modal */}
+      {showInvoiceModal && fullItinerary && (
+        <InvoiceGeneratorModal
+          isOpen={showInvoiceModal}
+          onClose={() => setShowInvoiceModal(false)}
+          itinerary={fullItinerary}
+        />
+      )}
     </div>
   );
 }

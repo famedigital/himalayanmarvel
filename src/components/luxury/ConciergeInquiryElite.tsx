@@ -21,6 +21,10 @@ export function ConciergeInquiryElite() {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
+    whatsapp: '',
+    travelers: '',
+    passportCountry: '',
+    travelMonth: '',
     vision: '',
   });
 
@@ -41,14 +45,14 @@ export function ConciergeInquiryElite() {
     // Reset after 5 seconds
     setTimeout(() => {
       setSubmitted(false);
-      setFormData({ name: '', email: '', vision: '' });
+      setFormData({ name: '', email: '', whatsapp: '', travelers: '', passportCountry: '', travelMonth: '', vision: '' });
     }, 5000);
   };
 
   return (
     <section id="contact" className="section-luxury relative overflow-hidden">
       {/* Background */}
-      <div className="absolute inset-0 bg-alabaster dark:bg-dark-forest" />
+      <div className="absolute inset-0 bg-alabaster" style={{ backgroundColor: isDark ? '#0E140E' : undefined }} />
 
       {/* Ambient glow */}
       <div className="absolute inset-0 pointer-events-none">
@@ -359,6 +363,136 @@ export function ConciergeInquiryElite() {
                         e.currentTarget.style.borderBottomWidth = '1px';
                       }}
                     />
+                  </div>
+
+                  {/* WhatsApp Number */}
+                  <div>
+                    <label className="block text-xs uppercase tracking-[0.2em] font-semibold mb-2" style={{ color: isDark ? 'rgba(247, 247, 242, 0.5)' : 'rgba(26, 26, 26, 0.4)' }}>
+                      WhatsApp Number
+                    </label>
+                    <input
+                      type="tel"
+                      value={formData.whatsapp}
+                      onChange={(e) => setFormData({ ...formData, whatsapp: e.target.value })}
+                      placeholder="+1 234 567 8900"
+                      className="w-full bg-transparent outline-none text-lg py-4 border-b transition-colors"
+                      style={{
+                        color: isDark ? '#F7F7F2' : '#1A1A1A',
+                        borderColor: isDark ? 'rgba(212, 175, 55, 0.2)' : 'rgba(0, 104, 56, 0.2)',
+                      }}
+                      onFocus={(e) => {
+                        e.currentTarget.style.borderColor = '#D4AF37';
+                        e.currentTarget.style.borderBottomWidth = '2px';
+                      }}
+                      onBlur={(e) => {
+                        e.currentTarget.style.borderColor = isDark ? 'rgba(212, 175, 55, 0.2)' : 'rgba(0, 104, 56, 0.2)';
+                        e.currentTarget.style.borderBottomWidth = '1px';
+                      }}
+                    />
+                    <p className="text-xs mt-1" style={{ color: isDark ? 'rgba(247, 247, 242, 0.4)' : 'rgba(26, 26, 26, 0.4)' }}>
+                      👉 Helps you qualify instantly
+                    </p>
+                  </div>
+
+                  {/* Number of Travelers */}
+                  <div>
+                    <label className="block text-xs uppercase tracking-[0.2em] font-semibold mb-2" style={{ color: isDark ? 'rgba(247, 247, 242, 0.5)' : 'rgba(26, 26, 26, 0.4)' }}>
+                      Number of Travelers
+                    </label>
+                    <select
+                      value={formData.travelers}
+                      onChange={(e) => setFormData({ ...formData, travelers: e.target.value })}
+                      required
+                      className="w-full bg-transparent outline-none text-lg py-4 border-b transition-colors appearance-none cursor-pointer"
+                      style={{
+                        color: isDark ? '#F7F7F2' : '#1A1A1A',
+                        borderColor: isDark ? 'rgba(212, 175, 55, 0.2)' : 'rgba(0, 104, 56, 0.2)',
+                      }}
+                      onFocus={(e) => {
+                        e.currentTarget.style.borderColor = '#D4AF37';
+                        e.currentTarget.style.borderBottomWidth = '2px';
+                      }}
+                      onBlur={(e) => {
+                        e.currentTarget.style.borderColor = isDark ? 'rgba(212, 175, 55, 0.2)' : 'rgba(0, 104, 56, 0.2)';
+                        e.currentTarget.style.borderBottomWidth = '1px';
+                      }}
+                    >
+                      <option value="" style={{ color: '#1A1A1A', background: '#FFFFFF' }}>Select travelers</option>
+                      <option value="1" style={{ color: '#1A1A1A', background: '#FFFFFF' }}>1 Traveler (Solo)</option>
+                      <option value="2" style={{ color: '#1A1A1A', background: '#FFFFFF' }}>2 Travelers (Couple)</option>
+                      <option value="3-4" style={{ color: '#1A1A1A', background: '#FFFFFF' }}>3-4 Travelers (Small Group)</option>
+                      <option value="5-8" style={{ color: '#1A1A1A', background: '#FFFFFF' }}>5-8 Travelers (Family/Group)</option>
+                      <option value="9+" style={{ color: '#1A1A1A', background: '#FFFFFF' }}>9+ Travelers (Large Group)</option>
+                    </select>
+                    <p className="text-xs mt-1" style={{ color: isDark ? 'rgba(247, 247, 242, 0.4)' : 'rgba(26, 26, 26, 0.4)' }}>
+                      👉 Key for pricing
+                    </p>
+                  </div>
+
+                  {/* Country of Passport */}
+                  <div>
+                    <label className="block text-xs uppercase tracking-[0.2em] font-semibold mb-2" style={{ color: isDark ? 'rgba(247, 247, 242, 0.5)' : 'rgba(26, 26, 26, 0.4)' }}>
+                      Country of Passport
+                    </label>
+                    <input
+                      type="text"
+                      value={formData.passportCountry}
+                      onChange={(e) => setFormData({ ...formData, passportCountry: e.target.value })}
+                      placeholder="e.g., United States, United Kingdom, India"
+                      required
+                      className="w-full bg-transparent outline-none text-lg py-4 border-b transition-colors"
+                      style={{
+                        color: isDark ? '#F7F7F2' : '#1A1A1A',
+                        borderColor: isDark ? 'rgba(212, 175, 55, 0.2)' : 'rgba(0, 104, 56, 0.2)',
+                      }}
+                      onFocus={(e) => {
+                        e.currentTarget.style.borderColor = '#D4AF37';
+                        e.currentTarget.style.borderBottomWidth = '2px';
+                      }}
+                      onBlur={(e) => {
+                        e.currentTarget.style.borderColor = isDark ? 'rgba(212, 175, 55, 0.2)' : 'rgba(0, 104, 56, 0.2)';
+                        e.currentTarget.style.borderBottomWidth = '1px';
+                      }}
+                    />
+                  </div>
+
+                  {/* Travel Month */}
+                  <div>
+                    <label className="block text-xs uppercase tracking-[0.2em] font-semibold mb-2" style={{ color: isDark ? 'rgba(247, 247, 242, 0.5)' : 'rgba(26, 26, 26, 0.4)' }}>
+                      Month of Travel
+                    </label>
+                    <select
+                      value={formData.travelMonth}
+                      onChange={(e) => setFormData({ ...formData, travelMonth: e.target.value })}
+                      required
+                      className="w-full bg-transparent outline-none text-lg py-4 border-b transition-colors appearance-none cursor-pointer"
+                      style={{
+                        color: isDark ? '#F7F7F2' : '#1A1A1A',
+                        borderColor: isDark ? 'rgba(212, 175, 55, 0.2)' : 'rgba(0, 104, 56, 0.2)',
+                      }}
+                      onFocus={(e) => {
+                        e.currentTarget.style.borderColor = '#D4AF37';
+                        e.currentTarget.style.borderBottomWidth = '2px';
+                      }}
+                      onBlur={(e) => {
+                        e.currentTarget.style.borderColor = isDark ? 'rgba(212, 175, 55, 0.2)' : 'rgba(0, 104, 56, 0.2)';
+                        e.currentTarget.style.borderBottomWidth = '1px';
+                      }}
+                    >
+                      <option value="" style={{ color: '#1A1A1A', background: '#FFFFFF' }}>Select month</option>
+                      <option value="January" style={{ color: '#1A1A1A', background: '#FFFFFF' }}>January</option>
+                      <option value="February" style={{ color: '#1A1A1A', background: '#FFFFFF' }}>February</option>
+                      <option value="March" style={{ color: '#1A1A1A', background: '#FFFFFF' }}>March</option>
+                      <option value="April" style={{ color: '#1A1A1A', background: '#FFFFFF' }}>April</option>
+                      <option value="May" style={{ color: '#1A1A1A', background: '#FFFFFF' }}>May</option>
+                      <option value="June" style={{ color: '#1A1A1A', background: '#FFFFFF' }}>June</option>
+                      <option value="July" style={{ color: '#1A1A1A', background: '#FFFFFF' }}>July</option>
+                      <option value="August" style={{ color: '#1A1A1A', background: '#FFFFFF' }}>August</option>
+                      <option value="September" style={{ color: '#1A1A1A', background: '#FFFFFF' }}>September</option>
+                      <option value="October" style={{ color: '#1A1A1A', background: '#FFFFFF' }}>October</option>
+                      <option value="November" style={{ color: '#1A1A1A', background: '#FFFFFF' }}>November</option>
+                      <option value="December" style={{ color: '#1A1A1A', background: '#FFFFFF' }}>December</option>
+                    </select>
                   </div>
 
                   {/* Submit */}

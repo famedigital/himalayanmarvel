@@ -67,7 +67,7 @@ export default function LoginPage() {
           <div className="flex justify-center mb-8">
             <div className="relative w-16 h-16">
               <img
-                src="https://res.cloudinary.com/dxztrqjft/image/upload/v1776332482/HMT_Logo_New_1_fwgpfy.png"
+                src="/logo/HMT-Logo.png"
                 alt="Himalayan Marvels"
                 className="w-full h-full object-contain"
               />

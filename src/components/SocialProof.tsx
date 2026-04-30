@@ -79,13 +79,21 @@ const FALLBACK_REVIEWS = [
 // Generate Review schema for SEO
 const reviewSchema = {
   '@context': 'https://schema.org',
-  '@type': 'Product',
-  name: 'Himalayan Marvels - Bhutan Luxury Private Tours',
-  image: 'https://himalayanmarvel.vercel.app/logo.png',
-  description: 'Bhutan\'s premier luxury travel concierge. Private journeys curated by insiders.',
-  brand: {
-    '@type': 'Brand',
-    name: 'Himalayan Marvels',
+  '@type': 'LocalBusiness',
+  name: 'Himalayan Marvels',
+  alternateName: 'Silverpine Bhutan',
+  image: '/logo/HMT-Logo.png',
+  description: "Bhutan's premier luxury travel concierge. Private journeys curated by insiders.",
+  url: 'https://himalayanmarvels.bt',
+  telephone: '+975-2-322314',
+  email: 'info@himalayanmarvels.bt',
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: 'Norzin Lam',
+    addressLocality: 'Thimphu',
+    addressRegion: 'Thimphu',
+    postalCode: '11001',
+    addressCountry: 'BT'
   },
   aggregateRating: {
     '@type': 'AggregateRating',
@@ -111,6 +119,7 @@ const reviewSchema = {
       name: 'Google Reviews',
     },
   })),
+  priceRange: '$$$',
 };
 
 // Himalayan Marvels Google Place ID

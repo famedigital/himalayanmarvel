@@ -240,7 +240,7 @@ export default function BookingDetail() {
           className="flex items-center gap-2 text-sm text-gray-600 hover:text-gray-900 mb-4 transition-colors"
         >
           <ArrowLeft className="w-4 h-4" />
-          Back to Bookings
+          Back to Operations
         </button>
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <div>

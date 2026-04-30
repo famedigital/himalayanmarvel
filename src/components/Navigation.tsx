@@ -14,9 +14,9 @@ const navItems = [
     href: '/tours',
     hasDropdown: true,
     children: [
-      { name: 'Cultural Immersion', href: '/tours?type=cultural' },
-      { name: 'Spiritual Wellness', href: '/tours?type=spiritual' },
-      { name: 'Himalayan Expeditions', href: '/tours?type=trek' },
+      { name: 'Cultural Journeys', href: '/tours?type=cultural' },
+      { name: 'Spiritual Journeys', href: '/tours?type=spiritual' },
+      { name: 'Himalayan Treks & Expeditions', href: '/tours?type=trek' },
     ],
   },
   { name: 'Journal', href: '/blog' },
@@ -93,18 +93,28 @@ export default function Navigation() {
           {/* Logo */}
           <Link href="/">
             <motion.div
-              className="flex items-center mr-2 md:mr-4"
+              className="mr-2 md:mr-4 flex items-baseline gap-1"
               whileHover={{ scale: 1.02 }}
               transition={{ duration: 0.3 }}
             >
               <span
-                className="text-[0.7rem] md:text-xs font-semibold tracking-[0.2em] uppercase whitespace-nowrap"
+                className="font-display font-semibold"
                 style={{
-                  color: isDark ? '#F7F7F2' : '#1A1A1A',
-                  fontFamily: 'var(--font-playfair)',
+                  fontSize: ' clamp(0.875rem, 2.5vw, 1.1rem)',
+                  color: isDark ? '#F7F7F2' : '#1A1A1A'
                 }}
               >
-                HIMALAYAN MARVELS
+                Himalayan
+              </span>
+              <span
+                className="font-display font-bold whitespace-nowrap"
+                style={{
+                  fontSize: ' clamp(0.875rem, 2.5vw, 1.25rem)',
+                  letterSpacing: '0.05em',
+                  color: isDark ? '#F7F7F2' : '#1A1A1A'
+                }}
+              >
+                MARVELS
               </span>
             </motion.div>
           </Link>

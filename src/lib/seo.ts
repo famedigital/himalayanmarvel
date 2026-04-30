@@ -115,7 +115,7 @@ export function generateOrganizationSchema(props: OrganizationSchemaProps = {}) 
     name = SITE_NAME,
     description = DEFAULT_DESCRIPTION,
     url = SITE_URL,
-    logo = `${SITE_URL}/logo.png`,
+    logo = `${SITE_URL}/logo/HMT-Logo.png`,
     email = 'info@himalayanmarvels.bt',
     phone = '+975-2-322314',
     address = {
@@ -273,7 +273,7 @@ export function generateArticleSchema(props: ArticleSchemaProps) {
       name: SITE_NAME,
       logo: {
         '@type': 'ImageObject',
-        url: `${SITE_URL}/logo.png`,
+        url: `${SITE_URL}/logo/HMT-Logo.png`,
       },
     },
     mainEntityOfPage: {
@@ -365,7 +365,7 @@ export function generateLocalBusinessSchema(props: LocalBusinessSchemaProps = {}
     name = SITE_NAME,
     description = DEFAULT_DESCRIPTION,
     url = SITE_URL,
-    logo = `${SITE_URL}/logo.png`,
+    logo = `${SITE_URL}/logo/HMT-Logo.png`,
     email = 'info@himalayanmarvels.bt',
     phone = '+975-2-322314',
     address = {

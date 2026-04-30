@@ -75,18 +75,19 @@ export default function Hero() {
 
   // Auto-advance image carousel every 6 seconds
   useEffect(() => {
+    if (slides.length === 0) return;
     const interval = setInterval(() => {
-      setCurrentImageIndex((prev) => (prev + 1) % heroImages.length);
+      setCurrentImageIndex((prev) => (prev + 1) % slides.length);
     }, 6000);
     return () => clearInterval(interval);
-  }, []);
+  }, [slides]);
 
   const isDark = mounted ? (resolvedTheme === 'dark' || theme === 'dark') : true;
 
   // Get primary slide or use first slide as fallback, then defaults
   const primarySlide = slides.find(s => s.isPrimary) || slides[0];
   const currentSlide = primarySlide;
-  const heroLogo = currentSlide?.logo || 'https://res.cloudinary.com/dxztrqjft/image/upload/v1776332482/HMT_Logo_New_1_fwgpfy.png';
+  const heroLogo = currentSlide?.logo || '/logo/HMT-Logo.png';
   const heroSubtitle = currentSlide?.subtitle || 'Luxury cultural, spiritual, and trekking journeys designed from within Bhutan.';
   const heroLink = currentSlide?.link || '/contact';
   const heroMediaUrl = currentSlide?.url || 'https://res.cloudinary.com/dxztrqjft/video/upload/v1776271223/tashichodzong_ddin28.mp4';
@@ -98,19 +99,35 @@ export default function Hero() {
       ref={ref}
       className="relative h-[85vh] md:h-screen w-full overflow-hidden bg-[#0E140E]"
     >
-      {/* Image Carousel Background */}
+      {/* Image/Video Carousel Background */}
       <div className="absolute inset-0">
         <AnimatePresence mode="wait">
-          <motion.img
-            key={currentImageIndex}
-            src={heroImages[currentImageIndex]}
-            alt="Bhutan landscape"
-            className="w-full h-full object-cover"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 1.5, ease: "easeInOut" }}
-          />
+          {slides[currentImageIndex]?.type === 'video' ? (
+            <motion.video
+              key={slides[currentImageIndex]?.id || currentImageIndex}
+              src={slides[currentImageIndex]?.url}
+              autoPlay
+              muted
+              loop
+              playsInline
+              className="w-full h-full object-cover"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 1.5, ease: "easeInOut" }}
+            />
+          ) : (
+            <motion.img
+              key={slides[currentImageIndex]?.id || currentImageIndex}
+              src={slides[currentImageIndex]?.url || heroImages[0]}
+              alt={slides[currentImageIndex]?.description || "Bhutan Landscape"}
+              className="w-full h-full object-cover"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 1.5, ease: "easeInOut" }}
+            />
+          )}
         </AnimatePresence>
 
         {/* Cinematic dual-layer overlay */}

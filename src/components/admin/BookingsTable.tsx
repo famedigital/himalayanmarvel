@@ -9,8 +9,9 @@ import {
   StatusBadge,
 } from './DataTable';
 import { ColumnDef } from '@tanstack/react-table';
-import { Eye, Pencil, Calendar, User, Mail, Phone, DollarSign } from 'lucide-react';
+import { Calendar, User, Mail, Phone, DollarSign } from 'lucide-react';
 import { format } from 'date-fns';
+import { TableRowActions } from './TableRowActions';
 import type { Booking, Tour } from '@/lib/supabase/types';
 
 // ============================================================================
@@ -109,11 +110,11 @@ const createColumns = (): ColumnDef<BookingWithTour>[] => [
     header: 'Status',
     cell: ({ row }) => {
       const status = row.getValue('status') as string;
-      const variantMap: Record<string, 'success' | 'warning' | 'error' | 'info' | 'default'> = {
+      const variantMap: Record<string, 'success' | 'warning' | 'destructive' | 'info' | 'default'> = {
         paid: 'success',
         confirmed: 'info',
         pending: 'warning',
-        cancelled: 'error',
+        cancelled: 'destructive',
       };
       return (
         <StatusBadge
@@ -167,24 +168,12 @@ const createColumns = (): ColumnDef<BookingWithTour>[] => [
     cell: ({ row }) => {
       const booking = row.original;
       return (
-        <div className="flex items-center justify-end gap-2">
-          <Link
-            href={`/admin/bookings/${booking.id}`}
-            className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg bg-gray-50 hover:bg-gray-100 text-gray-900/70 hover:text-gray-900 transition-colors text-sm"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <Eye className="w-3.5 h-3.5" />
-            View
-          </Link>
-          <Link
-            href={`/admin/bookings/${booking.id}/edit`}
-            className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg bg-orange-50 hover:bg-orange-100 text-orange-500 transition-colors text-sm"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <Pencil className="w-3.5 h-3.5" />
-            Edit
-          </Link>
-        </div>
+        <TableRowActions
+          id={booking.id}
+          editHref={`/admin/bookings/${booking.id}/edit`}
+          viewHref={`/admin/bookings/${booking.id}`}
+          copyValue={booking.id}
+        />
       );
     },
     meta: {
@@ -279,7 +268,7 @@ export function BookingsTable({ bookings: initialBookings }: BookingsTableProps)
                   : booking.status === 'confirmed'
                   ? 'info'
                   : booking.status === 'cancelled'
-                  ? 'error'
+                  ? 'destructive'
                   : 'warning'
               }
             />

@@ -38,7 +38,7 @@ export default async function DashboardPage() {
       href: '/admin/tours',
     },
     {
-      title: 'Total Bookings',
+      title: 'Total Operations',
       value: stats.bookings,
       icon: Calendar,
       color: 'from-pink-500 to-rose-500',
@@ -88,7 +88,7 @@ export default async function DashboardPage() {
       {/* Recent Activity */}
       <div className="bg-white dark:bg-gray-900/70 backdrop-blur-xl border border-gray-200 dark:border-gray-800 rounded-2xl p-6">
         <div className="flex items-center justify-between mb-6">
-          <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100">Recent Bookings</h2>
+          <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100">Recent Operations</h2>
           <Link
             href="/admin/bookings"
             className="text-orange-500 hover:text-orange-400 text-sm font-medium"
@@ -100,7 +100,7 @@ export default async function DashboardPage() {
         {stats.recentBookings.length === 0 ? (
           <div className="text-center py-12">
             <Calendar className="w-12 h-12 text-gray-900/20 mx-auto mb-4" />
-            <p className="text-gray-500 dark:text-gray-400">No bookings yet</p>
+            <p className="text-gray-500 dark:text-gray-400">No operations yet</p>
           </div>
         ) : (
           <div className="overflow-x-auto">
@@ -160,7 +160,7 @@ export default async function DashboardPage() {
           className="group relative bg-gradient-to-br from-pink-500/20 to-purple-500/20 border border-pink-500/30 rounded-2xl p-6 hover:border-pink-500/50 transition-all"
         >
           <Calendar className="w-8 h-8 text-pink-500 mb-4" />
-          <h3 className="text-gray-900 dark:text-gray-100 font-semibold mb-1">New Booking</h3>
+          <h3 className="text-gray-900 dark:text-gray-100 font-semibold mb-1">New Operation</h3>
           <p className="text-gray-500 dark:text-gray-400 text-sm">Add a client booking</p>
         </Link>
 

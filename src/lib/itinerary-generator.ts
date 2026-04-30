@@ -1,10 +1,20 @@
 import { Itinerary, ItineraryDay, SectionOpener } from '@/lib/supabase/itinerary-types';
+import { getCompanySettings } from '@/lib/hooks/useCompanySettings';
 
-export function generateItineraryHTML(data: any): string {
+export async function generateItineraryHTML(data: any): Promise<string> {
   const itinerary: Itinerary = data;
   // Days and openers come from Supabase join, not part of Itinerary type
   const days: ItineraryDay[] = (data as any).itinerary_days || [];
   const sectionOpeners: SectionOpener[] = (data as any).itinerary_section_openers || [];
+
+  // Fetch company settings
+  const settings = await getCompanySettings();
+  const companyName = settings?.company_name || 'Himalayan Marvels';
+  const companyLogo = settings?.logo_url || '';
+  const companyPhone = settings?.mobile || '+975 17111111';
+  const companyEmail = settings?.email || 'info@himalayanmarvels.com';
+  const companyWebsite = settings?.website || 'www.himalayanmarvels.com';
+  const companyAddress = settings?.address || 'Bhutan';
 
   // Format date range
   const formatDateRange = () => {
@@ -732,7 +742,7 @@ export function generateItineraryHTML(data: any): string {
         <div class="cover-bg"></div>
         <div class="cover-overlay"></div>
         <div class="cover-content">
-            <div class="cover-logo">${escapeHtml(itinerary.logo || 'Silverpine Bhutan')}</div>
+            <div class="cover-logo">${escapeHtml(itinerary.logo || companyName)}</div>
             <div class="cover-title">${escapeHtml(itinerary.title).replace(/ /g, '<br>')}</div>
             ${itinerary.subtitle ? `<div class="cover-subtitle">${escapeHtml(itinerary.subtitle)}</div>` : ''}
             <div class="cover-divider">
@@ -748,7 +758,7 @@ export function generateItineraryHTML(data: any): string {
     <!-- PAGE 2: LETTER -->
     <div class="page inner-page letter-page">
         <div class="running-header">
-            <span>${escapeHtml(itinerary.logo || 'Silverpine Bhutan')}</span>
+            <span>${escapeHtml(itinerary.logo || companyName)}</span>
             <span>${escapeHtml(itinerary.title || 'Itinerary')}</span>
         </div>
 
@@ -769,7 +779,7 @@ export function generateItineraryHTML(data: any): string {
         ` : ''}
 
         <div class="running-footer">
-            <span>${escapeHtml(itinerary.logo || 'Silverpine Bhutan')}</span>
+            <span>${escapeHtml(itinerary.logo || companyName)}</span>
             <span>www.silverpinebhutan.com</span>
             <div class="page-number">2</div>
         </div>
@@ -786,13 +796,19 @@ export function generateItineraryHTML(data: any): string {
         <div class="back-cover-bg"></div>
         <div class="back-cover-overlay"></div>
         <div class="back-cover-content">
-            <div class="back-cover-logo">${escapeHtml((itinerary.logo || 'Silverpine Bhutan').toUpperCase())}</div>
+            ${companyLogo ? `
+            <div style="margin-bottom: 50px;">
+                <img src="${companyLogo}" alt="${companyName}" style="max-width: 250px; height: auto;">
+            </div>
+            ` : `
+            <div class="back-cover-logo">${escapeHtml(companyName.toUpperCase())}</div>
+            `}
             <div class="back-cover-title">JOURNEY AWAITS</div>
             <div class="contact-info">
-                <div class="contact-item"><strong>Email:</strong> info@himalayanmarvels.com</div>
-                <div class="contact-item"><strong>Phone:</strong> +975 77 270 465</div>
-                <div class="contact-item"><strong>Website:</strong> www.himalayanmarvels.com</div>
-                <div class="contact-item"><strong>Location:</strong> Bhutan</div>
+                <div class="contact-item"><strong>Email:</strong> ${escapeHtml(companyEmail)}</div>
+                <div class="contact-item"><strong>Phone:</strong> ${escapeHtml(companyPhone)}</div>
+                <div class="contact-item"><strong>Website:</strong> ${escapeHtml(companyWebsite.replace(/^https?:\/\//, ''))}</div>
+                <div class="contact-item"><strong>Location:</strong> ${escapeHtml(companyAddress)}</div>
             </div>
         </div>
     </div>
@@ -839,8 +855,8 @@ function generateDaysPages(days: ItineraryDay[], logo: string, headerFooter?: an
         ${pageDays.map(day => generateDayHTML(day)).join('<div class="royal-divider"><div class="royal-divider-line"></div><div class="royal-divider-diamond"></div><div class="royal-divider-line"></div></div>')}
 
         <div class="running-footer">
-            <span>${escapeHtml(headerFooter?.footer_left || logo)}</span>
-            <span>${escapeHtml(headerFooter?.footer_center || 'www.silverpinebhutan.com')}</span>
+            <span>${escapeHtml(headerFooter?.footer_left || companyName)}</span>
+            <span>${escapeHtml(headerFooter?.footer_center || companyWebsite)}</span>
             <div class="page-number">${currentPageNum}</div>
         </div>
     </div>`;
@@ -968,8 +984,8 @@ function generatePricingPage(itinerary: Itinerary, logo: string, headerFooter?: 
         </div>` : ''}
 
         <div class="running-footer">
-            <span>${escapeHtml(headerFooter?.footer_left || logo)}</span>
-            <span>${escapeHtml(headerFooter?.footer_center || 'www.silverpinebhutan.com')}</span>
+            <span>${escapeHtml(headerFooter?.footer_left || companyName)}</span>
+            <span>${escapeHtml(headerFooter?.footer_center || companyWebsite)}</span>
             <div class="page-number">${999}</div>
         </div>
     </div>`;

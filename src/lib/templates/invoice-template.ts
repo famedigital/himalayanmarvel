@@ -4,6 +4,8 @@
  * Based on the Sekhar family invoice sample
  */
 
+import { getCompanySettings } from '@/lib/hooks/useCompanySettings';
+
 interface InvoiceData {
   invoice_number: string;
   guest_name: string;
@@ -23,6 +25,7 @@ interface InvoiceData {
   qr_code_url?: string;
   terms?: string;
   items?: InvoiceItem[];
+  currency?: 'INR' | 'USD' | 'EUR';
 }
 
 interface InvoiceItem {
@@ -31,7 +34,13 @@ interface InvoiceItem {
   amount?: string;
 }
 
-export function generateInvoiceHTML(data: InvoiceData): string {
+export async function generateInvoiceHTML(data: InvoiceData): Promise<string> {
+  // Fetch company settings from database
+  const settings = await getCompanySettings();
+
+  const currency = data.currency || 'INR';
+  const bankDetails = settings?.bank_details?.[currency] || settings?.bank_details?.INR;
+
   const currentDate = new Date().toLocaleDateString('en-IN', {
     day: '2-digit',
     month: 'short',
@@ -346,10 +355,10 @@ Booking confirmed upon receipt of advance payment. Travel insurance recommended.
         <!-- Header -->
         <div class="header">
             <div class="company-info">
-                <h1>HIMALAYAN MARVELS</h1>
+                <h1>${settings?.company_name || 'HIMALAYAN MARVELS'}</h1>
                 <p>Tours & Treks</p>
-                <p style="font-size: 9px; color: #999; margin-top: 4px;">Thimphu, Bhutan</p>
-                <p style="font-size: 9px; color: #999;">+975 17111111 | info@himalayanmarvels.com</p>
+                <p style="font-size: 9px; color: #999; margin-top: 4px;">${settings?.address || 'Thimphu, Bhutan'}</p>
+                <p style="font-size: 9px; color: #999;">${settings?.mobile || '+975 17111111'} | ${settings?.email || 'info@himalayanmarvels.com'}</p>
             </div>
             <div class="invoice-details">
                 <div class="invoice-title">INVOICE</div>
@@ -410,8 +419,12 @@ Booking confirmed upon receipt of advance payment. Travel insurance recommended.
         <div class="qr-section">
             <div class="qr-info">
                 <h4>SCAN TO PAY</h4>
-                <p><strong>Bank:</strong> Bhutan National Bank</p>
-                <p><strong>Account:</strong> Himalayan Marvels Tours & Treks</p>
+                <p><strong>Bank:</strong> ${bankDetails?.bank_name || 'Bhutan National Bank'}</p>
+                <p><strong>Account:</strong> ${settings?.company_name || 'Himalayan Marvels Tours & Treks'}</p>
+                <p><strong>Account No:</strong> ${bankDetails?.account_number || 'N/A'}</p>
+                ${bankDetails?.ifsc ? `<p><strong>IFSC:</strong> ${bankDetails.ifsc}</p>` : ''}
+                ${bankDetails?.swift ? `<p><strong>SWIFT:</strong> ${bankDetails.swift}</p>` : ''}
+                <p><strong>Branch:</strong> ${bankDetails?.branch || 'Thimphu'}</p>
                 <p style="margin-top: 5px; font-size: 8px; color: #666;">Ref: ${data.invoice_number}</p>
                 <p style="font-size: 8px; color: #666;">Methods: G-Pay • Bank Transfer</p>
             </div>
@@ -430,8 +443,8 @@ Booking confirmed upon receipt of advance payment. Travel insurance recommended.
 
         <!-- Footer -->
         <div class="footer">
-            <p><strong>HIMALAYAN MARVELS Tours & Treks</strong> | Thimphu, Bhutan</p>
-            <p>+975 17111111 | info@himalayanmarvels.com | www.himalayanmarvels.com</p>
+            <p><strong>${settings?.company_name || 'HIMALAYAN MARVELS'} Tours & Treks</strong> | ${settings?.address || 'Thimphu, Bhutan'}</p>
+            <p>${settings?.mobile || '+975 17111111'} | ${settings?.email || 'info@himalayanmarvels.com'} | ${settings?.website || 'www.himalayanmarvels.com'}</p>
         </div>
     </div>
 

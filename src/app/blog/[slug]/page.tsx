@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation';
 import Navigation from '@/components/Navigation';
 import JsonLd from '@/components/seo/JsonLd';
 import { generateSeoMetadata, generateArticleSchema, generateBreadcrumbSchema } from '@/lib/seo';
+import { getRelatedToursForBlog } from '@/lib/supabase/queries';
 import type { Metadata } from 'next';
 import BlogPostLayout from '@/components/blog/BlogPostLayout';
 
@@ -96,6 +97,7 @@ export default async function BlogPostPage({
   }
 
   const recentBlogs = await getRecentBlogs(blog.id);
+  const relatedTours = await getRelatedToursForBlog(blog.category, blog.id);
 
   // Generate JSON-LD schemas
   const breadcrumbItems: BreadcrumbItem[] = [
@@ -122,7 +124,7 @@ export default async function BlogPostPage({
     <>
       <JsonLd data={jsonLdData} />
       <Navigation />
-      <BlogPostLayout blog={blog} recentPosts={recentBlogs} />
+      <BlogPostLayout blog={blog} recentPosts={recentBlogs} relatedTours={relatedTours} />
     </>
   );
 }

@@ -5,6 +5,7 @@ import { ArrowLeft, Clock, DollarSign, MapPin, Users, Calendar, Check, X, Mail }
 import Navigation from '@/components/Navigation';
 import JsonLd from '@/components/seo/JsonLd';
 import { generateSeoMetadata, generateTouristTripSchema, generateBreadcrumbSchema, getCanonicalUrl } from '@/lib/seo';
+import { getRelatedBlogsForTour } from '@/lib/supabase/queries';
 import type { Metadata } from 'next';
 
 interface Tour {
@@ -84,6 +85,9 @@ export default async function TourDetailPage({
   if (!tour) {
     notFound();
   }
+
+  // Fetch related blogs by category
+  const relatedBlogs = await getRelatedBlogsForTour(tour.category);
 
   // Generate JSON-LD schemas
   const breadcrumbItems: BreadcrumbItem[] = [
@@ -254,7 +258,7 @@ export default async function TourDetailPage({
                       <div key={index} className="aspect-square rounded-xl overflow-hidden">
                         <img
                           src={image}
-                          alt={`Gallery ${index + 1}`}
+                          alt={`${tour.title} - Bhutan travel gallery photo ${index + 1}`}
                           className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
                         />
                       </div>
@@ -306,6 +310,47 @@ export default async function TourDetailPage({
           </div>
         </div>
       </section>
+
+      {/* Related Stories from Bhutan */}
+      {relatedBlogs && relatedBlogs.length > 0 && (
+        <section className="py-12 border-t dark:border-white/10 border-neutral-200">
+          <div className="container-premium">
+            <h2 className="text-2xl font-bold dark:text-white text-neutral-900 mb-2">
+              Stories from Bhutan
+            </h2>
+            <p className="dark:text-white/60 text-neutral-600 mb-8">
+              Read more about experiences in {tour.category?.toLowerCase() || 'Bhutan'}
+            </p>
+            <div className="grid md:grid-cols-3 gap-6">
+              {relatedBlogs.map((blog) => (
+                <Link key={blog.id} href={`/blog/${blog.slug}`} className="group">
+                  <div className="dark:bg-white/5 bg-white rounded-xl overflow-hidden border dark:border-white/10 border-neutral-200 hover:shadow-lg transition-shadow">
+                    {blog.featured_image && (
+                      <div className="aspect-video overflow-hidden">
+                        <img
+                          src={blog.featured_image}
+                          alt={blog.title}
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform"
+                        />
+                      </div>
+                    )}
+                    <div className="p-4">
+                      <h3 className="font-semibold dark:text-white text-neutral-900 mb-2 line-clamp-2">
+                        {blog.title}
+                      </h3>
+                      {blog.category && (
+                        <span className="text-xs text-green-600 dark:text-green-400">
+                          {blog.category}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* Simple Copyright */}
       <footer className="py-8 border-t dark:border-white/10 border-neutral-200">

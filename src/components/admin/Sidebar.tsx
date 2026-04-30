@@ -6,11 +6,10 @@ import { usePathname, useRouter } from 'next/navigation';
 import {
   LayoutDashboard,
   Map,
-  Calendar,
+  Briefcase,
   FileText,
   LogOut,
   Menu,
-  X,
   Globe,
   BookOpen,
   Image as ImageIcon,
@@ -18,21 +17,33 @@ import {
   Building2,
   ChevronLeft,
   ChevronRight,
+  Receipt,
 } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
-import Image from 'next/image';
 import { cn } from '@/lib/utils';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { Separator } from '@/components/ui/separator';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
+import {
+  Sheet,
+  SheetContent,
+  SheetTrigger,
+} from '@/components/ui/sheet';
 
 const navItems = [
   { name: 'Dashboard', href: '/admin/dashboard', icon: LayoutDashboard },
   { name: 'Tours', href: '/admin/tours', icon: Map },
-  { name: 'Bookings', href: '/admin/bookings', icon: Calendar },
-  { name: 'Itineraries', href: '/admin/itineraries', icon: BookOpen },
-  { name: 'Tour Categories', href: '/admin/tour-categories', icon: Layers },
+  { name: 'Categories', href: '/admin/tour-categories', icon: Layers },
   { name: 'Hero', href: '/admin/hero', icon: ImageIcon },
   { name: 'Blog', href: '/admin/blog', icon: FileText },
-  { name: 'Bank Details', href: '/admin/bank-details', icon: Building2 },
-  { name: 'Settings', href: '/admin/settings', icon: Globe },
+  { name: 'Itineraries', href: '/admin/itineraries', icon: BookOpen },
+  { name: 'Operations', href: '/admin/bookings', icon: Briefcase },
+  { name: 'Invoices', href: '/admin/invoices', icon: Receipt },
 ];
 
 const COLLAPSED_STORAGE_KEY = 'admin-sidebar-collapsed';
@@ -48,151 +59,157 @@ interface NavContentProps {
   onMobileClose?: () => void;
 }
 
+function NavItem({
+  item,
+  isActive,
+  collapsed,
+  onClick,
+}: {
+  item: (typeof navItems)[0];
+  isActive: boolean;
+  collapsed: boolean;
+  onClick?: () => void;
+}) {
+  const Icon = item.icon;
+
+  if (collapsed) {
+    return (
+      <TooltipProvider>
+        <Tooltip>
+          <TooltipTrigger className="flex h-10 w-10 items-center justify-center rounded-lg transition-all duration-200 hover:scale-105 active:scale-95 outline-hidden focus-visible:ring-2 focus-visible:ring-ring">
+            <Link
+              href={item.href}
+              onClick={onClick}
+              className={cn(
+                'flex h-full w-full items-center justify-center rounded-lg transition-all duration-200',
+                isActive
+                  ? 'bg-amber-500 text-white shadow-lg shadow-amber-500/30'
+                  : 'text-stone-600 hover:bg-stone-200 hover:text-stone-900'
+              )}
+            >
+              <Icon className="h-5 w-5" strokeWidth={2} />
+            </Link>
+          </TooltipTrigger>
+          <TooltipContent side="right" className="bg-stone-900 text-white border-stone-800">
+            {item.name}
+          </TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
+    );
+  }
+
+  return (
+    <Link
+      href={item.href}
+      onClick={onClick}
+      className={cn(
+        'group flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all duration-200',
+        'hover:pl-4',
+        isActive
+          ? 'bg-amber-500 text-white shadow-md shadow-amber-500/20'
+          : 'text-stone-700 hover:bg-stone-200 hover:text-stone-900'
+      )}
+    >
+      <Icon className="h-5 w-5 shrink-0 transition-transform group-hover:scale-110" strokeWidth={2} />
+      <span>{item.name}</span>
+    </Link>
+  );
+}
+
 function NavContent({ collapsed, pathname, onLogout, onMobileClose }: NavContentProps) {
   return (
-    <div className="flex flex-col h-full">
-      {/* Logo */}
-      <div className="p-4 border-b border-gray-200 dark:border-white/10">
-        <Link
-          href="/admin/dashboard"
-          className="flex items-center justify-center gap-3"
-          onClick={onMobileClose}
-        >
-          <div className="relative w-10 h-10 flex-shrink-0">
-            <Image
-              src="https://res.cloudinary.com/dxztrqjft/image/upload/v1776332482/HMT_Logo_New_1_fwgpfy.png"
-              alt="Himalayan Marvels"
-              fill
-              className="object-contain"
-            />
+    <div className="flex h-full flex-col">
+      {/* Logo Section */}
+      <div className="flex h-16 items-center justify-center border-b border-stone-200/50 bg-white px-4">
+        <Link href="/admin" className="flex items-center gap-3 transition-transform hover:scale-105">
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-amber-500 to-amber-600 text-white shadow-lg shadow-amber-500/30">
+            <span className="text-base font-bold">HM</span>
           </div>
           {!collapsed && (
-            <div className="overflow-hidden">
-              <h1 className="text-lg font-bold text-gray-900 dark:text-white whitespace-nowrap">
-                Himalayan Marvels
-              </h1>
-              <p className="text-xs text-gray-500 dark:text-gray-400 whitespace-nowrap">
-                Admin Panel
-              </p>
+            <div className="flex flex-col">
+              <span className="text-lg font-bold text-stone-900 leading-tight">Himalayan</span>
+              <span className="text-xs text-stone-500 leading-tight">Marvels Admin</span>
             </div>
           )}
         </Link>
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 p-3 space-y-1 overflow-y-auto overflow-x-hidden">
-        {navItems.map((item) => {
-          const isActive = pathname?.startsWith(item.href);
-          const Icon = item.icon;
-          return (
-            <Link
-              key={item.name}
-              href={item.href}
-              onClick={onMobileClose}
-              className={cn(
-                'flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-300 group relative',
-                isActive
-                  ? 'bg-gradient-to-r from-orange-500/20 to-pink-500/20 text-gray-900 dark:text-white border border-gray-200 dark:border-white/10'
-                  : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-white/5'
-              )}
-              title={collapsed ? item.name : undefined}
-            >
-              <Icon className="w-5 h-5 flex-shrink-0" />
-              <span
-                className={cn(
-                  'font-medium whitespace-nowrap transition-all duration-300',
-                  collapsed
-                    ? 'opacity-0 w-0 overflow-hidden'
-                    : 'opacity-100 w-auto'
-                )}
-              >
-                {item.name}
-              </span>
-              {/* Tooltip for collapsed state */}
-              {collapsed && (
-                <div className="absolute left-full ml-2 px-2 py-1 bg-gray-900 dark:bg-white text-white dark:text-gray-900 text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-50">
-                  {item.name}
-                </div>
-              )}
-            </Link>
-          );
-        })}
-      </nav>
+      <ScrollArea className="flex-1 px-3 py-4">
+        <nav className="space-y-1">
+          {navItems.map((item) => {
+            const isActive = pathname?.startsWith(item.href) && pathname !== item.href + '/new' && pathname !== item.href + '/edit';
+            return (
+              <NavItem
+                key={item.name}
+                item={item}
+                isActive={isActive || false}
+                collapsed={collapsed}
+                onClick={onMobileClose}
+              />
+            );
+          })}
+        </nav>
+      </ScrollArea>
 
-      {/* View Site */}
-      <div className="p-3 border-t border-gray-200 dark:border-white/10">
+      {/* Footer Actions */}
+      <div className="border-t border-stone-200/50 bg-stone-50/50 p-3">
+        {/* View Site */}
         <Link
           href="/"
           target="_blank"
+          onClick={onMobileClose}
           className={cn(
-            'flex items-center gap-3 px-3 py-2.5 rounded-xl text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-white/5 transition-all group relative',
-            collapsed ? 'justify-center' : ''
+            'group flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all duration-200 mb-2',
+            'text-stone-700 hover:bg-stone-200 hover:text-stone-900',
+            collapsed && 'justify-center'
           )}
-          title={collapsed ? 'View Site' : undefined}
         >
-          <Globe className="w-5 h-5 flex-shrink-0" />
-          <span
-            className={cn(
-              'font-medium whitespace-nowrap transition-all duration-300',
-              collapsed ? 'opacity-0 w-0 overflow-hidden' : 'opacity-100 w-auto'
-            )}
-          >
-            View Site
-          </span>
-          {collapsed && (
-            <div className="absolute left-full ml-2 px-2 py-1 bg-gray-900 dark:bg-white text-white dark:text-gray-900 text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-50">
-              View Site
-            </div>
-          )}
+          <Globe className="h-5 w-5 shrink-0 transition-transform group-hover:scale-110" strokeWidth={2} />
+          {!collapsed && <span>View Site</span>}
         </Link>
-      </div>
 
-      {/* Logout */}
-      <div className="p-3 border-t border-gray-200 dark:border-white/10">
+        <Separator className="my-2 bg-stone-200" />
+
+        {/* Logout */}
         <button
           onClick={onLogout}
           className={cn(
-            'flex items-center gap-3 px-3 py-2.5 rounded-xl text-gray-600 dark:text-gray-400 hover:text-red-400 dark:hover:text-red-400 hover:bg-red-500/10 transition-all w-full group relative',
-            collapsed ? 'justify-center' : ''
+            'group flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all duration-200',
+            'text-red-600 hover:bg-red-50 hover:text-red-700',
+            collapsed && 'justify-center'
           )}
-          title={collapsed ? 'Logout' : undefined}
         >
-          <LogOut className="w-5 h-5 flex-shrink-0" />
-          <span
+          <LogOut className="h-5 w-5 shrink-0 transition-transform group-hover:scale-110" strokeWidth={2} />
+          {!collapsed && <span>Logout</span>}
+        </button>
+
+        {/* Collapse Toggle */}
+        <div className="mt-2 hidden lg:block">
+          <button
+            onClick={() => {
+              const newState = !collapsed;
+              localStorage.setItem(COLLAPSED_STORAGE_KEY, String(newState));
+              window.dispatchEvent(
+                new CustomEvent('sidebar-toggle', { detail: { collapsed: newState } })
+              );
+            }}
             className={cn(
-              'font-medium whitespace-nowrap transition-all duration-300',
-              collapsed ? 'opacity-0 w-0 overflow-hidden' : 'opacity-100 w-auto'
+              'group flex w-full items-center justify-center rounded-lg px-3 py-2.5 text-sm font-medium transition-all duration-200',
+              'text-stone-500 hover:bg-stone-200 hover:text-stone-700',
+              collapsed && 'justify-center'
             )}
           >
-            Logout
-          </span>
-          {collapsed && (
-            <div className="absolute left-full ml-2 px-2 py-1 bg-gray-900 dark:bg-white text-white dark:text-gray-900 text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-50">
-              Logout
-            </div>
-          )}
-        </button>
-      </div>
-
-      {/* Collapse Toggle (Desktop only) */}
-      <div className="hidden lg:block p-3 border-t border-gray-200 dark:border-white/10">
-        <button
-          onClick={() => {
-            const newState = !collapsed;
-            localStorage.setItem(COLLAPSED_STORAGE_KEY, String(newState));
-            window.dispatchEvent(
-              new CustomEvent('sidebar-toggle', { detail: { collapsed: newState } })
-            );
-          }}
-          className="flex items-center justify-center w-full px-3 py-2 rounded-xl text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-white/5 transition-all"
-          aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
-        >
-          {collapsed ? (
-            <ChevronRight className="w-5 h-5" />
-          ) : (
-            <ChevronLeft className="w-5 h-5" />
-          )}
-        </button>
+            {collapsed ? (
+              <ChevronRight className="h-5 w-5 shrink-0 transition-transform group-hover:scale-110" strokeWidth={2} />
+            ) : (
+              <>
+                <ChevronLeft className="h-5 w-5 shrink-0 transition-transform group-hover:scale-110" strokeWidth={2} />
+                <span>Collapse</span>
+              </>
+            )}
+          </button>
+        </div>
       </div>
     </div>
   );
@@ -205,7 +222,6 @@ export default function Sidebar({ onCollapsedChange }: SidebarProps) {
   const router = useRouter();
   const supabase = createClient();
 
-  // Initialize collapsed state from localStorage using useRef for initial state
   const savedCollapsedRef = useRef(() => {
     if (typeof window === 'undefined') return false;
     const saved = localStorage.getItem(COLLAPSED_STORAGE_KEY);
@@ -214,14 +230,11 @@ export default function Sidebar({ onCollapsedChange }: SidebarProps) {
 
   const [collapsed, setCollapsed] = useState(savedCollapsedRef.current);
 
-  // Notify parent of initial collapsed state
   useEffect(() => {
     onCollapsedChange?.(collapsed);
     setIsMounting(false);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Listen for sidebar toggle events
   useEffect(() => {
     const handleToggle = (e: CustomEvent<{ collapsed: boolean }>) => {
       setCollapsed(e.detail.collapsed);
@@ -249,41 +262,27 @@ export default function Sidebar({ onCollapsedChange }: SidebarProps) {
     <>
       {/* Mobile Menu Button */}
       <div className="lg:hidden fixed top-4 left-4 z-50">
-        <button
-          onClick={() => setMobileOpen(!mobileOpen)}
-          className="p-2 rounded-lg bg-white/90 dark:bg-gray-800/90 backdrop-blur-xl border border-gray-200 dark:border-white/10 shadow-sm text-gray-700 dark:text-gray-300"
-          aria-label="Toggle menu"
-        >
-          {mobileOpen ? (
-            <X className="w-6 h-6" />
-          ) : (
-            <Menu className="w-6 h-6" />
-          )}
-        </button>
-      </div>
-
-      {/* Mobile Sidebar */}
-      {mobileOpen && (
-        <div className="lg:hidden fixed inset-0 z-40">
-          <div
-            className="absolute inset-0 bg-black/50 backdrop-blur-sm"
-            onClick={() => setMobileOpen(false)}
-          />
-          <div className="absolute left-0 top-0 bottom-0 w-72 bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-white/10">
+        <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
+          <SheetTrigger className="inline-flex items-center justify-center rounded-xl bg-white text-stone-700 border border-stone-200 hover:bg-stone-50 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2 h-10 w-10 shadow-lg shadow-stone-200/50 transition-all hover:scale-105 active:scale-95 outline-hidden">
+            <Menu className="h-5 w-5" strokeWidth={2.5} />
+            <span className="sr-only">Toggle menu</span>
+          </SheetTrigger>
+          <SheetContent side="left" className="p-0 w-72 bg-stone-50 border-r border-stone-200">
             <NavContent
               collapsed={false}
               pathname={pathname}
               onLogout={handleLogout}
               onMobileClose={() => setMobileOpen(false)}
             />
-          </div>
-        </div>
-      )}
+          </SheetContent>
+        </Sheet>
+      </div>
 
       {/* Desktop Sidebar */}
-      <div
+      <aside
         className={cn(
-          'hidden lg:flex lg:flex-col lg:fixed lg:inset-y-0 bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-white/10 transition-all duration-300 ease-in-out z-30',
+          'hidden lg:flex lg:flex-col lg:fixed lg:inset-y-0 z-30 bg-white border-r border-stone-200 transition-all duration-300 ease-in-out',
+          'shadow-xl shadow-stone-200/50',
           collapsed ? 'lg:w-16' : 'lg:w-64',
           isMounting && 'opacity-0'
         )}
@@ -293,7 +292,7 @@ export default function Sidebar({ onCollapsedChange }: SidebarProps) {
           pathname={pathname}
           onLogout={handleLogout}
         />
-      </div>
+      </aside>
     </>
   );
 }

@@ -4,9 +4,49 @@ import { useState, useEffect, useMemo } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import Sidebar from '@/components/admin/Sidebar';
 import Header from '@/components/admin/Header';
-import MobileNav from '@/components/admin/MobileNav';
 import { usePathname, useRouter } from 'next/navigation';
-import { ThemeToggle } from '@/components/ThemeToggle';
+import { Skeleton } from '@/components/ui/skeleton';
+import { Toaster } from '@/components/ui/sonner';
+
+function LoadingSkeleton() {
+  return (
+    <div className="min-h-screen bg-background">
+      {/* Sidebar Skeleton */}
+      <div className="hidden lg:flex lg:flex-col lg:fixed lg:inset-y-0 w-64 border-r">
+        <div className="flex h-16 items-center border-b px-6">
+          <Skeleton className="h-8 w-8 rounded-lg" />
+          <Skeleton className="h-6 w-24 ml-2" />
+        </div>
+        <div className="flex-1 p-4 space-y-2">
+          {[...Array(8)].map((_, i) => (
+            <Skeleton key={i} className="h-9 w-full" />
+          ))}
+        </div>
+      </div>
+
+      {/* Main Content Skeleton */}
+      <div className="lg:ml-64">
+        <div className="sticky top-0 z-20 h-16 border-b bg-background/95 backdrop-blur">
+          <div className="flex items-center justify-between px-6 h-full">
+            <Skeleton className="h-6 w-48" />
+            <div className="flex items-center gap-2">
+              <Skeleton className="h-9 w-9 rounded-full" />
+              <Skeleton className="h-9 w-9 rounded-full" />
+            </div>
+          </div>
+        </div>
+        <main className="p-6">
+          <Skeleton className="h-8 w-64 mb-6" />
+          <div className="space-y-4">
+            {[...Array(5)].map((_, i) => (
+              <Skeleton key={i} className="h-20 w-full" />
+            ))}
+          </div>
+        </main>
+      </div>
+    </div>
+  );
+}
 
 export default function AdminLayout({
   children,
@@ -14,17 +54,12 @@ export default function AdminLayout({
   children: React.ReactNode;
 }) {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [user, setUser] = useState<any>(null);
   const router = useRouter();
   const pathname = usePathname();
   const supabase = useMemo(() => createClient(), []);
   const isLoginPage = pathname === '/admin/login';
-
-  const handleMobileMenuToggle = () => {
-    setMobileMenuOpen((prev) => !prev);
-  };
 
   useEffect(() => {
     if (isLoginPage) {
@@ -66,24 +101,15 @@ export default function AdminLayout({
   }
 
   if (isLoading) {
-    return (
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-950 flex items-center justify-center">
-        <div className="flex flex-col items-center gap-4">
-          <div className="w-12 h-12 border-4 border-orange-500 border-t-transparent rounded-full animate-spin" />
-          <p className="text-sm text-gray-500 dark:text-gray-400">
-            Loading admin panel...
-          </p>
-        </div>
-      </div>
-    );
+    return <LoadingSkeleton />;
   }
 
   if (!user) {
     return (
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-950 flex items-center justify-center">
+      <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="flex flex-col items-center gap-4">
-          <div className="w-10 h-10 border-4 border-orange-500 border-t-transparent rounded-full animate-spin" />
-          <p className="text-sm text-gray-500 dark:text-gray-400">
+          <div className="h-10 w-10 border-4 border-primary border-t-transparent rounded-full animate-spin" />
+          <p className="text-sm text-muted-foreground">
             Redirecting to login...
           </p>
         </div>
@@ -92,28 +118,23 @@ export default function AdminLayout({
   }
 
   return (
-    <div className="admin-theme min-h-screen bg-gray-50 dark:bg-gray-950">
-      {/* Always-available theme toggle (all admin pages) */}
-      <div className="fixed top-4 right-4 z-50">
-        <div className="p-1 rounded-full bg-white/80 dark:bg-gray-900/80 border border-gray-200 dark:border-white/10 backdrop-blur-xl shadow-sm">
-          <ThemeToggle />
-        </div>
-      </div>
+    <div className="admin-theme min-h-screen">
       <Sidebar onCollapsedChange={setSidebarCollapsed} />
       <div
         className={`transition-all duration-300 ${
           sidebarCollapsed ? 'lg:ml-16' : 'lg:ml-64'
         }`}
       >
-        <Header
-          sidebarCollapsed={sidebarCollapsed}
-          onMobileMenuToggle={handleMobileMenuToggle}
-        />
-        <main className="p-4 md:p-6 lg:p-8 pb-24 lg:pb-8">
-          {children}
+        <div className="sticky top-0 z-40 bg-sidebar/95 backdrop-blur supports-[backdrop-filter]:bg-sidebar/80 border-b border-sidebar-border">
+          <Header />
+        </div>
+        <main className="p-4 md:p-6 lg:p-8 pb-24 lg:pb-8 min-h-screen">
+          <div className="admin-container">
+            {children}
+          </div>
         </main>
       </div>
-      <MobileNav />
+      <Toaster richColors position="top-right" />
     </div>
   );
 }

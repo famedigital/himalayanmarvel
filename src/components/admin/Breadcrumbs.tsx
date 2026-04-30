@@ -17,13 +17,15 @@ export default function Breadcrumbs() {
       const labels: Record<string, string> = {
         dashboard: 'Dashboard',
         tours: 'Tours',
-        bookings: 'Bookings',
+        bookings: 'Operations',
         itineraries: 'Itineraries',
         invoices: 'Invoices',
         blog: 'Blog',
         new: 'New',
         settings: 'Settings',
         hero: 'Hero Slider',
+        'tour-categories': 'Categories',
+        'bank-details': 'Bank Details',
       };
 
       // Skip IDs/UUIDs
@@ -49,24 +51,24 @@ export default function Breadcrumbs() {
         <li>
           <Link
             href="/admin/dashboard"
-            className="flex items-center gap-1 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+            className="flex items-center gap-1 text-muted-foreground hover:text-foreground transition-colors"
           >
-            <Home className="w-4 h-4" />
-            <span>Dashboard</span>
+            <Home className="h-4 w-4" />
+            <span className="hidden md:inline">Dashboard</span>
           </Link>
         </li>
 
         {breadcrumbs.map((crumb, index) => (
           <li key={crumb.href} className="flex items-center gap-2">
-            <ChevronRight className="w-4 h-4 text-gray-400 flex-shrink-0" />
+            <ChevronRight className="h-4 w-4 text-muted-foreground flex-shrink-0" />
             {index === breadcrumbs.length - 1 ? (
-              <span className="text-gray-900 dark:text-white font-medium">
+              <span className="font-medium text-foreground">
                 {crumb.label}
               </span>
             ) : (
               <Link
                 href={crumb.href}
-                className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+                className="text-muted-foreground hover:text-foreground transition-colors"
               >
                 {crumb.label}
               </Link>

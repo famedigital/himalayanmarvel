@@ -12,22 +12,26 @@ export default async function ItinerariesPage() {
     .order('created_at', { ascending: false });
 
   return (
-    <div className="p-8">
-      <div className="flex items-center justify-between mb-8">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900">Itineraries</h1>
-          <p className="text-gray-500">Create and manage custom tour itineraries</p>
+    <>
+      {/* Page Header */}
+      <div className="mb-6">
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-xl font-semibold text-foreground tracking-wide">Itineraries</h1>
+            <p className="text-muted-foreground text-sm mt-1">Create and manage custom tour itineraries</p>
+          </div>
+          <Link
+            href="/admin/itineraries/new"
+            className="flex items-center gap-2 px-4 py-2 bg-amber-600 text-white rounded-lg hover:bg-amber-700 transition-all shadow-sm font-medium text-sm"
+          >
+            <Plus className="w-4 h-4" />
+            New Itinerary
+          </Link>
         </div>
-        <Link
-          href="/admin/itineraries/new"
-          className="flex items-center gap-2 px-4 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition-colors"
-        >
-          <Plus className="w-4 h-4" />
-          New Itinerary
-        </Link>
       </div>
 
+      {/* Table */}
       <ItinerariesTable itineraries={itineraries || []} />
-    </div>
+    </>
   );
 }

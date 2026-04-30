@@ -61,7 +61,7 @@ export function FounderHero() {
               >
                 <Image
                   src="https://res.cloudinary.com/dxztrqjft/image/upload/v1776275660/founder-portrait_pbo8m4.jpg"
-                  alt="Bivatsu Giri - Founder & CEO"
+                  alt="Bivatsu Giri - Founder"
                   width={600}
                   height={750}
                   className="w-full aspect-[4/5] object-cover"
@@ -102,15 +102,12 @@ export function FounderHero() {
           >
             {/* Badge */}
             <LuxuryBadge variant="gold" size="md" className="mb-6">
-              Founder & CEO
+              Founder
             </LuxuryBadge>
 
             {/* Name */}
-            <h2 className="font-display text-display-section mb-2 leading-tight text-neutral-900 dark:text-white">
-              Bivatsu
-            </h2>
-            <h2 className="font-display text-display-section mb-8 leading-tight bg-gradient-to-r from-champagne-gold to-amber-400 bg-clip-text text-transparent">
-              Giri
+            <h2 className="font-display text-display-section mb-8 leading-tight text-champagne-gold">
+              Bivatsu Giri
             </h2>
 
             {/* Quote */}
@@ -161,10 +158,10 @@ export function FounderHero() {
               <div>
                 <p className="text-xs uppercase tracking-[0.2em] font-semibold mb-3 flex items-center gap-2 text-neutral-400 dark:text-neutral-500">
                   <Award className="w-4 h-4 text-champagne-gold" />
-                  Luxury Leadership
+                  Luxury hotel partner
                 </p>
                 <div className="flex flex-wrap gap-4">
-                  {['The Ritz-Carlton', 'Hyatt', 'Kempinski'].map((brand, index) => (
+                  {['The Ritz-Carlton', 'Hyatt', 'Kempinski', 'Six Senses'].map((brand, index) => (
                     <motion.span
                       key={index}
                       initial={{ opacity: 0 }}
@@ -174,7 +171,7 @@ export function FounderHero() {
                       className="text-lg font-display font-semibold text-neutral-700 dark:text-neutral-300"
                     >
                       {brand}
-                      {index < 2 && (
+                      {index < 3 && (
                         <span className="mx-3 text-champagne-gold/30 dark:text-champagne-gold/40">
                           •
                         </span>

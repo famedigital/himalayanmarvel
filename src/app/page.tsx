@@ -41,9 +41,9 @@ const organizationSchema = {
   name: 'Himalayan Marvels',
   alternateName: 'Himalayan Marvels Bhutan',
   url: 'https://himalayanmarvel.vercel.app',
-  logo: 'https://res.cloudinary.com/dxztrqjft/image/upload/v1776332482/HMT_Logo_New_1_fwgpfy.png',
+  logo: '/logo/HMT-Logo.png',
   description: 'Bhutan\'s premier luxury travel concierge. Private journeys curated by insiders, not tours designed for tourists. Founded by ex-Ritz-Carlton leadership.',
-  foundingDate: '2012',
+  foundingDate: '2014',
   foundingLocation: 'Thimphu, Bhutan',
   contactPoint: {
     '@type': 'ContactPoint',

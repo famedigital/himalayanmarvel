@@ -60,7 +60,7 @@ export default function Founder() {
           >
             {/* Label */}
             <span className="text-xs dark:text-white/40 text-neutral-500 uppercase tracking-[0.2em]">
-              Founder & CEO
+              Founder
             </span>
 
             {/* Name - Clean */}
@@ -101,7 +101,7 @@ export default function Founder() {
 
             {/* Luxury Brands */}
             <div className="mb-8">
-              <p className="text-xs dark:text-white/40 text-neutral-500 uppercase tracking-wider mb-3">Leadership at</p>
+              <p className="text-xs dark:text-white/40 text-neutral-500 uppercase tracking-wider mb-3">Luxury hotel partner</p>
               <div className="flex flex-wrap gap-4">
                 {brands.map((brand, index) => (
                   <motion.span
@@ -116,6 +116,15 @@ export default function Founder() {
                     {index < brands.length - 1 && <span className="dark:text-white/30 text-neutral-400 mx-2">•</span>}
                   </motion.span>
                 ))}
+                <motion.span
+                  initial={{ opacity: 0 }}
+                  whileInView={{ opacity: 1 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5, delay: 0.8 }}
+                  className="text-sm dark:text-white/70 text-neutral-700 font-medium"
+                >
+                  Six Senses
+                </motion.span>
               </div>
             </div>
 

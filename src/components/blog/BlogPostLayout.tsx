@@ -30,12 +30,22 @@ interface RecentPost {
   category?: string | null;
 }
 
+interface RelatedTour {
+  id: string;
+  title: string;
+  slug: string;
+  hero_image?: string | null;
+  category?: string | null;
+  price?: number | null;
+}
+
 interface BlogPostLayoutProps {
   blog: Blog;
   recentPosts: RecentPost[];
+  relatedTours?: RelatedTour[];
 }
 
-export default function BlogPostLayout({ blog, recentPosts }: BlogPostLayoutProps) {
+export default function BlogPostLayout({ blog, recentPosts, relatedTours }: BlogPostLayoutProps) {
   const [mounted, setMounted] = useState(false);
   const { theme, resolvedTheme } = useTheme();
 
@@ -235,7 +245,7 @@ export default function BlogPostLayout({ blog, recentPosts }: BlogPostLayoutProp
                     >
                       <img
                         src={image}
-                        alt={`Gallery ${index + 1}`}
+                        alt={`Photo from ${blog.title} - Travel gallery ${index + 1}`}
                         className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
                       />
                     </div>
@@ -266,6 +276,54 @@ export default function BlogPostLayout({ blog, recentPosts }: BlogPostLayoutProp
                 currentSlug={blog.slug}
                 postTitle={blog.title}
               />
+
+              {/* Explore This Journey - Related Tours */}
+              {relatedTours && relatedTours.length > 0 && (
+                <div
+                  className="p-5 rounded-2xl mt-6"
+                  style={{
+                    backgroundColor: isDark ? 'rgba(28, 36, 28, 0.5)' : 'rgba(247, 247, 242, 0.8)',
+                    border: `1px solid ${isDark ? 'rgba(212, 175, 55, 0.08)' : 'rgba(0, 104, 56, 0.06)'}`,
+                  }}
+                >
+                  <p
+                    className="text-xs font-semibold tracking-wider uppercase mb-4"
+                    style={{ color: '#D4AF37' }}
+                  >
+                    Explore This Journey
+                  </p>
+                  <div className="space-y-4">
+                    {relatedTours.map((tour) => (
+                      <Link key={tour.id} href={`/tours/${tour.slug}`} className="block group">
+                        <div className="rounded-xl overflow-hidden mb-2">
+                          {tour.hero_image && (
+                            <img
+                              src={tour.hero_image}
+                              alt={tour.title}
+                              className="w-full h-24 object-cover group-hover:scale-105 transition-transform"
+                            />
+                          )}
+                        </div>
+                        <h4 className="font-medium text-sm line-clamp-2" style={{ color: isDark ? '#F7F7F2' : '#1A1A1A' }}>
+                          {tour.title}
+                        </h4>
+                        {tour.price && (
+                          <p className="text-xs mt-1" style={{ color: '#006838' }}>
+                            From ${Number(tour.price).toLocaleString()}/person
+                          </p>
+                        )}
+                      </Link>
+                    ))}
+                  </div>
+                  <Link
+                    href="/tours"
+                    className="text-xs font-semibold mt-4 inline-block"
+                    style={{ color: '#D4AF37' }}
+                  >
+                    View all journeys →
+                  </Link>
+                </div>
+              )}
             </div>
           </div>
         </div>

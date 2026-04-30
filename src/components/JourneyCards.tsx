@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { JourneyCard } from '@/components/luxury/JourneyCard';
 import { useEffect, useState } from 'react';
 import { createClient } from '@/lib/supabase/client';
+import { Sparkles, Star, Mountain, Home, Flame } from 'lucide-react';
 
 interface TourCategory {
   id: string;
@@ -141,6 +142,98 @@ export default function JourneyCards() {
             Each journey is privately curated — not a group tour, but a transformative experience
             designed exclusively for you.
           </p>
+          <p className="text-sm dark:text-white/50 text-neutral-500 uppercase tracking-[0.15em] mt-2">
+            2 Signature Journeys Available
+          </p>
+        </motion.div>
+
+        {/* Unique Experiences List */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+          className="mb-16"
+        >
+          <div className="text-center mb-8">
+            <p className="text-champagne-gold text-xs uppercase tracking-[0.2em] font-semibold mb-4">
+              Unique Experiences
+            </p>
+          </div>
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-4 max-w-4xl mx-auto">
+            {[
+              {
+                icon: Sparkles,
+                text: 'Private Meditation With Monks',
+                gradient: 'linear-gradient(135deg, #D4AF37 0%, #F5D76E 50%, #D4AF37 100%)',
+              },
+              {
+                icon: Star,
+                text: 'Private Astrology Sessions',
+                gradient: 'linear-gradient(135deg, #9C7C2E 0%, #D4AF37 50%, #F5D76E 100%)',
+              },
+              {
+                icon: Mountain,
+                text: 'Monastery Stays',
+                gradient: 'linear-gradient(135deg, #6B7280 0%, #9CA3AF 50%, #D1D5DB 100%)',
+              },
+              {
+                icon: Home,
+                text: 'Farm-House Stays',
+                gradient: 'linear-gradient(135deg, #92400E 0%, #B45309 50%, #D97706 100%)',
+              },
+              {
+                icon: Flame,
+                text: 'Traditional Hot-Stone Bath',
+                gradient: 'linear-gradient(135deg, #DC2626 0%, #F97316 50%, #FBBF24 100%)',
+              },
+            ].map((exp, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 10 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.4, delay: index * 0.08 }}
+                whileHover={{ y: -8, scale: 1.02 }}
+                className="group text-center p-4 rounded-xl dark:bg-white/5 bg-white/80 dark:border border-champagne-gold/10 border-neutral-200 relative overflow-hidden"
+              >
+                {/* Hover glow background */}
+                <motion.div
+                  className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                  style={{
+                    background: `radial-gradient(circle at center, ${exp.gradient}15, transparent 70%)`,
+                  }}
+                />
+
+                {/* Premium icon container */}
+                <div className="relative mb-3">
+                  <motion.div
+                    className="w-12 h-12 mx-auto rounded-xl flex items-center justify-center shadow-lg"
+                    style={{
+                      background: exp.gradient,
+                      boxShadow: `0 4px 12px ${exp.gradient.replace(')', ', 0.3)')}`,
+                    }}
+                    whileHover={{ rotate: 5, scale: 1.1 }}
+                    transition={{ duration: 0.3, ease: [0.25, 0.1, 0.25, 1] }}
+                  >
+                    <exp.icon className="w-6 h-6 text-white" strokeWidth={2} />
+                  </motion.div>
+                  {/* Glow ring on hover */}
+                  <motion.div
+                    className="absolute inset-0 rounded-xl -z-10"
+                    style={{ background: exp.gradient, filter: 'blur(8px)' }}
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    whileHover={{ opacity: 0.6, scale: 1.2 }}
+                    transition={{ duration: 0.3 }}
+                  />
+                </div>
+
+                <p className="text-xs font-semibold dark:text-white text-neutral-900 relative z-10">
+                  {exp.text}
+                </p>
+              </motion.div>
+            ))}
+          </div>
         </motion.div>
 
         {/* Journey Cards Grid */}

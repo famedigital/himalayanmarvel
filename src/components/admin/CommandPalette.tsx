@@ -61,7 +61,7 @@ export default function CommandPalette({ open, onOpenChange }: CommandPalettePro
     },
     {
       id: 'new-booking',
-      label: 'Create New Booking',
+      label: 'Create New Operation',
       icon: Calendar,
       action: () => {
         router.push('/admin/bookings/new');
@@ -171,7 +171,7 @@ export default function CommandPalette({ open, onOpenChange }: CommandPalettePro
   return (
     <CommandDialog open={open} onOpenChange={onOpenChange}>
       <CommandInput
-        placeholder="Search tours, bookings, blogs..."
+        placeholder="Search tours, operations, blogs..."
         value={searchQuery}
         onValueChange={setSearchQuery}
       />
@@ -221,7 +221,7 @@ export default function CommandPalette({ open, onOpenChange }: CommandPalettePro
         {filteredBookings.length > 0 && (
           <>
             {filteredTours.length > 0 && <CommandSeparator />}
-            <CommandGroup heading="Bookings">
+            <CommandGroup heading="Operations">
               {filteredBookings.map((booking) => (
                 <CommandItem
                   key={booking.id}

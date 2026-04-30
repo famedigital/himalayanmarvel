@@ -5,12 +5,12 @@ import { Star, ExternalLink, Award } from 'lucide-react';
 import Link from 'next/link';
 
 /**
- * TripAdvisorVerified — Display verified TripAdvisor rating
+ * TripAdvisorVerified — Display verified Google rating
  *
  * Shows:
  * - Overall rating (4.9/5)
  * - Review count
- * - Link to TripAdvisor profile
+ * - Link to Google reviews
  * - Verified badge
  */
 export function TripAdvisorVerified() {
@@ -57,7 +57,7 @@ export function TripAdvisorVerified() {
             </div>
 
             <p className="text-lg text-neutral-600 dark:text-neutral-400">
-              Based on 150+ verified reviews on TripAdvisor
+              Based on 15 verified reviews on Google
             </p>
           </div>
 
@@ -69,16 +69,16 @@ export function TripAdvisorVerified() {
             transition={{ delay: 0.4 }}
           >
             <Link
-              href="https://www.tripadvisor.com/Attraction_Review-g293845-d33870452-Reviews-Himalayan_Marvels_Bhutan-Thimphu_Thimphu_District.html"
+              href="https://share.google/jcfuEHOacCjzAmGaM"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-3 px-8 py-4 bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 rounded-full font-semibold tracking-wide hover:shadow-lg transition-all duration-300"
             >
-              <span>Read Reviews on TripAdvisor</span>
+              <span>Read reviews on Google</span>
               <ExternalLink className="w-5 h-5" />
             </Link>
             <p className="text-sm text-neutral-500 dark:text-neutral-500 mt-4">
-              Official TripAdvisor Profile — Himalayan Marvels Bhutan
+              Official Google Profile — Himalayan Marvels Bhutan
             </p>
           </motion.div>
         </motion.div>

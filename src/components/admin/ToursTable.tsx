@@ -10,8 +10,9 @@ import {
   createDeleteHandler,
 } from './DataTable';
 import { ColumnDef } from '@tanstack/react-table';
-import { Pencil, Trash2, Map } from 'lucide-react';
+import { Map } from 'lucide-react';
 import { DeleteConfirm } from './DeleteConfirm';
+import { TableRowActions } from './TableRowActions';
 import type { Tour } from '@/lib/supabase/types';
 
 // ============================================================================
@@ -122,22 +123,13 @@ const createColumns = (
     cell: ({ row }) => {
       const tour = row.original;
       return (
-        <div className="flex items-center justify-end gap-2">
-          <Link
-            href={`/admin/tours/${tour.id}/edit`}
-            className="p-2 rounded-lg bg-gray-50 hover:bg-gray-100 text-gray-900/70 hover:text-gray-900 transition-colors"
-            title="Edit"
-          >
-            <Pencil className="w-4 h-4" />
-          </Link>
-          <button
-            onClick={() => onDeleteClick(tour.id, tour.title)}
-            className="p-2 rounded-lg bg-red-500/10 hover:bg-red-500/20 text-red-400 hover:text-red-300 transition-colors"
-            title="Delete"
-          >
-            <Trash2 className="w-4 h-4" />
-          </button>
-        </div>
+        <TableRowActions
+          id={tour.id}
+          editHref={`/admin/tours/${tour.id}/edit`}
+          viewHref={`/tours/${tour.slug}`}
+          onDelete={() => onDeleteClick(tour.id, tour.title)}
+          copyValue={tour.id}
+        />
       );
     },
     meta: {
@@ -250,10 +242,10 @@ export function ToursTable({ tours: initialTours, categories = [] }: ToursTableP
           },
         }}
         renderMobileCard={(tour) => (
-          <div className="space-y-3">
-            <div className="flex items-start gap-3">
+          <div className="space-y-4">
+            <div className="flex items-start gap-4">
               {tour.hero_image && (
-                <div className="relative w-16 h-12 rounded-lg overflow-hidden flex-shrink-0">
+                <div className="relative w-20 h-16 rounded-lg overflow-hidden flex-shrink-0 bg-muted">
                   <img
                     src={tour.hero_image}
                     alt={tour.title}
@@ -262,35 +254,36 @@ export function ToursTable({ tours: initialTours, categories = [] }: ToursTableP
                 </div>
               )}
               <div className="flex-1 min-w-0">
-                <p className="text-gray-900 font-medium truncate">{tour.title}</p>
-                <p className="text-gray-900/50 text-sm">{tour.slug}</p>
+                <p className="font-semibold truncate text-foreground">{tour.title}</p>
+                <p className="text-sm text-muted-foreground">{tour.slug}</p>
               </div>
-            </div>
-            <div className="flex items-center gap-3 text-sm">
-              <span className="text-gray-900">
-                {tour.duration ? `${tour.duration} days` : '-'}
-              </span>
-              <span className="text-gray-900">
-                {tour.price ? `$${Number(tour.price).toLocaleString()}` : '-'}
-              </span>
               <StatusBadge
                 status={tour.is_published ? 'Published' : 'Draft'}
                 variant={tour.is_published ? 'success' : 'warning'}
               />
             </div>
-            <div className="flex items-center justify-end gap-2 pt-2 border-t border-gray-100">
-              <Link
-                href={`/admin/tours/${tour.id}/edit`}
-                className="p-2 rounded-lg bg-gray-50 hover:bg-gray-100 text-gray-900/70"
-              >
-                <Pencil className="w-4 h-4" />
-              </Link>
-              <button
-                onClick={() => setDeleteId(tour.id)}
-                className="p-2 rounded-lg bg-red-500/10 hover:bg-red-500/20 text-red-400"
-              >
-                <Trash2 className="w-4 h-4" />
-              </button>
+            <div className="grid grid-cols-2 gap-4 text-sm">
+              <div>
+                <span className="text-muted-foreground">Duration</span>
+                <p className="font-medium text-foreground">
+                  {tour.duration ? `${tour.duration} days` : '-'}
+                </p>
+              </div>
+              <div>
+                <span className="text-muted-foreground">Price</span>
+                <p className="font-medium text-foreground">
+                  {tour.price ? `$${Number(tour.price).toLocaleString()}` : '-'}
+                </p>
+              </div>
+            </div>
+            <div className="flex items-center justify-end pt-2 border-t">
+              <TableRowActions
+                id={tour.id}
+                editHref={`/admin/tours/${tour.id}/edit`}
+                viewHref={`/tours/${tour.slug}`}
+                onDelete={() => setDeleteId(tour.id)}
+                copyValue={tour.id}
+              />
             </div>
           </div>
         )}
