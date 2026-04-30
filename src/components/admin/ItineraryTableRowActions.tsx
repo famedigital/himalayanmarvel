@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import {
   MoreHorizontal,
   Pencil,
@@ -11,7 +12,6 @@ import {
   Receipt,
   Loader2,
 } from 'lucide-react';
-import Link from 'next/link';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -47,6 +47,8 @@ export function ItineraryTableRowActions({
   isDuplicating = false,
   isGenerating = false,
 }: ItineraryTableRowActionsProps) {
+  const router = useRouter();
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger className="h-8 w-8 inline-flex items-center justify-center rounded-md hover:bg-accent transition-colors outline-hidden focus-visible:ring-2 focus-visible:ring-ring">
@@ -61,18 +63,14 @@ export function ItineraryTableRowActions({
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
 
-        <DropdownMenuItem asChild>
-          <Link href={editHref} className="cursor-pointer">
-            <Pencil className="mr-2 h-4 w-4" />
-            Edit Itinerary
-          </Link>
+        <DropdownMenuItem onClick={() => router.push(editHref)} className="cursor-pointer">
+          <Pencil className="mr-2 h-4 w-4" />
+          Edit Itinerary
         </DropdownMenuItem>
 
-        <DropdownMenuItem asChild>
-          <Link href={invoiceHref} className="cursor-pointer">
-            <Receipt className="mr-2 h-4 w-4 text-emerald-500" />
-            Generate Invoice
-          </Link>
+        <DropdownMenuItem onClick={() => router.push(invoiceHref)} className="cursor-pointer">
+          <Receipt className="mr-2 h-4 w-4 text-emerald-500" />
+          Generate Invoice
         </DropdownMenuItem>
 
         <DropdownMenuItem

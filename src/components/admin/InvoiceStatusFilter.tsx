@@ -1,7 +1,8 @@
 'use client';
 
 import { Filter, X } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { buttonVariants } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -33,24 +34,20 @@ export function InvoiceStatusFilter({ currentFilter, onFilterChange, counts }: I
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button
-          variant="outline"
-          size="sm"
-          className="gap-2 h-8 text-xs"
-        >
-          <Filter className="w-3.5 h-3.5" />
-          <span>{currentLabel}</span>
-          {currentFilter !== 'all' && (
-            <X
-              className="w-3 h-3 ml-1 hover:text-red-500"
-              onClick={(e) => {
-                e.stopPropagation();
-                onFilterChange('all');
-              }}
-            />
-          )}
-        </Button>
+      <DropdownMenuTrigger
+        className={cn(buttonVariants({ variant: 'outline', size: 'sm' }), 'gap-2 h-8 text-xs')}
+      >
+        <Filter className="w-3.5 h-3.5" />
+        <span>{currentLabel}</span>
+        {currentFilter !== 'all' && (
+          <X
+            className="w-3 h-3 ml-1 hover:text-red-500"
+            onClick={(e) => {
+              e.stopPropagation();
+              onFilterChange('all');
+            }}
+          />
+        )}
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-48">
         <DropdownMenuLabel>Filter by Status</DropdownMenuLabel>

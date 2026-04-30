@@ -41,7 +41,7 @@ export function InvoiceStatusSelect({
       </Label>
       <Select
         value={value || 'pending'}
-        onValueChange={onChange}
+        onValueChange={(nextValue) => onChange(nextValue ?? 'pending')}
         disabled={disabled}
       >
         <SelectTrigger id={id} className="h-8 text-xs">

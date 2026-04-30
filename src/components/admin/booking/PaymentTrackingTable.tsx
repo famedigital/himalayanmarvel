@@ -13,7 +13,7 @@ import {
 } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { IndianRupee, Calendar, CreditCard, Wallet, CheckCircle2, Clock, XCircle, AlertCircle } from 'lucide-react';
+import { IndianRupee, Calendar, CreditCard, Wallet, CheckCircle2, Clock, XCircle, AlertCircle, Building2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface Payment {

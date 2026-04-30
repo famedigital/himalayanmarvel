@@ -9,6 +9,7 @@ import type { ItineraryInvoiceData } from '@/lib/templates/invoice-html-generato
 import { InvoiceEditorForm } from './InvoiceEditorForm';
 import { InvoicePreviewPane } from './InvoicePreviewPane';
 import { createClient } from '@/lib/supabase/client';
+import { toast } from 'sonner';
 
 interface Itinerary {
   id: string;
@@ -173,8 +174,7 @@ export function InvoiceEditor({ itinerary, booking }: InvoiceEditorProps) {
       // Clear draft
       localStorage.removeItem(`invoice-draft-${itinerary.id}`);
 
-      toast({
-        title: 'Invoice saved successfully',
+      toast.success('Invoice saved successfully', {
         description: `Status: ${invoiceStatus.charAt(0).toUpperCase() + invoiceStatus.slice(1)}`,
       });
 

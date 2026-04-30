@@ -787,9 +787,9 @@ export async function generateItineraryHTML(data: any): Promise<string> {
 
     ${generateSectionOpener(sectionOpeners[0], 3)}
 
-    ${generateDaysPages(days, itinerary.logo || 'Silverpine Bhutan', undefined)}
+    ${generateDaysPages(days, itinerary.logo || 'Silverpine Bhutan', undefined, { companyName, companyWebsite })}
 
-    ${generatePricingPage(itinerary, itinerary.logo || 'Silverpine Bhutan', undefined)}
+    ${generatePricingPage(itinerary, itinerary.logo || 'Silverpine Bhutan', undefined, { companyName, companyWebsite })}
 
     <!-- BACK COVER -->
     <div class="page back-cover">
@@ -835,7 +835,12 @@ function generateSectionOpener(opener: SectionOpener | undefined, pageNum: numbe
     </div>`;
 }
 
-function generateDaysPages(days: ItineraryDay[], logo: string, headerFooter?: any): string {
+function generateDaysPages(
+  days: ItineraryDay[],
+  logo: string,
+  headerFooter?: any,
+  footerDefaults?: { companyName: string; companyWebsite: string }
+): string {
   if (days.length === 0) return '';
 
   let pages = '';
@@ -855,8 +860,8 @@ function generateDaysPages(days: ItineraryDay[], logo: string, headerFooter?: an
         ${pageDays.map(day => generateDayHTML(day)).join('<div class="royal-divider"><div class="royal-divider-line"></div><div class="royal-divider-diamond"></div><div class="royal-divider-line"></div></div>')}
 
         <div class="running-footer">
-            <span>${escapeHtml(headerFooter?.footer_left || companyName)}</span>
-            <span>${escapeHtml(headerFooter?.footer_center || companyWebsite)}</span>
+            <span>${escapeHtml(headerFooter?.footer_left || footerDefaults?.companyName || '')}</span>
+            <span>${escapeHtml(headerFooter?.footer_center || footerDefaults?.companyWebsite || '')}</span>
             <div class="page-number">${currentPageNum}</div>
         </div>
     </div>`;
@@ -920,7 +925,12 @@ function generateDayHTML(day: ItineraryDay): string {
     </div>`;
 }
 
-function generatePricingPage(itinerary: Itinerary, logo: string, headerFooter?: any): string {
+function generatePricingPage(
+  itinerary: Itinerary,
+  logo: string,
+  headerFooter?: any,
+  footerDefaults?: { companyName: string; companyWebsite: string }
+): string {
   const pricing = itinerary.pricing;
   const items = pricing?.items || [];
   const inclusions = pricing?.inclusions || [];
@@ -984,8 +994,8 @@ function generatePricingPage(itinerary: Itinerary, logo: string, headerFooter?: 
         </div>` : ''}
 
         <div class="running-footer">
-            <span>${escapeHtml(headerFooter?.footer_left || companyName)}</span>
-            <span>${escapeHtml(headerFooter?.footer_center || companyWebsite)}</span>
+            <span>${escapeHtml(headerFooter?.footer_left || footerDefaults?.companyName || '')}</span>
+            <span>${escapeHtml(headerFooter?.footer_center || footerDefaults?.companyWebsite || '')}</span>
             <div class="page-number">${999}</div>
         </div>
     </div>`;

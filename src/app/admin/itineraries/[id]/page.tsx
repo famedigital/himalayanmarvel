@@ -5,7 +5,7 @@
 
 'use client';
 
-import { useEffect, useState } from 'react';
+import { use, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { ArrowLeft, Save, Eye, Plus, Trash2, Loader2, Calendar, Users, CheckCircle, XCircle, Receipt } from 'lucide-react';
@@ -47,10 +47,12 @@ interface ItineraryForm {
   is_published: boolean;
 }
 
-export default function ItineraryFormPage({ params }: { params: { id?: string[] } }) {
+export default function ItineraryFormPage({ params }: { params?: Promise<{ id?: string | string[] }> }) {
   const router = useRouter();
-  const isNew = params.id?.[0] === 'new' || !params.id;
-  const itineraryId = isNew ? undefined : params.id?.[0];
+  const resolvedParams = use(params ?? Promise.resolve<{ id?: string | string[] }>({}));
+  const rawId = Array.isArray(resolvedParams.id) ? resolvedParams.id[0] : resolvedParams.id;
+  const isNew = rawId === 'new' || !rawId;
+  const itineraryId = isNew ? undefined : rawId;
 
   const [loading, setLoading] = useState(!isNew);
   const [saving, setSaving] = useState(false);

@@ -5,7 +5,7 @@
 
 'use client';
 
-import { useEffect, useState } from 'react';
+import { use, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { ArrowLeft, Save, Eye, Loader2 } from 'lucide-react';
@@ -38,10 +38,12 @@ interface InvoiceData {
   internal_notes?: string;
 }
 
-export default function InvoiceFormPage({ params }: { params: { id?: string[] } }) {
+export default function InvoiceFormPage({ params }: { params?: Promise<{ id?: string | string[] }> }) {
   const router = useRouter();
-  const isNew = params.id?.[0] === 'new' || !params.id;
-  const invoiceId = isNew ? undefined : params.id?.[0];
+  const resolvedParams = use(params ?? Promise.resolve<{ id?: string | string[] }>({}));
+  const rawId = Array.isArray(resolvedParams.id) ? resolvedParams.id[0] : resolvedParams.id;
+  const isNew = rawId === 'new' || !rawId;
+  const invoiceId = isNew ? undefined : rawId;
 
   const [loading, setLoading] = useState(!isNew);
   const [saving, setSaving] = useState(false);

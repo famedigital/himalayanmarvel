@@ -14,6 +14,8 @@ export function InvoiceGeneratorModal({ isOpen, onClose, itinerary }: InvoiceGen
   const [invoiceData, setInvoiceData] = useState<ItineraryInvoiceData | null>(null);
   const [generating, setGenerating] = useState(false);
   const [previewMode, setPreviewMode] = useState(false);
+  const [previewHtml, setPreviewHtml] = useState<string>('');
+  const [previewLoading, setPreviewLoading] = useState(false);
   const [shareLink, setShareLink] = useState<string | null>(null);
   const [generatingLink, setGeneratingLink] = useState(false);
 
@@ -34,6 +36,32 @@ export function InvoiceGeneratorModal({ isOpen, onClose, itinerary }: InvoiceGen
       });
     }
   }, [isOpen, itinerary]);
+
+  useEffect(() => {
+    if (!previewMode || !invoiceData) {
+      setPreviewHtml('');
+      setPreviewLoading(false);
+      return;
+    }
+
+    let cancelled = false;
+    setPreviewLoading(true);
+    generateItineraryInvoiceHTML(invoiceData)
+      .then((html) => {
+        if (!cancelled) setPreviewHtml(html);
+      })
+      .catch((error) => {
+        console.error('Failed to generate preview:', error);
+        if (!cancelled) setPreviewHtml('');
+      })
+      .finally(() => {
+        if (!cancelled) setPreviewLoading(false);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [previewMode, invoiceData]);
 
   const handleFieldChange = (field: keyof ItineraryInvoiceData, value: any) => {
     if (invoiceData) {
@@ -327,11 +355,15 @@ export function InvoiceGeneratorModal({ isOpen, onClose, itinerary }: InvoiceGen
                 </button>
               </div>
               <div className="bg-white border border-gray-200 rounded-lg p-4 overflow-auto max-h-96">
-                <div
-                  dangerouslySetInnerHTML={{
-                    __html: generateItineraryInvoiceHTML(invoiceData)
-                  }}
-                />
+                {previewLoading ? (
+                  <div className="text-sm text-gray-500">Generating preview…</div>
+                ) : (
+                  <div
+                    dangerouslySetInnerHTML={{
+                      __html: previewHtml,
+                    }}
+                  />
+                )}
               </div>
             </div>
           )}
