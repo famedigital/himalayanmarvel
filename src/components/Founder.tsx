@@ -1,6 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
+import { getYearsOfServiceString } from '@/lib/utils/years-of-service';
 
 export default function Founder() {
   const credentials = [
@@ -10,6 +11,10 @@ export default function Founder() {
   ];
 
   const brands = ['The Ritz-Carlton', 'Hyatt', 'Kempinski'];
+
+  // Auto-calculate years of service
+  const yearsOfService = getYearsOfServiceString();
+  const yearsNumber = parseInt(yearsOfService.replace('+', ''));
 
   return (
     <section id="about" className="section-padding dark:bg-neutral-900 bg-white">
@@ -44,7 +49,7 @@ export default function Founder() {
                 transition={{ duration: 0.8, delay: 0.3, ease: [0.25, 0.1, 0.25, 1] }}
                 className="absolute -bottom-6 -right-6 px-6 py-4 rounded-2xl shadow-xl dark:bg-neutral-900 bg-white dark:border border-white/10 border-neutral-200"
               >
-                <p className="text-3xl font-bold gradient-text">12+</p>
+                <p className="text-3xl font-bold gradient-text">{yearsOfService}</p>
                 <p className="text-xs dark:text-white/50 text-neutral-600 uppercase tracking-wider">Years Experience</p>
               </motion.div>
             </div>
@@ -77,7 +82,7 @@ export default function Founder() {
             </p>
 
             <p className="dark:text-white/70 text-neutral-700 text-lg leading-relaxed mb-8 max-w-md">
-              With an MBA from the <strong>University of Canberra</strong> and over 12 years of specialized experience, Bivatsu ensures that every itinerary is a masterpiece of logistics and luxury.
+              With an MBA from the <strong>University of Canberra</strong> and over {yearsNumber} years of specialized experience, Bivatsu ensures that every itinerary is a masterpiece of logistics and luxury.
             </p>
 
             {/* Credentials */}
@@ -131,7 +136,7 @@ export default function Founder() {
             {/* Stats - Clean */}
             <div className="grid grid-cols-3 gap-6">
               {[
-                { value: '5,000+', label: 'Travelers' },
+                { value: '40+', label: 'Countries' },
                 { value: '50+', label: 'Tours' },
                 { value: '4.9', label: 'Rating' },
               ].map((stat, index) => (

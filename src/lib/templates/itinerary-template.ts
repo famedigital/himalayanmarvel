@@ -4,8 +4,6 @@
  * Based on the Sekhar family itinerary sample
  */
 
-import { getCompanySettings } from '@/lib/hooks/useCompanySettings';
-
 export interface ItineraryDay {
   day: number;
   title: string;
@@ -88,9 +86,27 @@ export interface ItineraryData {
   contact_website?: string;
 }
 
-export async function generateItineraryHTML(data: ItineraryData): Promise<string> {
-  // Fetch company settings
-  const settings = await getCompanySettings();
+export interface CompanySettings {
+  company_name?: string;
+  logo_url?: string;
+  license_number?: string;
+  mobile?: string;
+  email?: string;
+  website?: string;
+  address?: string;
+}
+
+export function generateItineraryHTML(data: ItineraryData, companySettings?: CompanySettings): string {
+  // Use provided settings or fallback to defaults
+  const settings = companySettings || {
+    company_name: 'HIMALAYAN MARVELS',
+    logo_url: '',
+    license_number: '',
+    mobile: '+975 17111111',
+    email: 'info@himalayanmarvels.com',
+    website: 'www.himalayanmarvels.com',
+    address: 'Thimphu, Bhutan'
+  };
 
   // Format dates for display
   const formatDate = (dateStr: string) => {
@@ -110,13 +126,13 @@ export async function generateItineraryHTML(data: ItineraryData): Promise<string
   });
 
   // Use company settings with fallbacks
-  const companyName = settings?.company_name || 'HIMALAYAN MARVELS';
-  const companyLogo = settings?.logo_url || '';
-  const companyLicense = settings?.license_number || '';
-  const companyPhone = settings?.mobile || data.contact_phone || '+975 17111111';
-  const companyEmail = settings?.email || data.contact_email || 'info@himalayanmarvels.com';
-  const companyWebsite = settings?.website || data.contact_website || 'www.himalayanmarvels.com';
-  const companyAddress = settings?.address || 'Thimphu, Bhutan';
+  const companyName = settings.company_name || 'HIMALAYAN MARVELS';
+  const companyLogo = settings.logo_url || '';
+  const companyLicense = settings.license_number || '';
+  const companyPhone = settings.mobile || data.contact_phone || '+975 17111111';
+  const companyEmail = settings.email || data.contact_email || 'info@himalayanmarvels.com';
+  const companyWebsite = settings.website || data.contact_website || 'www.himalayanmarvels.com';
+  const companyAddress = settings.address || 'Thimphu, Bhutan';
   const companyTagline = 'Tours & Treks';
 
   // Build letter body paragraphs

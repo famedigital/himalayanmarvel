@@ -8,6 +8,7 @@ import Image from 'next/image';
 import { createClient } from '@/lib/supabase/client';
 import { LuxuryBadge } from '@/components/luxury/LuxuryBadge';
 import { LuxuryButton } from '@/components/luxury/LuxuryButton';
+import { getYearsOfServiceString } from '@/lib/utils/years-of-service';
 
 // Typewriter text component
 function TypewriterText({ text, className, delay = 0, speed = 30 }: { text: string; className?: string; delay?: number; speed?: number }) {
@@ -106,6 +107,9 @@ export default function HeroLuxury() {
 
   const isDark = mounted ? (resolvedTheme === 'dark' || theme === 'dark') : true;
 
+  // Auto-calculate years of service
+  const yearsOfService = getYearsOfServiceString();
+
   // Get primary slide or use first slide
   const primarySlide = slides.find(s => s.isPrimary) || slides[0];
   const currentSlide = primarySlide;
@@ -114,7 +118,7 @@ export default function HeroLuxury() {
 
   // EMOTIONAL, CINEMATIC COPY — Not functional description
   const heroSubtitle = currentSlide?.subtitle || 'Private cultural journeys, festival experiences, and Himalayan adventures — designed around your travel style by the team who\'s hosted 2,500+ guests since 2014.';
-  const heroLink = currentSlide?.link || '#contact';
+  const heroLink = currentSlide?.link || 'mailto:info@himalayanmarvels.com';
   const heroMediaUrl = currentSlide?.url || 'https://res.cloudinary.com/dxztrqjft/video/upload/v1776271223/tashichodzong_ddin28.mp4';
   const heroMediaType = currentSlide?.type || 'video';
   const heroCtaText = currentSlide?.ctaText || 'Design Your Custom Journey';
@@ -291,7 +295,7 @@ export default function HeroLuxury() {
       >
         {/* Years */}
         <div className="text-center">
-          <p className="text-2xl md:text-3xl lg:text-4xl font-display font-bold text-champagne-gold">13+</p>
+          <p className="text-2xl md:text-3xl lg:text-4xl font-display font-bold text-champagne-gold">{yearsOfService}</p>
           <p className="text-[10px] md:text-xs uppercase tracking-[0.1em] md:tracking-[0.15em] text-white/60 font-semibold mt-1">
             Years
           </p>

@@ -6,6 +6,7 @@ import { useRef, useState } from 'react';
 import { useTheme } from 'next-themes';
 import Image from 'next/image';
 import { LuxuryButton } from './LuxuryButton';
+import { getYearsOfServiceString } from '@/lib/utils/years-of-service';
 
 /**
  * FounderStoryCinematic — Emotional founder narrative video section
@@ -18,6 +19,9 @@ export function FounderStoryCinematic() {
   const isDark = resolvedTheme === 'dark' || theme === 'dark';
   const containerRef = useRef<HTMLDivElement>(null);
   const [videoError, setVideoError] = useState(false);
+
+  // Auto-calculate years of service
+  const yearsOfService = getYearsOfServiceString();
 
   const { scrollYProgress } = useScroll({
     target: containerRef,
@@ -104,7 +108,7 @@ export function FounderStoryCinematic() {
             It needed a travel experience that matched the magic of the Kingdom itself.&rdquo;
           </blockquote>
 
-          <p className="text-white/60 text-lg">— Bivatsu Giri, Founder & CEO</p>
+          <p className="text-white/60 text-lg">— Bivatsu Giri, Founder</p>
         </motion.div>
 
         {/* TIMELINE */}
@@ -150,15 +154,11 @@ export function FounderStoryCinematic() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 1, delay: 0.8 }}
-          className="grid grid-cols-4 gap-8 max-w-4xl mx-auto"
+          className="grid grid-cols-3 gap-8 max-w-3xl mx-auto"
         >
           <div className="text-center">
-            <p className="text-6xl font-display font-bold gradient-text mb-2">13+</p>
+            <p className="text-6xl font-display font-bold gradient-text mb-2">{yearsOfService}</p>
             <p className="text-white/60 text-sm uppercase tracking-wider">Years</p>
-          </div>
-          <div className="text-center">
-            <p className="text-6xl font-display font-bold gradient-text mb-2">5K+</p>
-            <p className="text-white/60 text-sm uppercase tracking-wider">Guests</p>
           </div>
           <div className="text-center">
             <p className="text-6xl font-display font-bold gradient-text mb-2">40+</p>

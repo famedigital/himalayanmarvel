@@ -164,10 +164,10 @@ export function TrustArchitectureElite() {
 
   // Inclusions list
   const inclusions = [
-    { icon: '🚗', text: 'Private Driver' },
-    { icon: '🏨', text: 'Luxury Stays' },
-    { icon: '✈️', text: 'Visa Handling' },
-    { icon: '📱', text: '24/7 Support' },
+    { icon: '', text: 'Private Transport' },
+    { icon: '', text: 'Private Guide' },
+    { icon: '', text: 'Luxury Stays' },
+    { icon: '', text: 'Visa Handling' },
   ];
 
   // Stats for basement
@@ -224,7 +224,7 @@ export function TrustArchitectureElite() {
           >
             <Gem className="w-3.5 h-3.5 text-champagne-gold" />
             <span className="text-champagne-gold text-[10px] uppercase tracking-[0.25em] font-semibold">
-              Signature Journeys
+              Spiritual Journeys
             </span>
           </motion.div>
 
@@ -444,7 +444,7 @@ export function TrustArchitectureElite() {
 
           {/* CENTER STAGE - Cultural Journey (HERO) */}
           <PremiumCard delay={0.15} featured className="md:col-span-2 p-0 group/journey">
-            <a href="/tours?type=cultural" className="block relative aspect-[4/3] md:aspect-[3/2] rounded-3xl overflow-hidden bg-neutral-900">
+            <a href="mailto:info@himalayanmarvels.com" className="block relative aspect-[4/3] md:aspect-[3/2] rounded-3xl overflow-hidden bg-neutral-900">
               <div className="absolute inset-0">
                 <Image
                   src="https://res.cloudinary.com/dxztrqjft/image/upload/v1776291877/dochula_r3uler.jpg"
@@ -500,7 +500,7 @@ export function TrustArchitectureElite() {
 
           {/* CENTER STAGE - Spiritual Journey (HERO) */}
           <PremiumCard delay={0.2} featured className="md:col-span-2 p-0 group/journey">
-            <a href="/tours?type=spiritual" className="block relative aspect-[4/3] md:aspect-[3/2] rounded-3xl overflow-hidden bg-neutral-900">
+            <a href="mailto:info@himalayanmarvels.com" className="block relative aspect-[4/3] md:aspect-[3/2] rounded-3xl overflow-hidden bg-neutral-900">
               <div className="absolute inset-0">
                 <Image
                   src="https://res.cloudinary.com/dxztrqjft/image/upload/v1776291879/tiger-nest-close_rm2bee.jpg"
@@ -564,7 +564,6 @@ export function TrustArchitectureElite() {
             <div className="space-y-4">
               {inclusions.map((item, i) => (
                 <div key={i} className="flex items-center gap-3">
-                  <span className="text-2xl">{item.icon}</span>
                   <span className="text-sm font-medium" style={{ color: isDark ? '#F7F7F2' : '#1A1A1A' }}>
                     {item.text}
                   </span>
@@ -607,7 +606,7 @@ export function TrustArchitectureElite() {
             <Quote className="w-8 h-8 text-champagne-gold/30 flex-shrink-0" />
             <div>
               <p className="font-serif text-sm md:text-base leading-relaxed" style={{ color: isDark ? '#F7F7F2' : '#1A1A1A' }}>
-                We don&apos;t sell tours. We curate <span className="text-champagne-gold italic">transformative encounters</span> with a kingdom that measures wealth in happiness.
+                We don&apos;t sell tours. We craft <span className="text-champagne-gold italic">private journeys</span> into a kingdom where happiness is the true measure of wealth.
               </p>
             </div>
           </PremiumCard>

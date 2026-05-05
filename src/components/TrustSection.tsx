@@ -5,6 +5,7 @@ import { Shield, Star, CheckCircle, ExternalLink } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useTheme } from 'next-themes';
 import RevealOnScroll from './ui/RevealOnScroll';
+import { getYearsOfServiceString } from '@/lib/utils/years-of-service';
 
 const partners = [
   { name: 'Drukair', logo: 'https://res.cloudinary.com/dxztrqjft/image/upload/v1776332392/drukair_ua8y4s.png' },
@@ -16,6 +17,9 @@ const partners = [
 export default function TrustSection() {
   const [mounted, setMounted] = useState(false);
   const { theme, resolvedTheme } = useTheme();
+
+  // Auto-calculate years of service
+  const yearsOfService = getYearsOfServiceString();
 
   useEffect(() => {
     setMounted(true);
@@ -75,7 +79,7 @@ export default function TrustSection() {
           {/* Stats */}
           <div className="flex gap-12">
             {[
-              { value: '12+', label: 'Years of Excellence' },
+              { value: yearsOfService, label: 'Years of Excellence' },
               { value: '100%', label: 'Satisfaction Rate' },
               { value: '2,500+', label: 'Guests Hosted' },
             ].map((stat) => (

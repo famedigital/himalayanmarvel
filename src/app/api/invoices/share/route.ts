@@ -1,13 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@supabase/supabase-js';
-
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-);
+import { createClient } from '@/lib/supabase/server';
 
 export async function POST(request: NextRequest) {
   try {
+    const supabase = await createClient();
     const body = await request.json();
     const { itinerary_id, invoice_data } = body;
 
@@ -21,7 +17,7 @@ export async function POST(request: NextRequest) {
     // Generate a unique share token
     const token = generateShareToken();
 
-    // Store invoice in database (create table if not exists)
+    // Store invoice in database
     const { data: invoice, error } = await supabase
       .from('invoices')
       .insert({

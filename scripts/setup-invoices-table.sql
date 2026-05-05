@@ -1,50 +1,47 @@
--- Create invoices table for tracking generated invoices
--- Run this in Supabase SQL Editor
-
+-- Create invoices table for storing and sharing invoices
 CREATE TABLE IF NOT EXISTS invoices (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  itinerary_id UUID NOT NULL REFERENCES itineraries(id) ON DELETE CASCADE,
-  invoice_number TEXT NOT NULL,
+  itinerary_id UUID REFERENCES itineraries(id) ON DELETE CASCADE,
+  invoice_number VARCHAR(50) UNIQUE NOT NULL,
   invoice_data JSONB NOT NULL,
-  share_token TEXT UNIQUE NOT NULL,
-  status TEXT NOT NULL DEFAULT 'sent', -- sent, paid, cancelled, expired
-  created_at TIMESTAMPTZ DEFAULT NOW(),
-  updated_at TIMESTAMPTZ DEFAULT NOW(),
-  paid_at TIMESTAMPTZ,
-  expires_at TIMESTAMPTZ
+  share_token VARCHAR(50) UNIQUE NOT NULL,
+  status VARCHAR(20) DEFAULT 'sent',
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
--- Create index for fast lookups by token
-CREATE INDEX IF NOT EXISTS idx_invoices_share_token ON invoices(share_token);
-CREATE INDEX IF NOT EXISTS idx_invoices_itinerary_id ON invoices(itinerary_id);
-CREATE INDEX IF NOT EXISTS idx_invoices_status ON invoices(status);
+-- Create index for faster lookups
+CREATE INDEX IF NOT EXISTS invoices_itinerary_id_idx ON invoices(itinerary_id);
+CREATE INDEX IF NOT EXISTS invoices_share_token_idx ON invoices(share_token);
+CREATE INDEX IF NOT EXISTS invoices_status_idx ON invoices(status);
 
 -- Enable RLS
 ALTER TABLE invoices ENABLE ROW LEVEL SECURITY;
 
--- Create policy: Admins can do everything
-CREATE POLICY "Admins can manage all invoices"
-  ON invoices
-  TO authenticated
-  USING (
-    auth.uid() IN (
-      SELECT id FROM profiles WHERE role = 'admin'
-    )
-  )
-  WITH CHECK (
-    auth.uid() IN (
-      SELECT id FROM profiles WHERE role = 'admin'
-    )
-  );
+-- Drop existing policies if any
+DROP POLICY IF EXISTS "Users can view invoices" ON invoices;
+DROP POLICY IF EXISTS "Users can create invoices" ON invoices;
+DROP POLICY IF EXISTS "Users can update invoices" ON invoices;
+DROP POLICY IF EXISTS "Users can delete invoices" ON invoices;
 
--- Create policy: Public can access invoices by share token (read-only)
-CREATE POLICY "Public can view invoices by share token"
-  ON invoices
+-- Create RLS policies
+CREATE POLICY "Users can view invoices" ON invoices
   FOR SELECT
-  TO public
-  USING (true);
+  USING (auth.role() = 'authenticated');
 
--- Function to update updated_at timestamp
+CREATE POLICY "Users can create invoices" ON invoices
+  FOR INSERT
+  WITH CHECK (auth.role() = 'authenticated');
+
+CREATE POLICY "Users can update invoices" ON invoices
+  FOR UPDATE
+  USING (auth.role() = 'authenticated');
+
+CREATE POLICY "Users can delete invoices" ON invoices
+  FOR DELETE
+  USING (auth.role() = 'authenticated');
+
+-- Add updated_at trigger
 CREATE OR REPLACE FUNCTION update_invoices_updated_at()
 RETURNS TRIGGER AS $$
 BEGIN
@@ -53,11 +50,8 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
--- Create trigger
-CREATE TRIGGER invoices_updated_at
+DROP TRIGGER IF EXISTS update_invoices_updated_at_trigger ON invoices;
+CREATE TRIGGER update_invoices_updated_at_trigger
   BEFORE UPDATE ON invoices
   FOR EACH ROW
   EXECUTE FUNCTION update_invoices_updated_at();
-
--- Reload schema
-NOTIFY pgrst, 'reload schema';

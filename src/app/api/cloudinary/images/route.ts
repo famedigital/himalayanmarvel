@@ -30,6 +30,7 @@ export async function GET(request: NextRequest) {
     // Build Cloudinary API URL for listing resources
     let apiUrl = `https://api.cloudinary.com/v1_1/${cloudName}/resources/image`;
     const queryParams = new URLSearchParams({
+      type: 'upload',
       prefix: folder,
       max_results: maxResults.toString(),
     });

@@ -7,6 +7,7 @@ import { useTheme } from 'next-themes';
 import Image from 'next/image';
 import { createClient } from '@/lib/supabase/client';
 import LeadCaptureForm from '@/components/LeadCaptureForm';
+import { getYearsOfServiceString } from '@/lib/utils/years-of-service';
 
 interface HeroSlide {
   id: string;
@@ -29,6 +30,9 @@ export default function Hero() {
   const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
   const scale = useTransform(scrollYProgress, [0, 0.5], [1, 0.9]);
   const { theme, resolvedTheme } = useTheme();
+
+  // Auto-calculate years of service
+  const yearsOfService = getYearsOfServiceString();
   const supabase = createClient();
 
   const [mounted, setMounted] = useState(false);
@@ -175,7 +179,7 @@ export default function Hero() {
             style={{ color: '#D4AF37' }}
           >
             <div className="flex items-center gap-2">
-              <span className="text-xl md:text-2xl font-bold">13+</span>
+              <span className="text-xl md:text-2xl font-bold">{yearsOfService}</span>
               <span className="text-[10px] md:text-xs uppercase tracking-wider">Years</span>
             </div>
             <div className="w-px h-5" style={{ backgroundColor: 'rgba(212, 175, 55, 0.3)' }} />

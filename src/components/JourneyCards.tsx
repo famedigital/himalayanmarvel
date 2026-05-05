@@ -36,11 +36,11 @@ const defaultTours: TourCategory[] = [
       'Traditional hot stone bath',
     ],
     availability: 'Only 2 spots for October departure',
-    link: '/tours?type=cultural',
+    link: 'mailto:info@himalayanmarvels.com',
   },
   {
     id: '2',
-    title: 'Spiritual & Wellness',
+    title: 'Spiritual Journeys',
     subtitle: '8-12 Days',
     description: 'Transformative meditation retreats, hot stone baths, and private monastery sessions.',
     image: 'https://res.cloudinary.com/dxztrqjft/image/upload/v1776291877/dochula_r3uler.jpg',
@@ -53,7 +53,7 @@ const defaultTours: TourCategory[] = [
       'Wellness consultations',
     ],
     availability: 'Limited to 6 journeys annually',
-    link: '/tours?type=spiritual',
+    link: 'mailto:info@himalayanmarvels.com',
   },
   {
     id: '3',
@@ -70,7 +70,7 @@ const defaultTours: TourCategory[] = [
       'Altitude preparation',
     ],
     availability: 'Book early for permits',
-    link: '/tours?type=trek',
+    link: 'mailto:info@himalayanmarvels.com',
   },
 ];
 
@@ -134,16 +134,13 @@ export default function JourneyCards() {
           </div>
 
           <h2 className="font-display text-display-section dark:text-white text-neutral-900 mb-6">
-            Signature{' '}
-            <span className="gradient-text">Private Journeys</span>
+            Spiritual{' '}
+            <span className="gradient-text">Journeys</span>
           </h2>
 
           <p className="text-lg dark:text-white/60 text-neutral-600 max-w-2xl mx-auto leading-relaxed font-light">
             Each journey is privately curated — not a group tour, but a transformative experience
             designed exclusively for you.
-          </p>
-          <p className="text-sm dark:text-white/50 text-neutral-500 uppercase tracking-[0.15em] mt-2">
-            2 Signature Journeys Available
           </p>
         </motion.div>
 

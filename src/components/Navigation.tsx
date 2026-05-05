@@ -104,7 +104,7 @@ export default function Navigation() {
                   color: isDark ? '#F7F7F2' : '#1A1A1A'
                 }}
               >
-                Himalayan
+                HIMALAYAN
               </span>
               <span
                 className="font-display font-bold whitespace-nowrap"
@@ -245,7 +245,7 @@ export default function Navigation() {
             <motion.a
               whileHover={{ y: -1, boxShadow: '0 4px 16px rgba(0, 104, 56, 0.3)' }}
               whileTap={{ scale: 0.97 }}
-              href="/concierge"
+              href="mailto:info@himalayanmarvels.com"
               className="px-5 py-2 text-[0.65rem] font-semibold tracking-[0.15em] uppercase hidden md:block rounded-full transition-all"
               style={{
                 color: '#FFFFFF',
@@ -377,7 +377,7 @@ export default function Navigation() {
                   Login
                 </a>
                 <a
-                  href="/concierge"
+                  href="mailto:info@himalayanmarvels.com"
                   onClick={() => setIsMobileMenuOpen(false)}
                   className="px-5 py-2 text-[0.6rem] font-medium tracking-[0.15em] uppercase rounded-full"
                   style={{ color: '#FFFFFF', backgroundColor: '#006838', border: '1px solid rgba(212, 175, 55, 0.2)' }}

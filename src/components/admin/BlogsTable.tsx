@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import { FileText } from 'lucide-react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { DeleteConfirm } from './DeleteConfirm';
 import { BlogTableRowActions } from './BlogTableRowActions';
 import { formatDateCondensed } from '@/lib/utils';
@@ -99,16 +100,16 @@ export function BlogsTable({ blogs }: BlogsTableProps) {
 
   return (
     <>
-      <div className="rounded-lg border border-border bg-card shadow-sm overflow-hidden">
-        <table className="w-full">
+      <div className="rounded-lg border border-border bg-card shadow-sm overflow-x-auto">
+        <table className="w-full table-fixed">
           <thead>
             <tr className="border-b border-border bg-muted/50">
-              <th className="text-left py-3 px-4 text-xs font-semibold tracking-wider uppercase text-muted-foreground">Post</th>
-              <th className="text-left py-3 px-4 text-xs font-semibold tracking-wider uppercase text-muted-foreground">Category</th>
-              <th className="text-left py-3 px-4 text-xs font-semibold tracking-wider uppercase text-muted-foreground">Author</th>
-              <th className="text-left py-3 px-4 text-xs font-semibold tracking-wider uppercase text-muted-foreground">Published</th>
-              <th className="text-left py-3 px-4 text-xs font-semibold tracking-wider uppercase text-muted-foreground">Date</th>
-              <th className="text-right py-3 px-4 text-xs font-semibold tracking-wider uppercase text-muted-foreground">Actions</th>
+              <th className="text-left py-3 px-4 text-xs font-semibold tracking-wider uppercase text-muted-foreground w-[35%]">Post</th>
+              <th className="text-left py-3 px-4 text-xs font-semibold tracking-wider uppercase text-muted-foreground w-[15%]">Category</th>
+              <th className="text-left py-3 px-4 text-xs font-semibold tracking-wider uppercase text-muted-foreground w-[15%]">Author</th>
+              <th className="text-left py-3 px-4 text-xs font-semibold tracking-wider uppercase text-muted-foreground w-[12%]">Published</th>
+              <th className="text-left py-3 px-4 text-xs font-semibold tracking-wider uppercase text-muted-foreground w-[13%]">Date</th>
+              <th className="text-center py-3 px-4 text-xs font-semibold tracking-wider uppercase text-muted-foreground w-[10%]">Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -119,30 +120,35 @@ export function BlogsTable({ blogs }: BlogsTableProps) {
                   index % 2 === 0 ? 'bg-card' : 'bg-muted/20'
                 } hover:bg-muted/40`}
               >
-                <td className="py-3 px-4">
+                <td className="py-3 px-4 w-[35%] max-w-[35%]">
                   <div className="flex items-center gap-3">
                     {blog.featured_image && (
                       <div className="relative w-12 h-8 rounded-lg overflow-hidden flex-shrink-0 bg-muted">
-                        <img
+                        <Image
                           src={blog.featured_image}
                           alt={blog.title}
-                          className="w-full h-full object-cover"
+                          fill
+                          sizes="48px"
+                          className="object-cover"
+                          onError={(e) => {
+                            e.currentTarget.style.display = 'none';
+                          }}
                         />
                       </div>
                     )}
-                    <div className="min-w-0">
+                    <div className="min-w-0 flex-1">
                       <p className="font-medium text-sm text-foreground truncate">{blog.title}</p>
                       <p className="text-[10px] text-muted-foreground mt-0.5 uppercase tracking-wider truncate">{blog.excerpt || blog.slug}</p>
                     </div>
                   </div>
                 </td>
-                <td className="py-3 px-4">
+                <td className="py-3 px-4 w-[15%]">
                   <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-medium bg-muted text-foreground border border-border">
                     {blog.category || 'General'}
                   </span>
                 </td>
-                <td className="py-3 px-4 text-muted-foreground text-xs">{blog.author || 'Himalayan Marvels'}</td>
-                <td className="py-3 px-4">
+                <td className="py-3 px-4 text-muted-foreground text-xs w-[15%]">{blog.author || 'Himalayan Marvels'}</td>
+                <td className="py-3 px-4 w-[12%]">
                   <span className={`inline-flex items-center px-2 py-0.5 rounded text-[10px] font-medium tracking-wide uppercase border ${
                     blog.is_published
                       ? 'bg-muted text-foreground border-border'
@@ -151,7 +157,7 @@ export function BlogsTable({ blogs }: BlogsTableProps) {
                     {blog.is_published ? 'Published' : 'Draft'}
                   </span>
                 </td>
-                <td className="py-3 px-4 text-muted-foreground text-xs">
+                <td className="py-3 px-4 text-muted-foreground text-xs w-[13%]">
                   {blog.published_at
                     ? new Date(blog.published_at).toLocaleDateString('en-US', {
                         month: 'short',
@@ -164,17 +170,19 @@ export function BlogsTable({ blogs }: BlogsTableProps) {
                         year: 'numeric'
                       })}
                 </td>
-                <td className="py-3 px-4">
-                  <BlogTableRowActions
-                    id={blog.id}
-                    title={blog.title}
-                    editHref={`/admin/blog/${blog.id}/edit`}
-                    viewHref={`/blog/${blog.slug}`}
-                    isPublished={blog.is_published}
-                    isToggling={togglingPublish === blog.id}
-                    onTogglePublish={() => handleTogglePublish(blog.id, blog.is_published)}
-                    onDelete={() => setDeleteId(blog.id)}
-                  />
+                <td className="py-3 px-4 text-center w-[10%] relative">
+                  <div className="flex items-center justify-center">
+                    <BlogTableRowActions
+                      id={blog.id}
+                      title={blog.title}
+                      editHref={`/admin/blog/${blog.id}/edit`}
+                      viewHref={`/blog/${blog.slug}`}
+                      isPublished={blog.is_published}
+                      isToggling={togglingPublish === blog.id}
+                      onTogglePublish={() => handleTogglePublish(blog.id, blog.is_published)}
+                      onDelete={() => setDeleteId(blog.id)}
+                    />
+                  </div>
                 </td>
               </tr>
             ))}

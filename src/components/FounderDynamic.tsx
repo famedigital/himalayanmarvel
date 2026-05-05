@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react';
 import { useTheme } from 'next-themes';
 import { Loader2 } from 'lucide-react';
 import RevealOnScroll from './ui/RevealOnScroll';
+import { getYearsOfServiceString } from '@/lib/utils/years-of-service';
 
 interface AboutContent {
   name: string;
@@ -22,6 +23,9 @@ export default function FounderDynamic() {
   const [loading, setLoading] = useState(true);
   const [mounted, setMounted] = useState(false);
   const { theme, resolvedTheme } = useTheme();
+
+  // Auto-calculate years of service
+  const yearsOfService = getYearsOfServiceString();
 
   useEffect(() => {
     setMounted(true);
@@ -48,7 +52,7 @@ export default function FounderDynamic() {
           bio: 'A hospitality visionary whose professional DNA was forged in the world\'s most demanding luxury environments. After elite training at Les Roches (Spain) and International College of Hotel Management (Australia), Bivatsu honed his craft within the leadership circles of global icons.',
           credentials: 'Les Roches (Spain), ICHM (Australia), MBA - University of Canberra',
           brands: 'The Ritz-Carlton, Hyatt, Kempinski',
-          stats: '12+|5,000+|50+|4.9',
+          stats: `${yearsOfService}|5,000+|50+|4.9`,
           image: 'https://res.cloudinary.com/dxztrqjft/image/upload/v1776275660/founder-portrait_pbo8m4.jpg',
         });
       }

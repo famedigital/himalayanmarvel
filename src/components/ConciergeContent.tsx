@@ -7,6 +7,7 @@ import Navigation from '@/components/Navigation';
 import Footer from '@/components/Footer';
 import RevealOnScroll from '@/components/ui/RevealOnScroll';
 import JsonLd from '@/components/seo/JsonLd';
+import { getYearsOfServiceString } from '@/lib/utils/years-of-service';
 
 // Service Schema for Concierge page
 const serviceSchema = {
@@ -30,6 +31,9 @@ const serviceSchema = {
 };
 
 export default function ConciergeContent() {
+  // Auto-calculate years of service
+  const yearsOfService = getYearsOfServiceString();
+
   return (
     <main className="min-h-screen bg-alabaster dark:bg-dark-forest">
       <JsonLd data={serviceSchema} />
@@ -66,7 +70,7 @@ export default function ConciergeContent() {
                   <em className="text-champagne-gold">Concierge</em>
                 </h1>
                 <p className="text-xl md:text-2xl text-gray-300 leading-relaxed font-light max-w-2xl mb-12">
-                  Experience the luxury of having every detail curated by insiders who've spent 12+ years crafting journeys in the Last Shangri-La.
+                  Experience the luxury of having every detail curated by insiders who've spent {yearsOfService} years crafting journeys in the Last Shangri-La.
                 </p>
                 <div className="flex flex-col sm:flex-row gap-4">
                   <motion.a
@@ -108,87 +112,76 @@ export default function ConciergeContent() {
         </motion.div>
       </section>
 
-      {/* Process Timeline Section */}
-      <section className="py-32 px-6 bg-gradient-to-b from-black to-dark-forest">
-        <div className="max-w-7xl mx-auto">
+      {/* Process Timeline - Sleek Apple Style */}
+      <section className="py-20 px-6 bg-neutral-950">
+        <div className="max-w-5xl mx-auto">
           <RevealOnScroll>
-            <div className="text-center mb-20">
-              <p className="text-champagne-gold text-sm tracking-[0.2em] uppercase mb-4">
-                The Process
-              </p>
-              <h2 className="text-4xl md:text-5xl font-serif text-white">
-                How We Craft Your <em className="text-champagne-gold">Journey</em>
-              </h2>
+            {/* Header */}
+            <div className="text-center mb-16">
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6 }}
+              >
+                <p className="text-champagne-gold text-xs tracking-[0.25em] uppercase font-medium mb-3">
+                  The Process
+                </p>
+                <h2 className="text-3xl md:text-4xl font-semibold text-white">
+                  How We Craft Your Journey
+                </h2>
+              </motion.div>
             </div>
 
-            {/* Animated process timeline */}
-            <div className="grid md:grid-cols-4 gap-8 relative">
-              {/* Connection line */}
-              <div className="hidden md:block absolute top-16 left-0 right-0 h-px bg-gradient-to-r from-transparent via-champagne-gold/50 to-transparent" />
+            {/* Process Steps - Clean Grid */}
+            <div className="grid md:grid-cols-2 gap-4">
+              {[
+                {
+                  step: '01',
+                  title: 'Share Your Vision',
+                  description: 'Tell us what calls to you — spiritual retreat, cultural immersion, or adventure'
+                },
+                {
+                  step: '02',
+                  title: 'Consultation',
+                  description: 'Our concierge calls to understand your preferences and pace'
+                },
+                {
+                  step: '03',
+                  title: 'Custom Design',
+                  description: 'We craft your detailed day-by-day journey with curated experiences'
+                },
+                {
+                  step: '04',
+                  title: 'Experience',
+                  description: 'Arrive in Bhutan and live your privately crafted journey'
+                }
+              ].map((item, index) => (
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5, delay: index * 0.1 }}
+                  className="group"
+                >
+                  <div className="relative p-6 rounded-2xl bg-neutral-900/50 border border-neutral-800 hover:bg-white hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+                    {/* Step Number */}
+                    <div className="absolute top-6 right-6 text-4xl font-semibold text-white/20 group-hover:text-neutral-900/20 transition-colors">
+                      {item.step}
+                    </div>
 
-              {/* Step 1 */}
-              <motion.div
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.2 }}
-                className="relative text-center group"
-              >
-                <div className="w-28 h-28 mx-auto mb-6 rounded-full bg-champagne-gold/5 border border-champagne-gold/20 flex items-center justify-center text-4xl transition-all duration-500 group-hover:bg-champagne-gold/20 group-hover:border-champagne-gold/50 group-hover:scale-110">
-                  💭
-                </div>
-                <h3 className="text-lg text-white mb-3 font-light">Share Vision</h3>
-                <p className="text-gray-400 text-sm leading-relaxed">
-                  Tell us what calls to you — spiritual retreat, cultural immersion, or adventure
-                </p>
-              </motion.div>
-
-              {/* Step 2 */}
-              <motion.div
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.4 }}
-                className="relative text-center group"
-              >
-                <div className="w-28 h-28 mx-auto mb-6 rounded-full bg-champagne-gold/5 border border-champagne-gold/20 flex items-center justify-center text-4xl transition-all duration-500 group-hover:bg-champagne-gold/20 group-hover:border-champagne-gold/50 group-hover:scale-110">
-                  📞
-                </div>
-                <h3 className="text-lg text-white mb-3 font-light">Consultation</h3>
-                <p className="text-gray-400 text-sm leading-relaxed">
-                  Our concierge calls to understand your preferences, pace, and requirements
-                </p>
-              </motion.div>
-
-              {/* Step 3 */}
-              <motion.div
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.6 }}
-                className="relative text-center group"
-              >
-                <div className="w-28 h-28 mx-auto mb-6 rounded-full bg-champagne-gold/5 border border-champagne-gold/20 flex items-center justify-center text-4xl transition-all duration-500 group-hover:bg-champagne-gold/20 group-hover:border-champagne-gold/50 group-hover:scale-110">
-                  📜
-                </div>
-                <h3 className="text-lg text-white mb-3 font-light">Custom Design</h3>
-                <p className="text-gray-400 text-sm leading-relaxed">
-                  We craft your detailed day-by-day journey with curated experiences
-                </p>
-              </motion.div>
-
-              {/* Step 4 */}
-              <motion.div
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.8 }}
-                className="relative text-center group"
-              >
-                <div className="w-28 h-28 mx-auto mb-6 rounded-full bg-champagne-gold/5 border border-champagne-gold/20 flex items-center justify-center text-4xl transition-all duration-500 group-hover:bg-champagne-gold/20 group-hover:border-champagne-gold/50 group-hover:scale-110">
-                  ✨
-                </div>
-                <h3 className="text-lg text-white mb-3 font-light">Experience</h3>
-                <p className="text-gray-400 text-sm leading-relaxed">
-                  Arrive in Bhutan and live your privately crafted journey
-                </p>
-              </motion.div>
+                    {/* Content */}
+                    <div className="relative z-10">
+                      <h3 className="text-lg font-semibold text-white mb-2 group-hover:text-neutral-900 transition-colors">
+                        {item.title}
+                      </h3>
+                      <p className="text-neutral-400 text-sm leading-relaxed group-hover:text-neutral-600 transition-colors">
+                        {item.description}
+                      </p>
+                    </div>
+                  </div>
+                </motion.div>
+              ))}
             </div>
           </RevealOnScroll>
         </div>
@@ -246,7 +239,7 @@ export default function ConciergeContent() {
                   Inside Access
                 </h3>
                 <p className="text-gray-600 dark:text-gray-300">
-                  12+ years of relationships mean we can open doors others can't. Private
+                  {yearsOfService} years of relationships mean we can open doors others can't. Private
                   audiences with high lamas, exclusive festival viewing, hidden monastery visits.
                 </p>
               </div>
@@ -268,74 +261,57 @@ export default function ConciergeContent() {
         </div>
       </section>
 
-      {/* How It Works */}
-      <section className="py-24 px-4 bg-gradient-to-b from-alabaster to-white dark:from-dark-forest dark:to-black">
-        <div className="max-w-6xl mx-auto">
+      {/* How It Works - Clean Minimal */}
+      <section className="py-20 px-6 bg-black">
+        <div className="max-w-5xl mx-auto">
           <RevealOnScroll>
+            {/* Header */}
             <div className="text-center mb-16">
-              <p className="text-champagne-gold text-sm tracking-[0.2em] uppercase mb-4">
-                The Process
-              </p>
-              <h2 className="text-4xl font-light text-dark-forest dark:text-alabaster mb-4">
-                How We Craft Your Journey
-              </h2>
-              <p className="text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
-                Four simple steps to your private Bhutan experience
-              </p>
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6 }}
+              >
+                <p className="text-champagne-gold text-xs tracking-[0.25em] uppercase font-medium mb-3">
+                  The Process
+                </p>
+                <h2 className="text-3xl md:text-4xl font-semibold text-white">
+                  How We Craft Your Journey
+                </h2>
+                <p className="text-neutral-400 mt-3 text-base">
+                  Four simple steps to your private Bhutan experience
+                </p>
+              </motion.div>
             </div>
 
-            <div className="grid md:grid-cols-4 gap-6">
-              <div className="text-center">
-                <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-champagne-gold text-dark-forest flex items-center justify-center text-2xl font-light">
-                  1
-                </div>
-                <h3 className="text-lg font-light text-dark-forest dark:text-alabaster mb-2">
-                  Share Your Vision
-                </h3>
-                <p className="text-gray-600 dark:text-gray-300 text-sm">
-                  Tell us what calls to you—spiritual retreat, cultural immersion, or
-                  Himalayan adventure. No detail too small.
-                </p>
-              </div>
-
-              <div className="text-center">
-                <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-champagne-gold text-dark-forest flex items-center justify-center text-2xl font-light">
-                  2
-                </div>
-                <h3 className="text-lg font-light text-dark-forest dark:text-alabaster mb-2">
-                  Consultation
-                </h3>
-                <p className="text-gray-600 dark:text-gray-300 text-sm">
-                  Our concierge schedules a call to understand your preferences, pace, and
-                  any special requirements.
-                </p>
-              </div>
-
-              <div className="text-center">
-                <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-champagne-gold text-dark-forest flex items-center justify-center text-2xl font-light">
-                  3
-                </div>
-                <h3 className="text-lg font-light text-dark-forest dark:text-alabaster mb-2">
-                  Custom Itinerary
-                </h3>
-                <p className="text-gray-600 dark:text-gray-300 text-sm">
-                  We design a detailed day-by-day journey with accommodations, experiences,
-                  and logistics—all curated for you.
-                </p>
-              </div>
-
-              <div className="text-center">
-                <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-champagne-gold text-dark-forest flex items-center justify-center text-2xl font-light">
-                  4
-                </div>
-                <h3 className="text-lg font-light text-dark-forest dark:text-alabaster mb-2">
-                  Journey of a Lifetime
-                </h3>
-                <p className="text-gray-600 dark:text-gray-300 text-sm">
-                  Arrive in Bhutan and experience your private journey. Our team supports
-                  you every step of the way.
-                </p>
-              </div>
+            {/* Steps - Horizontal */}
+            <div className="grid md:grid-cols-4 gap-4">
+              {[
+                { num: '01', title: 'Share Your Vision' },
+                { num: '02', title: 'Consultation' },
+                { num: '03', title: 'Custom Itinerary' },
+                { num: '04', title: 'Experience' }
+              ].map((step, index) => (
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5, delay: index * 0.1 }}
+                  className="group"
+                >
+                  <div className="text-center p-6 rounded-2xl bg-neutral-900/30 border border-neutral-800 hover:bg-white hover:shadow-lg hover:-translate-y-1 transition-all duration-300 cursor-pointer">
+                    <div className="mb-3">
+                      <div className="text-5xl font-semibold text-white/20 group-hover:text-neutral-900/20 transition-colors">
+                        {step.num}
+                      </div>
+                    </div>
+                    <h3 className="text-base font-semibold text-white group-hover:text-neutral-900 transition-colors">
+                      {step.title}
+                    </h3>
+                  </div>
+                </motion.div>
+              ))}
             </div>
           </RevealOnScroll>
         </div>

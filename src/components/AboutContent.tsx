@@ -7,6 +7,7 @@ import Navigation from '@/components/Navigation';
 import Footer from '@/components/Footer';
 import RevealOnScroll from '@/components/ui/RevealOnScroll';
 import JsonLd from '@/components/seo/JsonLd';
+import { getYearsOfServiceString } from '@/lib/utils/years-of-service';
 
 const organizationSchema = {
   '@context': 'https://schema.org',
@@ -47,6 +48,9 @@ const organizationSchema = {
 };
 
 export default function AboutContent() {
+  // Auto-calculate years of service
+  const yearsOfService = getYearsOfServiceString();
+
   return (
     <main className="min-h-screen bg-alabaster dark:bg-dark-forest">
       <JsonLd data={organizationSchema} />
@@ -75,13 +79,10 @@ export default function AboutContent() {
                 The Story
               </p>
               <h1 className="text-5xl md:text-7xl lg:text-8xl font-serif text-white mb-8 leading-none">
-                The Man Who Left<br />
-                <em className="text-champagne-gold">Global Luxury</em><br />
-                For Bhutan
+                The Story
               </h1>
-              <p className="text-xl md:text-2xl text-gray-300 leading-relaxed font-light max-w-2xl">
-                In 2014, Bivatsu Giri stepped away from a career in global luxury hospitality
-                to build something more personal in his home country of Bhutan.
+              <p className="text-xl md:text-2xl text-gray-300 leading-relaxed font-light max-w-3xl">
+                In 2014, after working in global luxury hospitality, Bivatsu chose to return home to Bhutan, not to build a larger company, but a more meaningful one. Himalayan Marvels was created with a simple idea: that travel here should feel personal, unhurried, and quietly transformative.
               </p>
             </RevealOnScroll>
           </div>
@@ -214,16 +215,12 @@ export default function AboutContent() {
                   </p>
                 </div>
 
-                <div className="mt-8 flex flex-wrap gap-4">
-                  <div className="px-4 py-2 bg-champagne-gold/10 rounded-lg border border-champagne-gold/20">
+                <div className="mt-8 flex flex-wrap gap-4 justify-center">
+                  <div className="px-6 py-3 bg-champagne-gold/10 rounded-lg border border-champagne-gold/20">
                     <p className="text-xs text-champagne-gold uppercase tracking-wider">Experience</p>
-                    <p className="text-2xl font-light text-dark-forest dark:text-alabaster">12+ Years</p>
+                    <p className="text-2xl font-light text-dark-forest dark:text-alabaster">{yearsOfService} Years</p>
                   </div>
-                  <div className="px-4 py-2 bg-champagne-gold/10 rounded-lg border border-champagne-gold/20">
-                    <p className="text-xs text-champagne-gold uppercase tracking-wider">Guests Hosted</p>
-                    <p className="text-2xl font-light text-dark-forest dark:text-alabaster">2,500+</p>
-                  </div>
-                  <div className="px-4 py-2 bg-champagne-gold/10 rounded-lg border border-champagne-gold/20">
+                  <div className="px-6 py-3 bg-champagne-gold/10 rounded-lg border border-champagne-gold/20">
                     <p className="text-xs text-champagne-gold uppercase tracking-wider">Rating</p>
                     <p className="text-2xl font-light text-dark-forest dark:text-alabaster">4.9/5</p>
                   </div>

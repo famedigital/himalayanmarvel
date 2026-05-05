@@ -20,11 +20,31 @@ interface Itinerary {
   itinerary_days?: { count: number }[];
 }
 
-interface ItinerariesTableProps {
-  itineraries: Itinerary[];
+interface Booking {
+  id: string;
+  itinerary_id: string;
+  status: string;
+  travel_date?: string;
 }
 
-export function ItinerariesTable({ itineraries }: ItinerariesTableProps) {
+interface Invoice {
+  id: string;
+  itinerary_id: string;
+  status: string;
+  payment_amount?: number;
+  invoice_data?: {
+    total_amount?: number;
+    currency_symbol?: string;
+  };
+}
+
+interface ItinerariesTableProps {
+  itineraries: Itinerary[];
+  bookings?: Booking[];
+  invoices?: Invoice[];
+}
+
+export function ItinerariesTable({ itineraries, bookings = [], invoices = [] }: ItinerariesTableProps) {
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
   const [duplicating, setDuplicating] = useState<string | null>(null);
@@ -32,6 +52,52 @@ export function ItinerariesTable({ itineraries }: ItinerariesTableProps) {
   const [items, setItems] = useState(itineraries);
 
   const deletingItem = items.find(i => i.id === deleteId);
+
+  // Helper function to get booking for an itinerary
+  const getBookingForItinerary = (itineraryId: string) => {
+    return bookings.find(b => b.itinerary_id === itineraryId);
+  };
+
+  // Helper function to get invoice for an itinerary
+  const getInvoiceForItinerary = (itineraryId: string) => {
+    return invoices.find(inv => inv.itinerary_id === itineraryId);
+  };
+
+  // Helper function to get intelligent status
+  const getIntelligentStatus = (itinerary: Itinerary) => {
+    const booking = getBookingForItinerary(itinerary.id);
+    const invoice = getInvoiceForItinerary(itinerary.id);
+
+    if (booking && booking.travel_date) {
+      const travelDate = new Date(booking.travel_date);
+      const today = new Date();
+      const daysUntil = Math.ceil((travelDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
+
+      if (daysUntil <= 7) {
+        return { status: 'departing-soon', label: `Departing in ${daysUntil} day${daysUntil !== 1 ? 's' : ''}`, color: 'red' };
+      } else if (daysUntil <= 30) {
+        return { status: 'upcoming', label: `Upcoming (${daysUntil} days)`, color: 'orange' };
+      }
+    }
+
+    if (invoice && invoice.status !== 'paid') {
+      return { status: 'payment-pending', label: 'Payment Pending', color: 'amber' };
+    }
+
+    if (booking) {
+      return { status: 'confirmed', label: 'Confirmed', color: 'green' };
+    }
+
+    if (invoice) {
+      return { status: 'invoiced', label: 'Invoiced', color: 'blue' };
+    }
+
+    if (itinerary.status === 'final') {
+      return { status: 'final', label: 'Final', color: 'purple' };
+    }
+
+    return { status: 'draft', label: 'Draft', color: 'gray' };
+  };
 
   const handleDelete = async () => {
     if (!deleteId) return;
@@ -159,16 +225,23 @@ export function ItinerariesTable({ itineraries }: ItinerariesTableProps) {
 
   const handlePreviewHTML = async (id: string) => {
     try {
+      console.log('[ItinerariesTable] Previewing HTML for itinerary:', id);
       const response = await fetch(`/api/itineraries/${id}/html`);
-      if (!response.ok) throw new Error('Failed to generate HTML');
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({ error: 'Unknown error' }));
+        console.error('[ItinerariesTable] Server error:', errorData);
+        throw new Error(errorData.error || errorData.details || 'Failed to generate HTML');
+      }
 
       const html = await response.text();
+      console.log('[ItinerariesTable] HTML generated, length:', html.length);
       const blob = new Blob([html], { type: 'text/html' });
       const url = URL.createObjectURL(blob);
       window.open(url, '_blank');
     } catch (error) {
-      console.error('Preview failed:', error);
-      alert('Failed to preview HTML. Please try again.');
+      console.error('[ItinerariesTable] Preview failed:', error);
+      alert(`Failed to preview HTML: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   };
 
@@ -233,7 +306,9 @@ export function ItinerariesTable({ itineraries }: ItinerariesTableProps) {
               >
                 <td className="py-3 px-4">
                   <div>
-                    <p className="font-medium text-sm text-foreground truncate max-w-[200px]">{itinerary.title}</p>
+                    <Link href={`/admin/itineraries/${itinerary.id}`} className="font-medium text-sm text-foreground truncate max-w-[200px] hover:text-amber-600 transition-colors">
+                      {itinerary.title}
+                    </Link>
                     <p className="text-[10px] text-muted-foreground mt-0.5 uppercase tracking-wider">
                       {itinerary.itinerary_days?.[0]?.count || 0} Days • Private Tour
                     </p>
@@ -256,13 +331,23 @@ export function ItinerariesTable({ itineraries }: ItinerariesTableProps) {
                   <span className="text-muted-foreground text-xs">{itinerary.itinerary_days?.[0]?.count || 0} days</span>
                 </td>
                 <td className="py-3 px-4">
-                  <span className={`inline-flex items-center px-2 py-0.5 rounded text-[10px] font-medium tracking-wide uppercase border ${
-                    itinerary.status === 'final'
-                      ? 'bg-muted text-foreground border-border'
-                      : 'bg-amber-500/10 text-amber-600 border-amber-500/20 dark:bg-amber-500/20 dark:text-amber-400'
-                  }`}>
-                    {itinerary.status === 'final' ? 'Final' : 'Draft'}
-                  </span>
+                  {(() => {
+                    const statusInfo = getIntelligentStatus(itinerary);
+                    const colorClasses = {
+                      red: 'bg-red-100 text-red-700 border-red-200 dark:bg-red-950/20 dark:text-red-400 dark:border-red-800',
+                      orange: 'bg-orange-100 text-orange-700 border-orange-200 dark:bg-orange-950/20 dark:text-orange-400 dark:border-orange-800',
+                      amber: 'bg-amber-100 text-amber-700 border-amber-200 dark:bg-amber-950/20 dark:text-amber-400 dark:border-amber-800',
+                      green: 'bg-green-100 text-green-700 border-green-200 dark:bg-green-950/20 dark:text-green-400 dark:border-green-800',
+                      blue: 'bg-blue-100 text-blue-700 border-blue-200 dark:bg-blue-950/20 dark:text-blue-400 dark:border-blue-800',
+                      purple: 'bg-purple-100 text-purple-700 border-purple-200 dark:bg-purple-950/20 dark:text-purple-400 dark:border-purple-800',
+                      gray: 'bg-gray-100 text-gray-700 border-gray-200 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-700',
+                    };
+                    return (
+                      <span className={`inline-flex items-center px-2 py-0.5 rounded text-[10px] font-medium tracking-wide uppercase border ${colorClasses[statusInfo.color as keyof typeof colorClasses]}`}>
+                        {statusInfo.label}
+                      </span>
+                    );
+                  })()}
                 </td>
                 <td className="py-3 px-4 text-muted-foreground text-xs">
                   {new Date(itinerary.created_at).toLocaleDateString('en-US', {
@@ -275,7 +360,8 @@ export function ItinerariesTable({ itineraries }: ItinerariesTableProps) {
                   <ItineraryTableRowActions
                     id={itinerary.id}
                     title={itinerary.title}
-                    editHref={`/admin/itineraries/${itinerary.id}/edit`}
+                    viewHref={`/admin/itineraries/${itinerary.id}`}
+                    editHref={`/admin/itineraries/${itinerary.id}`}
                     invoiceHref={`/admin/invoices/new/${itinerary.id}`}
                     onPreview={() => handlePreviewHTML(itinerary.id)}
                     onDownload={() => handleGenerateHTML(itinerary.id)}

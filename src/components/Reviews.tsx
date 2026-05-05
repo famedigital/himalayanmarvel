@@ -3,6 +3,7 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { Star, Quote, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useState } from 'react';
+import { getYearsOfServiceString } from '@/lib/utils/years-of-service';
 
 const reviews = [
   {
@@ -28,6 +29,9 @@ const reviews = [
 export default function Reviews() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [direction, setDirection] = useState(0);
+
+  // Auto-calculate years of service
+  const yearsOfService = getYearsOfServiceString();
 
   const handleNext = () => {
     setDirection(1);
@@ -132,7 +136,7 @@ export default function Reviews() {
         {/* Stats */}
         <div className="grid grid-cols-3 gap-6 mt-16 max-w-lg mx-auto">
           {[
-            { value: '12+', label: 'Years Excellence' },
+            { value: yearsOfService, label: 'Years Excellence' },
             { value: '4.9', label: 'Avg. Rating' },
             { value: '100%', label: 'Satisfaction' },
           ].map((stat, index) => (

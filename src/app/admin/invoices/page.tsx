@@ -173,6 +173,13 @@ export default function InvoicesPage() {
                     </td>
                     <td className="px-3 py-2">
                       <div className="flex items-center justify-end gap-1">
+                        <Link
+                          href={`/admin/invoices/${invoice.id}`}
+                          className="p-1.5 rounded bg-blue-100 hover:bg-blue-200 text-blue-700 transition-colors"
+                          title="Edit Payment"
+                        >
+                          <Receipt className="w-3 h-3" />
+                        </Link>
                         <button
                           type="button"
                           onClick={async () => {
@@ -204,15 +211,6 @@ export default function InvoicesPage() {
                         >
                           <Download className="w-3 h-3" />
                         </button>
-                        {invoice.itineraries && (
-                          <Link
-                            href={`/admin/invoices/new/${invoice.itineraries.id}`}
-                            className="p-1 rounded bg-muted hover:bg-muted/80 text-foreground transition-colors"
-                            title="Edit"
-                          >
-                            <Receipt className="w-3 h-3" />
-                          </Link>
-                        )}
                       </div>
                     </td>
                   </tr>

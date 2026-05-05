@@ -45,31 +45,37 @@ export default function CloudinaryUpload({
   const [showPicker, setShowPicker] = useState(false);
 
   const uploadToCloudinary = async (file: File) => {
+    console.log('[CloudinaryUpload] Starting upload for file:', file.name, 'Size:', file.size);
     setUploading(true);
     setProgress(0);
 
     try {
-      // First, get the upload signature from our API
       const formData = new FormData();
       formData.append('file', file);
       formData.append('folder', folder);
-      formData.append('upload_preset', 'ml_default'); // You can also use unsigned upload preset
+      formData.append('upload_preset', 'ml_default');
 
-      // For signed uploads, we need to go through our API route
+      console.log('[CloudinaryUpload] Uploading to folder:', folder);
+
       const response = await fetch('/api/upload', {
         method: 'POST',
         body: formData,
       });
 
+      console.log('[CloudinaryUpload] Upload response status:', response.status);
+
       if (!response.ok) {
-        throw new Error('Upload failed');
+        const error = await response.json();
+        console.error('[CloudinaryUpload] Upload failed:', error);
+        throw new Error(error.error || 'Upload failed');
       }
 
       const data = await response.json();
+      console.log('[CloudinaryUpload] Upload successful:', data.url);
       onUploadComplete(data.url);
     } catch (error) {
-      console.error('Upload error:', error);
-      alert('Upload failed. Please try again.');
+      console.error('[CloudinaryUpload] Upload error:', error);
+      alert(`Upload failed: ${error instanceof Error ? error.message : 'Please try again.'}`);
     } finally {
       setUploading(false);
       setProgress(0);
@@ -125,8 +131,14 @@ export default function CloudinaryUpload({
           {/* Browse Button to Change Image */}
           {enableBrowse && (
             <button
-              onClick={() => setShowPicker(true)}
-              className="w-full mt-2 px-3 py-1.5 text-xs text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 flex items-center justify-center gap-1 border border-blue-300 dark:border-blue-700 rounded hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors"
+              type="button"
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                console.log('[CloudinaryUpload] Opening image picker to change image');
+                setShowPicker(true);
+              }}
+              className="w-full mt-2 px-3 py-1.5 text-xs text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 flex items-center justify-center gap-1 border border-blue-300 dark:border-blue-700 rounded hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors font-medium"
             >
               <FolderOpen className="w-3 h-3" />
               Change Image
@@ -188,11 +200,14 @@ export default function CloudinaryUpload({
         {/* Browse Cloudinary Button */}
         {enableBrowse && !value && (
           <button
+            type="button"
             onClick={(e) => {
+              e.preventDefault();
               e.stopPropagation();
+              console.log('[CloudinaryUpload] Opening image picker for folder:', folder);
               setShowPicker(true);
             }}
-            className="w-full mt-2 px-3 py-2 text-sm text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 flex items-center justify-center gap-2 border border-blue-300 dark:border-blue-700 rounded-lg hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors"
+            className="w-full mt-2 px-3 py-2 text-sm text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 flex items-center justify-center gap-2 border border-blue-300 dark:border-blue-700 rounded-lg hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors font-medium"
           >
             <FolderOpen className="w-4 h-4" />
             Browse Cloudinary

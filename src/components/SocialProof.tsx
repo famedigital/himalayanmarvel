@@ -9,6 +9,7 @@ import { fetchInstagramPosts, type InstagramPost } from '@/lib/instagram';
 import { fetchGoogleReviews, googleReviewToReview, type GoogleReview } from '@/lib/google-reviews';
 import RevealOnScroll from './ui/RevealOnScroll';
 import JsonLd from './seo/JsonLd';
+import { getYearsOfServiceString } from '@/lib/utils/years-of-service';
 
 interface Review {
   id: number;
@@ -208,6 +209,9 @@ export default function SocialProof() {
   const [reviews, setReviews] = useState(FALLBACK_REVIEWS);
   const [isLoadingReviews, setIsLoadingReviews] = useState(false);
   const [instagramPosts, setInstagramPosts] = useState<typeof FALLBACK_POSTS | InstagramPost[]>(FALLBACK_POSTS);
+
+  // Auto-calculate years of service
+  const yearsOfService = getYearsOfServiceString();
   const [isLoadingInstagram, setIsLoadingInstagram] = useState(true);
   const [mounted, setMounted] = useState(false);
   const { theme, resolvedTheme } = useTheme();
@@ -524,7 +528,7 @@ export default function SocialProof() {
               {/* Stats */}
               <div className="grid grid-cols-2 gap-4 mt-8">
                 {[
-                  { value: '13+', label: 'Years Creating Magic', icon: Mountain },
+                  { value: yearsOfService, label: 'Years Creating Magic', icon: Mountain },
                   { value: '4.9', label: 'Average Rating', icon: Star },
                 ].map((stat, index) => (
                   <motion.div

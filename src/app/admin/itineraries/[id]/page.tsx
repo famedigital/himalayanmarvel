@@ -8,11 +8,14 @@
 import { use, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { ArrowLeft, Save, Eye, Plus, Trash2, Loader2, Calendar, Users, CheckCircle, XCircle, Receipt } from 'lucide-react';
+import { ArrowLeft, Save, Eye, Plus, Trash2, Loader2, Calendar, Users, CheckCircle, XCircle, Receipt, Download, User, Car, Hotel, IdCard, FileText, LayoutDashboard, Settings, Briefcase } from 'lucide-react';
 import { generateItineraryHTML, ItineraryData, ItineraryDay } from '@/lib/templates/itinerary-template';
 import CloudinaryUpload from '@/components/admin/CloudinaryUpload';
 import { InvoiceGeneratorModal } from '@/components/admin/InvoiceGeneratorModal';
+import { ItineraryInvoiceManager } from '@/components/admin/ItineraryInvoiceManager';
+import { OperationsAssignmentPanel } from '@/components/admin/OperationsAssignmentPanel';
 import { createClient } from '@/lib/supabase/client';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 interface ItineraryForm {
   id?: string;
@@ -57,7 +60,7 @@ export default function ItineraryFormPage({ params }: { params?: Promise<{ id?: 
   const [loading, setLoading] = useState(!isNew);
   const [saving, setSaving] = useState(false);
   const [previewMode, setPreviewMode] = useState(false);
-  const [activeTab, setActiveTab] = useState<'basics' | 'letter' | 'days' | 'pricing' | 'terms' | 'checklist'>('basics');
+  const [activeTab, setActiveTab] = useState<'basics' | 'letter' | 'days' | 'pricing' | 'terms' | 'checklist' | 'operations'>('basics');
   const [showInvoiceModal, setShowInvoiceModal] = useState(false);
   const [fullItinerary, setFullItinerary] = useState<any>(null);
   const [form, setForm] = useState<ItineraryForm>({
@@ -80,6 +83,19 @@ export default function ItineraryFormPage({ params }: { params?: Promise<{ id?: 
     }
   }, [isNew, itineraryId]);
 
+  // Auto-generate slug from title for new itineraries
+  useEffect(() => {
+    if (isNew && form.title && !form.slug) {
+      const generatedSlug = form.title
+        .toLowerCase()
+        .trim()
+        .replace(/[^\w\s-]/g, '') // Remove special characters
+        .replace(/[\s_-]+/g, '-') // Replace spaces and underscores with hyphens
+        .replace(/^-+|-+$/g, ''); // Remove leading/trailing hyphens
+      setForm(prev => ({ ...prev, slug: generatedSlug }));
+    }
+  }, [isNew, form.title, form.slug]);
+
   const fetchItinerary = async (id: string) => {
     try {
       const supabase = createClient();
@@ -94,12 +110,22 @@ export default function ItineraryFormPage({ params }: { params?: Promise<{ id?: 
       setFullItinerary(data);
       setForm({
         ...data,
-        letter_body: data.letter_body ? JSON.parse(data.letter_body as string) : [''],
+        letter_body: Array.isArray(data.letter_body)
+          ? data.letter_body
+          : (typeof data.letter_body === 'string' ? [data.letter_body] : ['']),
         itinerary_days: data.itinerary_days || [],
-        price_inclusions: data.price_inclusions ? JSON.parse(data.price_inclusions as string) : undefined,
-        inclusions_list: data.inclusions_list ? JSON.parse(data.inclusions_list as string) : undefined,
-        terms: data.terms_conditions ? JSON.parse(data.terms_conditions as string) : undefined,
-        packing_checklist: data.packing_checklist ? (typeof data.packing_checklist === 'string' ? JSON.parse(data.packing_checklist) : data.packing_checklist) : undefined,
+        price_inclusions: typeof data.price_inclusions === 'string'
+          ? (() => { try { return JSON.parse(data.price_inclusions); } catch { return undefined; } })()
+          : data.price_inclusions,
+        inclusions_list: typeof data.inclusions_list === 'string'
+          ? (() => { try { return JSON.parse(data.inclusions_list); } catch { return undefined; } })()
+          : data.inclusions_list,
+        terms: typeof data.terms_conditions === 'string'
+          ? (() => { try { return JSON.parse(data.terms_conditions); } catch { return undefined; } })()
+          : data.terms_conditions,
+        packing_checklist: typeof data.packing_checklist === 'string'
+          ? (() => { try { return JSON.parse(data.packing_checklist); } catch { return undefined; } })()
+          : data.packing_checklist,
       });
     } catch (error) {
       console.error('Error fetching itinerary:', error);
@@ -147,7 +173,7 @@ export default function ItineraryFormPage({ params }: { params?: Promise<{ id?: 
       setSaving(true);
 
       // Generate HTML template
-      const itineraryTemplate = await generateItineraryHTML({
+      const itineraryTemplate = generateItineraryHTML({
         title: form.title,
         subtitle: form.subtitle,
         guest_name: form.guest_name,
@@ -195,7 +221,7 @@ export default function ItineraryFormPage({ params }: { params?: Promise<{ id?: 
         packing_checklist: form.packing_checklist ? JSON.stringify(form.packing_checklist) : null,
       };
 
-      const url = isNew ? '/api/admin/itineraries' : `/api/admin/itineraries/${itineraryId}`;
+      const url = isNew ? '/admin/api/itineraries' : `/admin/api/itineraries/${itineraryId}`;
       const method = isNew ? 'POST' : 'PUT';
 
       const response = await fetch(url, {
@@ -220,27 +246,51 @@ export default function ItineraryFormPage({ params }: { params?: Promise<{ id?: 
   };
 
   const handlePreview = async () => {
-    const html = await generateItineraryHTML({
-      title: form.title,
-      subtitle: form.subtitle,
-      guest_name: form.guest_name,
-      duration_days: form.duration_days,
-      duration_nights: form.duration_nights,
-      start_date: form.start_date,
-      end_date: form.end_date,
-      destinations: form.destinations,
-      cover_image_url: form.cover_image_url,
-      letter_date: form.letter_date,
-      letter_salutation: form.letter_salutation,
-      letter_body: form.letter_body,
-      days: form.itinerary_days,
-      total_price: form.total_price,
-      terms: form.terms,
-      packing_checklist: form.packing_checklist,
-    } as ItineraryData);
-    const blob = new Blob([html], { type: 'text/html' });
-    const url = URL.createObjectURL(blob);
-    window.open(url, '_blank');
+    if (!itineraryId) {
+      alert('Please save the itinerary first before previewing.');
+      return;
+    }
+    try {
+      const response = await fetch(`/api/itineraries/${itineraryId}/html`);
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || 'Failed to generate HTML');
+      }
+      const html = await response.text();
+      const blob = new Blob([html], { type: 'text/html' });
+      const url = URL.createObjectURL(blob);
+      window.open(url, '_blank');
+    } catch (error) {
+      console.error('Preview failed:', error);
+      alert(`Failed to preview HTML: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    }
+  };
+
+  const handleDownload = async () => {
+    if (!itineraryId) {
+      alert('Please save the itinerary first before downloading.');
+      return;
+    }
+    try {
+      const response = await fetch(`/api/itineraries/${itineraryId}/html`);
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || 'Failed to generate HTML');
+      }
+      const html = await response.text();
+      const blob = new Blob([html], { type: 'text/html' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `itinerary-${form.title.replace(/\s+/g, '-')}.html`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error('Download failed:', error);
+      alert(`Failed to download HTML: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    }
   };
 
   const handleStatusChange = async (newStatus: 'draft' | 'final' | 'cancelled') => {
@@ -273,12 +323,14 @@ export default function ItineraryFormPage({ params }: { params?: Promise<{ id?: 
 
   // Tabs
   const tabs = [
-    { id: 'basics' as const, label: 'Basics', icon: Users },
-    { id: 'letter' as const, label: 'Letter', icon: Eye },
+    { id: 'basics' as const, label: 'Overview', icon: LayoutDashboard },
+    { id: 'letter' as const, label: 'Letter', icon: FileText },
     { id: 'days' as const, label: 'Days', icon: Calendar },
     { id: 'pricing' as const, label: 'Pricing', icon: Save },
-    { id: 'terms' as const, label: 'Terms', icon: Eye },
-    { id: 'checklist' as const, label: 'Checklist', icon: Eye },
+    { id: 'terms' as const, label: 'Terms', icon: FileText },
+    { id: 'checklist' as const, label: 'Checklist', icon: FileText },
+    { id: 'operations' as const, label: 'Operations', icon: Briefcase },
+    { id: 'invoices' as const, label: 'Invoices', icon: Receipt },
   ];
 
   return (
@@ -288,17 +340,27 @@ export default function ItineraryFormPage({ params }: { params?: Promise<{ id?: 
         <div className="flex items-center gap-4">
           <Link
             href="/admin/itineraries"
-            className="inline-flex items-center gap-2 text-gray-700 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white"
+            className="inline-flex items-center justify-center w-10 h-10 rounded-xl bg-gradient-to-br from-gray-100 to-gray-200 hover:from-gray-200 hover:to-gray-300 dark:from-gray-800 dark:to-gray-700 transition-all duration-200 border border-gray-300 dark:border-gray-600 shadow-sm"
           >
-            <ArrowLeft className="w-4 h-4" />
-            Back to Itineraries
+            <ArrowLeft className="w-5 h-5 text-gray-700 dark:text-gray-300" strokeWidth={2} />
           </Link>
           <div>
-            <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
+            <h1 className="text-3xl font-bold bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 dark:from-white dark:via-gray-100 dark:to-white bg-clip-text text-transparent bg-[length:var(--tw-gradient-to-r)] from-0% via-50% to-100% bg-[length:var(--tw-from-pos)] bg-[length:var(--tw-to-pos)]">
               {isNew ? 'Create New Itinerary' : form.title}
             </h1>
-            <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">
-              {isNew ? 'Create a new tour itinerary' : 'Edit itinerary details'}
+            <p className="mt-1.5 text-sm text-gray-600 dark:text-gray-400 font-medium flex items-center gap-2">
+              {isNew ? 'Craft a new tour itinerary' : 'Manage your itinerary'}
+              {form.status && (
+                <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold border ${
+                  form.status === 'draft'
+                    ? 'bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-950/20 dark:text-amber-400 dark:border-amber-800'
+                    : form.status === 'final'
+                    ? 'bg-green-50 text-green-700 border-green-200 dark:bg-green-950/20 dark:text-green-400 dark:border-green-800'
+                    : 'bg-gray-100 text-gray-700 border-gray-200 dark:bg-gray-800 dark:text-gray-400'
+                }`}>
+                  {form.status === 'draft' ? 'Draft' : form.status === 'final' ? 'Final' : form.status}
+                </span>
+              )}
             </p>
           </div>
         </div>
@@ -309,48 +371,55 @@ export default function ItineraryFormPage({ params }: { params?: Promise<{ id?: 
               {form.status === 'draft' && (
                 <button
                   onClick={() => handleStatusChange('final')}
-                  className="inline-flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700"
+                  className="group inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-emerald-500 to-emerald-600 text-white rounded-xl hover:from-emerald-600 hover:to-emerald-700 transition-all duration-200 shadow-lg shadow-emerald-500/30 font-semibold"
                   title="Mark as accepted by client"
                 >
-                  <CheckCircle className="w-4 h-4" />
-                  Accept
+                  <CheckCircle className="w-4 h-4" strokeWidth={2} />
+                  <span>Accept</span>
                 </button>
               )}
               {(form.status === 'draft' || form.status === 'final') && (
                 <button
                   onClick={() => handleStatusChange('cancelled')}
-                  className="inline-flex items-center gap-2 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700"
+                  className="group inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-red-500 to-rose-600 text-white rounded-xl hover:from-red-600 hover:to-rose-700 transition-all duration-200 shadow-lg shadow-red-500/30 font-semibold"
                   title="Cancel this itinerary"
                 >
-                  <XCircle className="w-4 h-4" />
-                  Cancel
+                  <XCircle className="w-4 h-4" strokeWidth={2} />
+                  <span>Cancel</span>
                 </button>
               )}
               {/* Invoice Button */}
               <button
                 onClick={() => setShowInvoiceModal(true)}
-                className="inline-flex items-center gap-2 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700"
+                className="group inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-purple-500 to-purple-600 text-white rounded-xl hover:from-purple-600 hover:to-purple-700 transition-all duration-200 shadow-lg shadow-purple-500/30 font-semibold"
                 title="Generate invoice for this itinerary"
               >
-                <Receipt className="w-4 h-4" />
-                Generate Invoice
+                <Receipt className="w-4 h-4" strokeWidth={2} />
+                <span>Generate Invoice</span>
               </button>
             </>
           )}
           <button
             onClick={handlePreview}
-            className="inline-flex items-center gap-2 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700"
+            className="group inline-flex items-center gap-2 px-5 py-2.5 bg-white border-2 border-gray-200 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-800 transition-all duration-200 font-semibold shadow-sm"
           >
-            <Eye className="w-4 h-4" />
-            Preview
+            <Eye className="w-4 h-4" strokeWidth={2} />
+            <span>Preview</span>
+          </button>
+          <button
+            onClick={handleDownload}
+            className="group inline-flex items-center gap-2 px-5 py-2.5 bg-white border-2 border-gray-200 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-800 transition-all duration-200 font-semibold shadow-sm"
+          >
+            <Download className="w-4 h-4" strokeWidth={2} />
+            <span>Download</span>
           </button>
           <button
             onClick={handleSave}
             disabled={saving}
-            className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50"
+            className="group inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-xl hover:from-blue-700 hover:to-blue-800 disabled:opacity-50 transition-all duration-200 shadow-lg shadow-blue-600/30 font-semibold"
           >
-            {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
-            {saving ? 'Saving...' : 'Save Itinerary'}
+            {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" strokeWidth={2} />}
+            {saving ? <span>Saving...</span> : <span>Save Itinerary</span>}
           </button>
         </div>
       </div>
@@ -798,6 +867,20 @@ export default function ItineraryFormPage({ params }: { params?: Promise<{ id?: 
             </div>
           </div>
         )}
+
+        {activeTab === 'operations' && (
+          <OperationsTabContent itineraryId={itineraryId} guestName={form.guest_name} />
+        )}
+
+        {activeTab === 'invoices' && (
+          <div className="space-y-6">
+            <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Invoices & Payments</h2>
+            <ItineraryInvoiceManager
+              itineraryId={itineraryId}
+              itinerary={form}
+            />
+          </div>
+        )}
       </div>
 
       {/* Status & Publish */}
@@ -840,6 +923,134 @@ export default function ItineraryFormPage({ params }: { params?: Promise<{ id?: 
           itinerary={fullItinerary}
         />
       )}
+    </div>
+  );
+}
+
+// Operations Tab Component
+function OperationsTabContent({ itineraryId, guestName }: { itineraryId?: string; guestName: string }) {
+  const [loading, setLoading] = useState(true);
+  const [booking, setBooking] = useState<any>(null);
+
+  useEffect(() => {
+    if (itineraryId) {
+      checkForBooking();
+    }
+  }, [itineraryId]);
+
+  const checkForBooking = async () => {
+    try {
+      const supabase = createClient();
+      const { data } = await supabase
+        .from('bookings')
+        .select('*')
+        .eq('itinerary_id', itineraryId)
+        .single();
+
+      setBooking(data);
+    } catch (error) {
+      console.error('Error checking for booking:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center py-12">
+        <Loader2 className="w-6 h-6 animate-spin text-gray-400" />
+      </div>
+    );
+  }
+
+  if (!booking) {
+    return (
+      <div className="text-center py-12 bg-gradient-to-br from-blue-50 to-purple-50 dark:from-blue-950/20 dark:to-purple-950/20 rounded-lg border border-blue-200 dark:border-blue-800">
+        <Receipt className="w-16 h-16 mx-auto mb-4 text-blue-600 dark:text-blue-400" />
+        <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">
+          Create Booking First
+        </h3>
+        <p className="text-gray-600 dark:text-gray-400 text-sm mb-4">
+          Generate an invoice to create a confirmed booking for {guestName}
+        </p>
+        <button
+          onClick={() => {
+            if (itineraryId) {
+              window.location.href = `/admin/itineraries/${itineraryId}`;
+            }
+          }}
+          className="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-semibold"
+        >
+          <Receipt className="w-4 h-4" />
+          Generate Invoice
+        </button>
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-6">
+      <div className="text-center py-6 bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-950/20 dark:to-emerald-950/20 rounded-lg border border-green-200 dark:border-green-800">
+        <Receipt className="w-16 h-16 mx-auto mb-4 text-green-600 dark:text-green-400" />
+        <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">
+          Confirmed Booking for {guestName}
+        </h3>
+        <p className="text-gray-600 dark:text-gray-400 text-sm mb-1">
+          Status: <span className="font-semibold text-green-700 dark:text-green-400">{booking.status}</span>
+        </p>
+        <p className="text-gray-600 dark:text-gray-400 text-sm">
+          Travel Date: {booking.travel_date ? new Date(booking.travel_date).toLocaleDateString() : 'TBD'}
+        </p>
+        <Link
+          href={`/admin/operations/${booking.id}`}
+          className="inline-flex items-center gap-2 px-6 py-3 bg-orange-600 text-white rounded-lg hover:bg-orange-700 font-semibold mt-4"
+        >
+          Manage Operations
+          <Receipt className="w-4 h-4" />
+        </Link>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
+        <div className="bg-white dark:bg-gray-800 rounded-lg p-4 border border-gray-200 dark:border-gray-700 hover:shadow-lg transition-shadow cursor-pointer">
+          <User className="w-8 h-8 text-blue-600 mb-3" />
+          <h4 className="font-semibold text-gray-900 dark:text-gray-100 mb-1">Guides</h4>
+          <p className="text-xs text-gray-600 dark:text-gray-400">
+            {booking.guide_details ? 'Assigned' : 'Not assigned'}
+          </p>
+        </div>
+
+        <div className="bg-white dark:bg-gray-800 rounded-lg p-4 border border-gray-200 dark:border-gray-700 hover:shadow-lg transition-shadow cursor-pointer">
+          <Car className="w-8 h-8 text-green-600 mb-3" />
+          <h4 className="font-semibold text-gray-900 dark:text-gray-100 mb-1">Transport</h4>
+          <p className="text-xs text-gray-600 dark:text-gray-400">
+            {booking.car_details ? 'Assigned' : 'Not assigned'}
+          </p>
+        </div>
+
+        <div className="bg-white dark:bg-gray-800 rounded-lg p-4 border border-gray-200 dark:border-gray-700 hover:shadow-lg transition-shadow cursor-pointer">
+          <Hotel className="w-8 h-8 text-purple-600 mb-3" />
+          <h4 className="font-semibold text-gray-900 dark:text-gray-100 mb-1">Hotels</h4>
+          <p className="text-xs text-gray-600 dark:text-gray-400">
+            {booking.hotel_details ? 'Booked' : 'Not booked'}
+          </p>
+        </div>
+
+        <div className="bg-white dark:bg-gray-800 rounded-lg p-4 border border-gray-200 dark:border-gray-700 hover:shadow-lg transition-shadow cursor-pointer">
+          <IdCard className="w-8 h-8 text-orange-600 mb-3" />
+          <h4 className="font-semibold text-gray-900 dark:text-gray-100 mb-1">Passports</h4>
+          <p className="text-xs text-gray-600 dark:text-gray-400">
+            Track documents
+          </p>
+        </div>
+
+        <div className="bg-white dark:bg-gray-800 rounded-lg p-4 border border-gray-200 dark:border-gray-700 hover:shadow-lg transition-shadow cursor-pointer">
+          <FileText className="w-8 h-8 text-red-600 mb-3" />
+          <h4 className="font-semibold text-gray-900 dark:text-gray-100 mb-1">Permits</h4>
+          <p className="text-xs text-gray-600 dark:text-gray-400">
+            Track applications
+          </p>
+        </div>
+      </div>
     </div>
   );
 }

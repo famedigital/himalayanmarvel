@@ -389,9 +389,6 @@ export function ConciergeInquiryElite() {
                         e.currentTarget.style.borderBottomWidth = '1px';
                       }}
                     />
-                    <p className="text-xs mt-1" style={{ color: isDark ? 'rgba(247, 247, 242, 0.4)' : 'rgba(26, 26, 26, 0.4)' }}>
-                      👉 Helps you qualify instantly
-                    </p>
                   </div>
 
                   {/* Number of Travelers */}
@@ -424,9 +421,6 @@ export function ConciergeInquiryElite() {
                       <option value="5-8" style={{ color: '#1A1A1A', background: '#FFFFFF' }}>5-8 Travelers (Family/Group)</option>
                       <option value="9+" style={{ color: '#1A1A1A', background: '#FFFFFF' }}>9+ Travelers (Large Group)</option>
                     </select>
-                    <p className="text-xs mt-1" style={{ color: isDark ? 'rgba(247, 247, 242, 0.4)' : 'rgba(26, 26, 26, 0.4)' }}>
-                      👉 Key for pricing
-                    </p>
                   </div>
 
                   {/* Country of Passport */}

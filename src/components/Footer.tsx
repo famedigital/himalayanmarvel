@@ -6,10 +6,9 @@ import RevealOnScroll from './ui/RevealOnScroll';
 
 const footerLinks = {
   explore: [
-    { name: 'Tour Packages', href: '/tours' },
     { name: 'Cultural Journeys', href: '/tours?type=cultural' },
-    { name: 'Spiritual Retreats', href: '/tours?type=spiritual' },
-    { name: 'Himalayan Treks', href: '/tours?type=trek' },
+    { name: 'Spiritual Journeys', href: '/tours?type=spiritual' },
+    { name: 'Himalayan Treks & Expeditions', href: '/tours?type=trek' },
   ],
   company: [
     { name: 'About Us', href: '/about' },
@@ -71,7 +70,7 @@ export default function Footer() {
               &ldquo;Happiness is a place&rdquo; &mdash; Bhutanese proverb
             </p>
             <motion.a
-              href="#contact"
+              href="mailto:info@himalayanmarvels.com"
               whileHover={{ y: -2, borderColor: 'rgba(212, 175, 55, 0.5)', backgroundColor: 'rgba(0, 104, 56, 0.15)' }}
               whileTap={{ scale: 0.98 }}
               className="inline-flex items-center gap-3 px-10 py-4 rounded-full text-white text-base font-medium tracking-wide transition-all"

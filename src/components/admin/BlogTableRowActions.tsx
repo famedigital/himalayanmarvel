@@ -4,7 +4,9 @@ import { useRouter } from 'next/navigation';
 import {
   DropdownMenu,
   DropdownMenuContent,
+  DropdownMenuGroup,
   DropdownMenuItem,
+  DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
@@ -46,40 +48,44 @@ export function BlogTableRowActions({
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger className="h-8 w-8 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted transition-all flex items-center justify-center cursor-pointer outline-hidden">
-        <span className="sr-only">Open menu</span>
-        <MoreHorizontal className="h-3.5 w-3.5" />
+      <DropdownMenuTrigger
+        className="h-9 w-9 inline-flex items-center justify-center rounded-md text-muted-foreground hover:text-foreground hover:bg-accent transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:opacity-50 disabled:pointer-events-none relative z-10"
+        aria-label="Open menu"
+      >
+        {isToggling ? (
+          <Loader2 className="h-4 w-4 animate-spin" />
+        ) : (
+          <MoreHorizontal className="h-4 w-4" />
+        )}
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-40">
-        <div className="px-2 py-1.5 text-[10px] font-semibold uppercase text-muted-foreground">
-          {title}
-        </div>
+      <DropdownMenuContent align="end" className="w-[180px]">
+        <DropdownMenuGroup>
+          <DropdownMenuLabel className="font-normal truncate max-w-[160px]">{title}</DropdownMenuLabel>
+        </DropdownMenuGroup>
         <DropdownMenuSeparator />
 
         {viewHref && (
           <DropdownMenuItem onClick={() => handleNavigate(viewHref)}>
-            <Eye className="mr-2 h-3.5 w-3.5" />
-            <span className="text-xs">View</span>
+            <Eye className="mr-2 h-4 w-4" />
+            View
           </DropdownMenuItem>
         )}
 
         <DropdownMenuItem onClick={() => handleNavigate(editHref)}>
-          <Pencil className="mr-2 h-3.5 w-3.5" />
-          <span className="text-xs">Edit</span>
+          <Pencil className="mr-2 h-4 w-4" />
+          Edit
         </DropdownMenuItem>
 
         <DropdownMenuItem onClick={onTogglePublish} disabled={isToggling}>
-          {isToggling ? (
-            <Loader2 className="mr-2 h-3.5 w-3.5 animate-spin" />
-          ) : isPublished ? (
+          {isPublished ? (
             <>
-              <EyeOff className="mr-2 h-3.5 w-3.5 text-amber-500" />
-              <span className="text-xs">Unpublish</span>
+              <EyeOff className="mr-2 h-4 w-4 text-amber-500" />
+              Unpublish
             </>
           ) : (
             <>
-              <Eye className="mr-2 h-3.5 w-3.5 text-emerald-500" />
-              <span className="text-xs">Publish</span>
+              <Eye className="mr-2 h-4 w-4 text-emerald-500" />
+              Publish
             </>
           )}
         </DropdownMenuItem>
@@ -87,8 +93,8 @@ export function BlogTableRowActions({
         <DropdownMenuSeparator />
 
         <DropdownMenuItem onClick={onDelete} className="text-destructive focus:text-destructive">
-          <Trash2 className="mr-2 h-3.5 w-3.5" />
-          <span className="text-xs">Delete</span>
+          <Trash2 className="mr-2 h-4 w-4" />
+          Delete
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

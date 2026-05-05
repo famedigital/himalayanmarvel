@@ -6,6 +6,7 @@ import Image from 'next/image';
 import { useTheme } from 'next-themes';
 import { LuxuryBadge } from './LuxuryBadge';
 import { cn } from '@/lib/utils';
+import { getYearsOfServiceString } from '@/lib/utils/years-of-service';
 
 /**
  * FounderHero — Trust authority section positioned immediately after hero
@@ -20,6 +21,9 @@ import { cn } from '@/lib/utils';
 export function FounderHero() {
   const { theme, resolvedTheme } = useTheme();
   const isDark = resolvedTheme === 'dark' || theme === 'dark';
+
+  // Auto-calculate years of service
+  const yearsOfService = getYearsOfServiceString();
 
   return (
     <section className="section-luxury relative overflow-hidden">
@@ -80,7 +84,7 @@ export function FounderHero() {
                 transition={{ duration: 0.8, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
                 className="absolute -bottom-8 -right-8 px-8 py-6 rounded-2xl backdrop-blur-xl bg-white/95 dark:bg-neutral-900/95 border border-emerald-100 dark:border-champagne-gold/15 shadow-[0_20px_60px_rgba(0,0,0,0.08)] dark:shadow-[0_20px_60px_rgba(0,0,0,0.5)]"
               >
-                <p className="text-5xl font-display font-bold gradient-text">13+</p>
+                <p className="text-5xl font-display font-bold gradient-text">{yearsOfService}</p>
                 <p
                   className={cn(
                     "text-xs uppercase tracking-[0.2em] font-semibold mt-2 text-neutral-600 dark:text-white/60"
@@ -125,7 +129,7 @@ export function FounderHero() {
                 "
               </div>
               <p className="font-editorial text-2xl md:text-3xl leading-relaxed pl-8 text-neutral-800 dark:text-neutral-100">
-                We don&apos;t sell tours. We curate <span className="text-champagne-gold">transformations</span>.
+                We don&apos;t sell tours. We craft journeys into a kingdom where happiness is the true measure of wealth.
               </p>
             </motion.blockquote>
 
@@ -158,7 +162,7 @@ export function FounderHero() {
               <div>
                 <p className="text-xs uppercase tracking-[0.2em] font-semibold mb-3 flex items-center gap-2 text-neutral-400 dark:text-neutral-500">
                   <Award className="w-4 h-4 text-champagne-gold" />
-                  Luxury hotel partner
+                  Luxury Hotel Experience
                 </p>
                 <div className="flex flex-wrap gap-4">
                   {['The Ritz-Carlton', 'Hyatt', 'Kempinski', 'Six Senses'].map((brand, index) => (

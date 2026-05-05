@@ -57,7 +57,7 @@ export function TripAdvisorVerified() {
             </div>
 
             <p className="text-lg text-neutral-600 dark:text-neutral-400">
-              Based on 15 verified reviews on Google
+              Based on Verified Google Reviews
             </p>
           </div>
 

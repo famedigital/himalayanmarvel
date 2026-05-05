@@ -7,6 +7,7 @@ import Header from '@/components/admin/Header';
 import { usePathname, useRouter } from 'next/navigation';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Toaster } from '@/components/ui/sonner';
+import './globals.css';
 
 function LoadingSkeleton() {
   return (
