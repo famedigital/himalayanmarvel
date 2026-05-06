@@ -96,7 +96,8 @@ export default function TourCategoriesManager({ initialCategories }: TourCategor
       }
     } catch (error) {
       console.error('Save failed:', error);
-      alert(`Failed to save: ${error.message}`);
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
+      alert(`Failed to save: ${errorMessage}`);
     } finally {
       setSaving(false);
     }

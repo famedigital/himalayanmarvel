@@ -61,7 +61,7 @@ export default function HeroManager({ initialSlides, initialSettingId = null }: 
   };
 
   const setPrimarySlide = (id: string) => {
-    setSlides(slides.map(s => ({
+    setSlides(prevSlides => prevSlides.map(s => ({
       ...s,
       isPrimary: s.id === id
     })));
