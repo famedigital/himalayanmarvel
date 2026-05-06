@@ -9,6 +9,7 @@ import ToursPageEditor from './frontend/ToursPageEditor';
 import FooterEditor from './frontend/FooterEditor';
 import { createClient } from '@/lib/supabase/client';
 import { toast } from 'sonner';
+import { ArrowRight } from 'lucide-react';
 
 interface FrontendContentManagerProps {
   initialContent: any[];
@@ -156,19 +157,37 @@ export default function FrontendContentManager({
 
           <TabsContent value="hero" className="mt-0">
             <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800 p-8 shadow-sm">
-              <h2 className="text-2xl font-bold mb-4 text-gray-900 dark:text-white">Hero Slides</h2>
-              <p className="text-gray-600 dark:text-gray-400">
-                Hero slider management coming soon...
-              </p>
+              <div className="text-center">
+                <h2 className="text-2xl font-bold mb-4 text-gray-900 dark:text-white">Hero Slider Management</h2>
+                <p className="text-gray-600 dark:text-gray-400 mb-6">
+                  Manage homepage hero slides, videos, and all hero content.
+                </p>
+                <a
+                  href="/admin/hero"
+                  className="inline-flex items-center gap-2 px-6 py-3 bg-amber-500 text-white rounded-lg hover:bg-amber-600 transition-colors font-medium"
+                >
+                  Go to Hero Manager
+                  <ArrowRight className="w-4 h-4" />
+                </a>
+              </div>
             </div>
           </TabsContent>
 
           <TabsContent value="categories" className="mt-0">
             <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800 p-8 shadow-sm">
-              <h2 className="text-2xl font-bold mb-4 text-gray-900 dark:text-white">Tour Categories</h2>
-              <p className="text-gray-600 dark:text-gray-400">
-                Tour category management coming soon...
-              </p>
+              <div className="text-center">
+                <h2 className="text-2xl font-bold mb-4 text-gray-900 dark:text-white">Tour Categories Management</h2>
+                <p className="text-gray-600 dark:text-gray-400 mb-6">
+                  Manage tour categories, pricing, and availability.
+                </p>
+                <a
+                  href="/admin/tour-categories"
+                  className="inline-flex items-center gap-2 px-6 py-3 bg-amber-500 text-white rounded-lg hover:bg-amber-600 transition-colors font-medium"
+                >
+                  Go to Tour Categories Manager
+                  <ArrowRight className="w-4 h-4" />
+                </a>
+              </div>
             </div>
           </TabsContent>
         </div>

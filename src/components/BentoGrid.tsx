@@ -80,137 +80,110 @@ export default function BentoGrid() {
   return (
     <section
       id="tours"
-      className="section-padding"
-      style={{ backgroundColor: isDark ? '#0E140E' : '#F7F7F2' }}
+      className="py-12 md:py-16 px-4 md:px-6 bg-gradient-to-b from-slate-950 via-neutral-900 to-slate-950"
     >
-      <div className="container-premium">
-        {/* Section Header */}
-        <RevealOnScroll className="text-center mb-16">
-          <div className="flex items-center justify-center gap-3 mb-4">
-            <div className="w-8 h-px" style={{ backgroundColor: '#D4AF37' }} />
-            <span
-              className="text-[0.65rem] font-semibold tracking-[0.3em] uppercase"
-              style={{ color: '#D4AF37' }}
-            >
+      <div className="container-luxury max-w-6xl mx-auto">
+        {/* Compact header */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+          className="text-center mb-8 md:mb-10"
+        >
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full mb-4 backdrop-blur-sm border border-amber-500/20 bg-amber-500/5">
+            <div className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse" />
+            <span className="text-amber-500 text-[10px] uppercase tracking-[0.2em] font-semibold">
               Journeys
             </span>
-            <div className="w-8 h-px" style={{ backgroundColor: '#D4AF37' }} />
           </div>
-          <h2
-            className="text-4xl md:text-5xl lg:text-6xl font-light mb-6"
-            style={{
-              color: isDark ? '#F7F7F2' : '#1A1A1A',
-              fontFamily: 'var(--font-playfair)',
-            }}
-          >
+
+          <h2 className="font-display text-2xl md:text-4xl lg:text-5xl font-bold text-white mb-2 md:mb-3">
             Curated{' '}
-            <span className="gradient-text">Destinations</span>
+            <span className="bg-gradient-to-r from-amber-200 via-amber-400 to-amber-200 bg-clip-text text-transparent">
+              Destinations
+            </span>
           </h2>
-          <p
-            className="text-lg max-w-2xl mx-auto leading-relaxed"
-            style={{ color: isDark ? 'rgba(247,247,242,0.45)' : 'rgba(26,26,26,0.5)' }}
-          >
+
+          <p className="text-xs md:text-sm text-neutral-400 max-w-xl mx-auto">
             Every path through the Kingdom is a story waiting to unfold.
           </p>
-        </RevealOnScroll>
+        </motion.div>
 
-        {/* Bento Grid - horizontal scroll on mobile, grid on desktop */}
-        <div className="scroll-snap-x flex md:grid md:grid-cols-3 md:auto-rows-[minmax(280px,auto)] gap-4 -mx-4 md:mx-0 px-4 md:px-0 pb-4 md:pb-0">
-          {tours.map((tour, index) => {
+        {/* Compact bento grid */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4">
+            {tours.map((tour, index) => {
             const isHero = index === 0;
-            const isWide = index === 1 && tours.length > 2;
 
             return (
-              <RevealOnScroll
+              <motion.div
                 key={tour.id}
-                delay={index * 0.1}
-                className={`
-                  flex-shrink-0 w-[85vw] md:w-auto
-                  ${isHero ? 'md:col-span-2 md:row-span-2' : ''}
-                  ${isWide ? 'md:col-span-1' : ''}
-                  snap-start
-                `}
+                initial={{ opacity: 0, scale: 0.95 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+                className={isHero ? 'md:col-span-2 md:row-span-2' : ''}
               >
                 <motion.a
                   href={tour.link}
-                  className="group relative block w-full h-full min-h-[240px] md:min-h-[280px] rounded-2xl overflow-hidden cursor-pointer"
-                  whileHover={{ y: -4 }}
-                  transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-                  style={{
-                    border: '1px solid rgba(212, 175, 55, 0.08)',
-                  }}
+                  className="group relative block w-full h-full min-h-[200px] md:min-h-[280px] rounded-xl md:rounded-2xl overflow-hidden"
+                  whileHover={{ y: -3 }}
+                  transition={{ duration: 0.3 }}
                 >
                   {/* Image */}
-                  <div className="absolute inset-0 overflow-hidden">
-                    <motion.img
+                  <div className="absolute inset-0">
+                    <img
                       src={tour.image}
                       alt={tour.title}
-                      className="w-full h-full object-cover img-editorial transition-transform duration-700 ease-out group-hover:scale-105"
+                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                     />
-                    {/* Gradient Overlay */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-black/20" />
                   </div>
 
                   {/* Content */}
-                  <div className={`relative h-full flex flex-col justify-end ${isHero ? 'p-8 md:p-10' : 'p-6'}`}>
+                  <div className={`relative h-full flex flex-col justify-end p-4 md:p-6 ${isHero ? 'lg:p-8' : ''}`}>
                     {/* Badge */}
-                    <div className="mb-3">
-                      <span
-                        className="inline-block px-3 py-1 text-[0.65rem] uppercase tracking-[0.2em] rounded-full"
-                        style={{
-                          backgroundColor: 'rgba(0, 104, 56, 0.8)',
-                          color: '#F7F7F2',
-                        }}
-                      >
+                    <div className="mb-2 md:mb-3">
+                      <span className="inline-block px-2 py-1 md:px-3 md:py-1.5 text-[9px] md:text-[10px] uppercase tracking-[0.15em] rounded-full bg-emerald-600/90 backdrop-blur-sm text-white">
                         {tour.subtitle}
                       </span>
                     </div>
 
                     {/* Title */}
-                    <h3
-                      className={`font-medium text-white mb-2 ${isHero ? 'text-2xl md:text-3xl lg:text-4xl' : 'text-lg md:text-xl'}`}
-                      style={{ fontFamily: 'var(--font-playfair)' }}
-                    >
+                    <h3 className={`font-display font-bold text-white mb-1 md:mb-2 ${isHero ? 'text-xl md:text-3xl lg:text-4xl' : 'text-base md:text-xl lg:text-2xl'}`}>
                       {tour.title}
                     </h3>
 
-                    {/* Description */}
+                    {/* Description - hero only */}
                     {isHero && (
-                      <p className="text-white/60 text-sm md:text-base mb-4 max-w-lg leading-relaxed">
+                      <p className="text-white/70 text-xs md:text-sm mb-3 md:mb-4 max-w-md leading-relaxed line-clamp-2">
                         {tour.description}
                       </p>
                     )}
 
                     {/* Price + Arrow */}
-                    <div className="flex items-center justify-between mt-2">
-                      <span
-                        className="font-semibold text-sm md:text-base"
-                        style={{ color: '#D4AF37' }}
-                      >
+                    <div className="flex items-center justify-between">
+                      <span className="font-semibold text-amber-400 text-xs md:text-sm">
                         {tour.price}
                       </span>
-                      <motion.div
-                        className="w-10 h-10 rounded-full flex items-center justify-center transition-colors duration-300"
-                        style={{ backgroundColor: 'rgba(0, 104, 56, 0.8)' }}
-                        whileHover={{ backgroundColor: '#006838' }}
-                      >
-                        <ArrowUpRight className="w-4 h-4 text-white" />
-                      </motion.div>
+                      <div className="w-8 h-8 md:w-10 md:h-10 rounded-full bg-amber-500 flex items-center justify-center group-hover:bg-amber-400 transition-colors">
+                        <ArrowUpRight className="w-3 h-3 md:w-4 md:h-4 text-white" />
+                      </div>
                     </div>
                   </div>
 
-                  {/* Hover border accent */}
-                  <div
-                    className="absolute inset-0 rounded-2xl pointer-events-none transition-opacity duration-500 opacity-0 group-hover:opacity-100"
+                  {/* Hover glow */}
+                  <div className="absolute inset-0 rounded-xl md:rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
                     style={{
-                      border: '1px solid rgba(212, 175, 55, 0.2)',
-                      boxShadow: '0 8px 32px rgba(0, 104, 56, 0.15)',
+                      border: '1px solid rgba(212, 175, 55, 0.3)',
+                      boxShadow: '0 0 30px rgba(212, 175, 55, 0.1)',
                     }}
                   />
                 </motion.a>
-              </RevealOnScroll>
+              </motion.div>
             );
           })}
+          )}
         </div>
       </div>
     </section>

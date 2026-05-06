@@ -2,10 +2,30 @@
 
 import { motion } from 'framer-motion';
 import { Mail, Phone, MessageCircle, Calendar, MapPin, Users } from 'lucide-react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useTheme } from 'next-themes';
 import Image from 'next/image';
 import { LuxuryButton } from './LuxuryButton';
+import { createClient } from '@/lib/supabase/client';
+
+interface ConciergeFormData {
+  title?: string;
+  description?: string;
+  formFields?: Array<{
+    name: string;
+    label: string;
+    type: string;
+    placeholder: string;
+    required: boolean;
+  }>;
+  contactInfo?: {
+    email?: string;
+    phone?: string;
+    whatsapp?: string;
+    responseTime?: string;
+  };
+  successMessage?: string;
+}
 
 /**
  * ConciergeInquiryElite — Premium concierge inquiry system
@@ -17,6 +37,36 @@ import { LuxuryButton } from './LuxuryButton';
 export function ConciergeInquiryElite() {
   const { theme, resolvedTheme } = useTheme();
   const isDark = resolvedTheme === 'dark' || theme === 'dark';
+
+  const [data, setData] = useState<ConciergeFormData>({
+    title: 'Speak With Our',
+    description: 'Every journey begins with a conversation, not a form. Share your vision, and we\'ll craft a journey that\'s exclusively yours.',
+    contactInfo: {
+      email: 'info@himalayanmarvels.com',
+      phone: '+975-77270465',
+      whatsapp: '+975-77270465',
+      responseTime: 'Within 24 hours',
+    },
+    successMessage: 'Thank you! Our concierge will contact you within 24 hours.',
+  });
+
+  const supabase = createClient();
+
+  useEffect(() => {
+    const fetchConciergeData = async () => {
+      const { data: conciergeData } = await supabase
+        .from('settings')
+        .select('value')
+        .eq('key', 'homepage_concierge_form')
+        .single();
+
+      if (conciergeData?.value) {
+        setData(conciergeData.value);
+      }
+    };
+
+    fetchConciergeData();
+  }, [supabase]);
 
   const [formData, setFormData] = useState({
     name: '',
@@ -48,6 +98,10 @@ export function ConciergeInquiryElite() {
       setFormData({ name: '', email: '', whatsapp: '', travelers: '', passportCountry: '', travelMonth: '', vision: '' });
     }, 5000);
   };
+
+  const displayTitle = data.title || 'Speak With Our';
+  const displayDescription = data.description || 'Every journey begins with a conversation, not a form. Share your vision, and we\'ll craft a journey that\'s exclusively yours.';
+  const displaySuccessMessage = data.successMessage || 'Thank you! Our concierge will contact you within 24 hours.';
 
   return (
     <section id="contact" className="section-luxury relative overflow-hidden">

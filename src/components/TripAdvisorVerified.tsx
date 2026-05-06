@@ -3,6 +3,22 @@
 import { motion } from 'framer-motion';
 import { Star, ExternalLink, Award } from 'lucide-react';
 import Link from 'next/link';
+import { useState, useEffect } from 'react';
+import { createClient } from '@/lib/supabase/client';
+
+interface ReviewsData {
+  rating?: number;
+  reviewCount?: number;
+  reviewSource?: string;
+  reviewLink?: string;
+  badgeText?: string;
+  topReviews?: Array<{
+    author: string;
+    rating: number;
+    text: string;
+    date: string;
+  }>;
+}
 
 /**
  * TripAdvisorVerified — Display verified Google rating
@@ -14,6 +30,32 @@ import Link from 'next/link';
  * - Verified badge
  */
 export function TripAdvisorVerified() {
+  const [data, setData] = useState<ReviewsData>({
+    rating: 4.9,
+    reviewCount: 0,
+    reviewSource: 'Google',
+    reviewLink: 'https://share.google/jcfuEHOacCjzAmGaM',
+    badgeText: 'Verified Excellence',
+  });
+
+  const supabase = createClient();
+
+  useEffect(() => {
+    const fetchReviewsData = async () => {
+      const { data: reviewsData } = await supabase
+        .from('settings')
+        .select('value')
+        .eq('key', 'homepage_reviews')
+        .single();
+
+      if (reviewsData?.value) {
+        setData(reviewsData.value);
+      }
+    };
+
+    fetchReviewsData();
+  }, [supabase]);
+
   return (
     <section className="py-16 px-6 bg-gradient-to-b from-alabaster to-white dark:from-dark-forest dark:to-black">
       <div className="max-w-4xl mx-auto">
@@ -38,14 +80,14 @@ export function TripAdvisorVerified() {
           >
             <Award className="w-5 h-5 text-champagne-gold" />
             <span className="text-sm font-semibold tracking-[0.15em] uppercase text-champagne-gold">
-              Verified Excellence
+              {data.badgeText || 'Verified Excellence'}
             </span>
           </motion.div>
 
           {/* Rating */}
           <div className="mb-8">
             <p className="text-7xl md:text-8xl font-display font-bold text-neutral-900 dark:text-white mb-4">
-              4.9
+              {data.rating || 4.9}
               <span className="text-3xl md:text-4xl text-neutral-400 dark:text-neutral-600">/5</span>
             </p>
 
@@ -57,7 +99,9 @@ export function TripAdvisorVerified() {
             </div>
 
             <p className="text-lg text-neutral-600 dark:text-neutral-400">
-              Based on Verified Google Reviews
+              {data.reviewCount && data.reviewCount > 0
+                ? `Based on ${data.reviewCount} Verified ${data.reviewSource || 'Google'} Reviews`
+                : 'Based on Verified Google Reviews'}
             </p>
           </div>
 
@@ -69,16 +113,16 @@ export function TripAdvisorVerified() {
             transition={{ delay: 0.4 }}
           >
             <Link
-              href="https://share.google/jcfuEHOacCjzAmGaM"
+              href={data.reviewLink || 'https://share.google/jcfuEHOacCjzAmGaM'}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-3 px-8 py-4 bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 rounded-full font-semibold tracking-wide hover:shadow-lg transition-all duration-300"
             >
-              <span>Read reviews on Google</span>
+              <span>Read reviews on {data.reviewSource || 'Google'}</span>
               <ExternalLink className="w-5 h-5" />
             </Link>
             <p className="text-sm text-neutral-500 dark:text-neutral-500 mt-4">
-              Official Google Profile — Himalayan Marvels Bhutan
+              Official {data.reviewSource || 'Google'} Profile — Himalayan Marvels Bhutan
             </p>
           </motion.div>
         </motion.div>

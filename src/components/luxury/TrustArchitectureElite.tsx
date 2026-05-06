@@ -6,6 +6,24 @@ import Image from 'next/image';
 import { useTheme } from 'next-themes';
 import { cn } from '@/lib/utils';
 import { useState, useRef, useEffect } from 'react';
+import { createClient } from '@/lib/supabase/client';
+
+interface TrustData {
+  badgeText?: string;
+  badgeIcon?: string;
+  sectionTitle?: string;
+  inclusions?: Array<{ icon?: string; text: string }>;
+  stats?: Array<{ value: number; suffix: string; label: string }>;
+  journeyPackages?: Array<{
+    title: string;
+    description: string;
+    image: string;
+    link: string;
+  }>;
+  socialLinks?: Array<{ platform: string; url: string; icon: string }>;
+  partnerships?: string[]; // Image URLs
+  certifications?: string[]; // Image URLs
+}
 
 /**
  * TrustArchitectureElite — Anchor & Wings Layout
@@ -167,31 +185,60 @@ function PremiumCard({
 export function TrustArchitectureElite() {
   const { theme, resolvedTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
+  const [data, setData] = useState<TrustData>({
+    badgeText: 'Spiritual Journeys',
+    badgeIcon: 'Gem',
+    sectionTitle: 'Curated by',
+    inclusions: [
+      { icon: '', text: 'Private Transport' },
+      { icon: '', text: 'Private Guide' },
+      { icon: '', text: 'Luxury Stays' },
+      { icon: '', text: 'Visa Handling' },
+    ],
+    stats: [
+      { value: 500, suffix: '+', label: 'Travelers' },
+      { value: 4.9, suffix: '/5', label: 'Rating' },
+      { value: 100, suffix: '%', label: 'Happy' },
+    ],
+    journeyPackages: [],
+    socialLinks: [],
+    partnerships: [],
+    certifications: [],
+  });
+
+  const supabase = createClient();
 
   useEffect(() => {
     setMounted(true);
   }, []);
 
+  useEffect(() => {
+    const fetchTrustData = async () => {
+      const { data: trustData } = await supabase
+        .from('settings')
+        .select('value')
+        .eq('key', 'homepage_trust')
+        .single();
+
+      if (trustData?.value) {
+        setData(trustData.value);
+      }
+    };
+
+    if (mounted) {
+      fetchTrustData();
+    }
+  }, [mounted, supabase]);
+
   const isDark = mounted ? (resolvedTheme === 'dark' || theme === 'dark') : true;
-
-  // Inclusions list
-  const inclusions = [
-    { icon: '', text: 'Private Transport' },
-    { icon: '', text: 'Private Guide' },
-    { icon: '', text: 'Luxury Stays' },
-    { icon: '', text: 'Visa Handling' },
-  ];
-
-  // Stats for basement
-  const stats = [
-    { value: 500, suffix: '+', label: 'Travelers' },
-    { value: 4.9, suffix: '/5', label: 'Rating' },
-    { value: 100, suffix: '%', label: 'Happy' },
-  ];
 
   if (!mounted) {
     return null;
   }
+
+  // Use data from state or fallbacks
+  const inclusions = data.inclusions || [];
+  const stats = data.stats || [];
 
   return (
     <section className="relative py-16 md:py-24 overflow-hidden">
@@ -240,7 +287,7 @@ export function TrustArchitectureElite() {
           >
             <Gem className="w-3.5 h-3.5 text-champagne-gold" />
             <span className="text-champagne-gold text-[10px] uppercase tracking-[0.25em] font-semibold">
-              Spiritual Journeys
+              {data.badgeText || 'Spiritual Journeys'}
             </span>
           </motion.div>
 
