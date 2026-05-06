@@ -7,7 +7,7 @@
  * DELETE /api/admin/itineraries/[id] - Delete itinerary
  */
 
-import { createClient } from '@/lib/supabase/client';
+import { createClient } from '@/lib/supabase/server';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET(
@@ -16,7 +16,7 @@ export async function GET(
 ) {
   try {
     const { id } = await params;
-    const supabase = createClient();
+    const supabase = await createClient();
 
     const { data, error } = await supabase
       .from('itineraries')
@@ -59,7 +59,7 @@ export async function PUT(
   try {
     const { id } = await params;
     const body = await request.json();
-    const supabase = createClient();
+    const supabase = await createClient();
 
     // Update slug if title changed and slug not provided
     let slug = body.slug;
@@ -73,41 +73,35 @@ export async function PUT(
 
     const updateData: any = {
       title: body.title,
-      slug,
-      subtitle: body.subtitle,
-      guest_name: body.guest_name,
-      duration_days: body.duration_days,
-      duration_nights: body.duration_nights,
+      subtitle: body.subtitle || null,
+      logo: body.logo || null,
+      guest_names: body.guest_names,
+      no_of_pax: body.no_of_pax || 2,
+      entry_point: body.entry_point || "Paro Airport",
+      exit_point: body.exit_point || "Paro Airport",
       start_date: body.start_date,
       end_date: body.end_date,
-      destinations: body.destinations,
-      cover_title: body.cover_title,
-      cover_subtitle: body.cover_subtitle,
-      cover_image_url: body.cover_image_url,
-      letter_date: body.letter_date,
-      letter_salutation: body.letter_salutation,
-      letter_body: body.letter_body,
-      letter_signature_name: body.letter_signature_name,
-      letter_signature_title: body.letter_signature_title,
-      itinerary_days: body.itinerary_days,
-      total_price: body.total_price,
-      currency: body.currency,
-      price_inclusions: body.price_inclusions,
-      price_exclusions: body.price_exclusions,
-      terms_conditions: body.terms_conditions,
-      packing_checklist: body.packing_checklist,
-      contact_phone: body.contact_phone,
-      contact_email: body.contact_email,
-      contact_website: body.contact_website,
-      itinerary_template: body.itinerary_template,
-      featured_image_url: body.featured_image_url,
-      gallery_images: body.gallery_images,
-      tags: body.tags,
+      cover_image: body.cover_image || null,
+      letter_date: body.letter_date || null,
+      letter_salutation: body.letter_salutation || null,
+      letter_body: body.letter_body || null, // Expect array, not string
+      letter_signature_name: body.letter_signature_name || null,
+      letter_signature_title: body.letter_signature_title || null,
+      pricing: body.pricing || null,
+      terms: body.terms || null,
+      checklist: body.checklist || null,
       status: body.status,
-      is_published: body.is_published,
-      notes: body.notes,
-      internal_notes: body.internal_notes,
+      back_cover: body.back_cover || null,
+      header_footer: body.header_footer || null,
     };
+
+    // Only add fields that exist in the body
+    if (body.itinerary_template !== undefined) updateData.itinerary_template = body.itinerary_template;
+    if (body.featured_image_url !== undefined) updateData.featured_image_url = body.featured_image_url;
+    if (body.gallery_images !== undefined) updateData.gallery_images = body.gallery_images;
+    if (body.tags !== undefined) updateData.tags = body.tags;
+    if (body.notes !== undefined) updateData.notes = body.notes;
+    if (body.internal_notes !== undefined) updateData.internal_notes = body.internal_notes;
 
     const { data, error } = await supabase
       .from('itineraries')
@@ -134,23 +128,32 @@ export async function PUT(
     });
   } catch (error: any) {
     console.error('Error updating itinerary:', error);
+    console.error('Error details:', {
+      message: error.message,
+      code: error.code,
+      details: error.details,
+      hint: error.hint,
+    });
     return NextResponse.json(
       {
         success: false,
         error: error.message || 'Failed to update itinerary',
+        details: error.details,
+        hint: error.hint,
       },
       { status: 500 }
     );
   }
 }
 
+// DELETE handler for removing itineraries
 export async function DELETE(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const { id } = await params;
-    const supabase = createClient();
+    const supabase = await createClient();
 
     const { error } = await supabase
       .from('itineraries')

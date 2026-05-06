@@ -5,6 +5,7 @@ import { ThemeProvider } from '@/components/ThemeProvider';
 import { LayoutWrapper } from '@/components/LayoutWrapper';
 import { QueryProvider } from '@/components/QueryProvider';
 import { NuqsAdapter } from 'nuqs/adapters/next/app';
+import { Toaster } from 'react-hot-toast';
 import { cn } from "@/lib/utils";
 import JsonLd from '@/components/seo/JsonLd';
 
@@ -86,6 +87,9 @@ export default function RootLayout({
             </QueryProvider>
           </NuqsAdapter>
         </ThemeProvider>
+
+        {/* Toast Notifications */}
+        <Toaster position="top-right" />
 
         {/* Global JSON-LD Schema for Rich Snippets */}
         <JsonLd data={{

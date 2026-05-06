@@ -63,6 +63,10 @@ export default function Navigation() {
 
   const isDark = mounted ? (resolvedTheme === 'dark' || theme === 'dark') : true;
 
+  if (!mounted) {
+    return null;
+  }
+
   return (
     <>
       {/* Floating Dock Navigation */}

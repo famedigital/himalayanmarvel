@@ -42,7 +42,7 @@ const defaultTours: TourCategory[] = [
   },
   {
     id: '2',
-    title: 'Spiritual & Wellness Journeys',
+    title: 'Spiritual Journeys',
     subtitle: '8-12 Days',
     description: 'Transformative experiences with meditation, hot stone baths, and private monastery visits.',
     image: 'https://res.cloudinary.com/dxztrqjft/image/upload/v1776291877/dochula_r3uler.jpg',

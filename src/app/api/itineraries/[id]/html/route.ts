@@ -122,7 +122,7 @@ export async function GET(
 
     console.log('[ItineraryHTML] Generating HTML for:', itineraryData.title);
     console.log('[ItineraryHTML] Days count:', itineraryData.days.length);
-    console.log('[ItineraryHTML] Pricing:', itineraryData.pricing);
+    console.log('[ItineraryHTML] Total price:', itineraryData.total_price);
     console.log('[ItineraryHTML] Letter body paragraphs:', itineraryData.letter_body.length);
 
     // Fetch company settings

@@ -1,5 +1,6 @@
 'use client';
 
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Shield, Award } from 'lucide-react';
 import Image from 'next/image';
@@ -20,10 +21,20 @@ import { getYearsOfServiceString } from '@/lib/utils/years-of-service';
  */
 export function FounderHero() {
   const { theme, resolvedTheme } = useTheme();
-  const isDark = resolvedTheme === 'dark' || theme === 'dark';
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const isDark = mounted ? (resolvedTheme === 'dark' || theme === 'dark') : true;
 
   // Auto-calculate years of service
   const yearsOfService = getYearsOfServiceString();
+
+  if (!mounted) {
+    return null;
+  }
 
   return (
     <section className="section-luxury relative overflow-hidden">
@@ -64,7 +75,7 @@ export function FounderHero() {
                 }}
               >
                 <Image
-                  src="https://res.cloudinary.com/dxztrqjft/image/upload/v1776275660/founder-portrait_pbo8m4.jpg"
+                  src="https://res.cloudinary.com/dxztrqjft/image/upload/v1776275660/founder-portrait_pbo8m4.jpg?v=20260506"
                   alt="Bivatsu Giri - Founder"
                   width={600}
                   height={750}

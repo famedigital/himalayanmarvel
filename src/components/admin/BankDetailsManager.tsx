@@ -45,14 +45,56 @@ Currency: USD
 
   const saveSettings = async () => {
     setSaving(true);
-    await supabase
-      .from('settings')
-      .upsert({
-        key: 'bank_details',
-        value: bankDetails,
-        description: 'Bank wire transfer details for payments',
-      });
-    setSaving(false);
+    try {
+      // Check if record exists
+      const { data: existing } = await supabase
+        .from('settings')
+        .select('id')
+        .eq('key', 'bank_details')
+        .single();
+
+      let result;
+
+      if (existing?.id) {
+        // Update existing record
+        result = await supabase
+          .from('settings')
+          .update({
+            value: bankDetails,
+            description: 'Bank wire transfer details for payments',
+            updated_at: new Date().toISOString(),
+          })
+          .eq('id', existing.id);
+
+        if (result.error) {
+          alert(`Failed to save: ${result.error.message}`);
+          return;
+        }
+
+        alert('Bank details updated successfully!');
+      } else {
+        // Insert new record
+        result = await supabase
+          .from('settings')
+          .insert({
+            key: 'bank_details',
+            value: bankDetails,
+            description: 'Bank wire transfer details for payments',
+          });
+
+        if (result.error) {
+          alert(`Failed to save: ${result.error.message}`);
+          return;
+        }
+
+        alert('Bank details created successfully!');
+      }
+    } catch (error) {
+      console.error('Save failed:', error);
+      alert(`Failed to save: ${error.message}`);
+    } finally {
+      setSaving(false);
+    }
   };
 
   if (loading) {

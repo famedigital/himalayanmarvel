@@ -53,7 +53,13 @@ function PremiumCard({
   delay?: number;
 }) {
   const { theme, resolvedTheme } = useTheme();
-  const isDark = resolvedTheme === 'dark' || theme === 'dark';
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const isDark = mounted ? (resolvedTheme === 'dark' || theme === 'dark') : true;
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
   const cardRef = useRef<HTMLDivElement>(null);
@@ -160,7 +166,13 @@ function PremiumCard({
 
 export function TrustArchitectureElite() {
   const { theme, resolvedTheme } = useTheme();
-  const isDark = resolvedTheme === 'dark' || theme === 'dark';
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const isDark = mounted ? (resolvedTheme === 'dark' || theme === 'dark') : true;
 
   // Inclusions list
   const inclusions = [
@@ -176,6 +188,10 @@ export function TrustArchitectureElite() {
     { value: 4.9, suffix: '/5', label: 'Rating' },
     { value: 100, suffix: '%', label: 'Happy' },
   ];
+
+  if (!mounted) {
+    return null;
+  }
 
   return (
     <section className="relative py-16 md:py-24 overflow-hidden">

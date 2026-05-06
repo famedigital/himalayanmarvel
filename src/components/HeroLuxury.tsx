@@ -69,7 +69,10 @@ interface HeroSlide {
  */
 export default function HeroLuxury() {
   const ref = useRef<HTMLElement>(null);
-  const { scrollYProgress } = useScroll({ target: ref, offset: ['start start', 'end start'] });
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ['start start', 'end start']
+  });
   const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
   const scale = useTransform(scrollYProgress, [0, 0.5], [1, 0.95]);
   const { theme, resolvedTheme } = useTheme();
@@ -81,7 +84,9 @@ export default function HeroLuxury() {
 
   useEffect(() => {
     setMounted(true);
+  }, []);
 
+  useEffect(() => {
     const fetchSlides = async () => {
       const { data } = await supabase
         .from('settings')
@@ -102,10 +107,24 @@ export default function HeroLuxury() {
       setLoading(false);
     };
 
-    fetchSlides();
-  }, []);
+    if (mounted) {
+      fetchSlides();
+    }
+  }, [mounted, supabase]);
 
   const isDark = mounted ? (resolvedTheme === 'dark' || theme === 'dark') : true;
+
+  if (!mounted) {
+    return (
+      <section
+        ref={ref}
+        className="relative h-screen w-full overflow-hidden bg-[#0E140E]"
+      >
+        {/* Placeholder to ensure ref is hydrated */}
+        <div className="absolute inset-0 bg-[#0E140E]" />
+      </section>
+    );
+  }
 
   // Auto-calculate years of service
   const yearsOfService = getYearsOfServiceString();

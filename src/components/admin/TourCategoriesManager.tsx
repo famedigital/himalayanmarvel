@@ -51,18 +51,52 @@ export default function TourCategoriesManager({ initialCategories }: TourCategor
   const handleSave = async () => {
     setSaving(true);
     try {
-      await supabase
+      // First check if record exists
+      const { data: existing } = await supabase
         .from('settings')
-        .upsert({
-          key: 'tour_categories',
-          value: categories,
-          updated_at: new Date().toISOString(),
-        });
+        .select('id')
+        .eq('key', 'tour_categories')
+        .single();
 
-      alert('Tour categories saved successfully!');
+      let result;
+
+      if (existing?.id) {
+        // Update existing record
+        result = await supabase
+          .from('settings')
+          .update({
+            value: categories,
+            updated_at: new Date().toISOString(),
+          })
+          .eq('id', existing.id);
+
+        if (result.error) {
+          console.error('Update error:', result.error);
+          alert(`Failed to save: ${result.error.message}`);
+          return;
+        }
+
+        alert('Tour categories updated successfully!');
+      } else {
+        // Insert new record
+        result = await supabase
+          .from('settings')
+          .insert({
+            key: 'tour_categories',
+            value: categories,
+          });
+
+        if (result.error) {
+          console.error('Insert error:', result.error);
+          alert(`Failed to save: ${result.error.message}`);
+          return;
+        }
+
+        alert('Tour categories created successfully!');
+      }
     } catch (error) {
       console.error('Save failed:', error);
-      alert('Failed to save. Please try again.');
+      alert(`Failed to save: ${error.message}`);
     } finally {
       setSaving(false);
     }

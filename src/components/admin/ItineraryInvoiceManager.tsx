@@ -3,6 +3,8 @@
 import { useState, useEffect } from 'react';
 import { Receipt, CreditCard, Calendar, IndianRupee, Check, Clock, AlertCircle, Plus, Save } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
+import { handleAuthError } from '@/lib/supabase/auth-utils';
+import Link from 'next/link';
 
 interface ItineraryInvoiceManagerProps {
   itineraryId: string;
@@ -32,11 +34,19 @@ export function ItineraryInvoiceManager({ itineraryId, itinerary, booking }: Iti
   const fetchInvoices = async () => {
     try {
       const supabase = createClient();
-      const { data } = await supabase
+      const { data, error } = await supabase
         .from('invoices')
         .select('*')
         .eq('itinerary_id', itineraryId)
         .order('created_at', { ascending: false });
+
+      if (error) {
+        // Handle auth errors
+        if (handleAuthError(error)) {
+          return;
+        }
+        throw error;
+      }
 
       setInvoices(data || []);
       if (data && data.length > 0) {
@@ -57,18 +67,27 @@ export function ItineraryInvoiceManager({ itineraryId, itinerary, booking }: Iti
       const supabase = createClient();
 
       // Calculate new payment amount (add to existing)
-      const currentPaid = activeInvoice.payment_amount || 0;
-      const additionalPayment = parseFloat(paymentForm.payment_amount) || 0;
+      const currentPaid = activeInvoice.invoice_data?.payment_amount || 0;
+      const additionalPayment = typeof paymentForm.payment_amount === 'string'
+        ? parseFloat(paymentForm.payment_amount)
+        : paymentForm.payment_amount || 0;
       const newTotalPaid = currentPaid + additionalPayment;
+
+      console.log('💰 PAYMENT UPDATE DEBUG:');
+      console.log('- Invoice ID:', activeInvoice.id);
+      console.log('- Current Paid:', currentPaid);
+      console.log('- Additional Payment:', additionalPayment);
+      console.log('- New Total Paid:', newTotalPaid);
+      console.log('- Payment Status:', paymentForm.payment_status);
 
       // Update invoice_data with payment information (store everything in JSONB)
       const updatedInvoiceData = {
         ...activeInvoice.invoice_data,
+        payment_amount: newTotalPaid,
         payment_status: paymentForm.payment_status,
         payment_method: paymentForm.payment_method,
         payment_date: paymentForm.payment_date,
         payment_notes: paymentForm.payment_notes,
-        payment_amount: newTotalPaid,
         payment_history: [
           ...(activeInvoice.invoice_data?.payment_history || []),
           {
@@ -81,36 +100,30 @@ export function ItineraryInvoiceManager({ itineraryId, itinerary, booking }: Iti
         ]
       };
 
-      // Try to update with payment_amount column first, fall back to just invoice_data
-      const { error: columnError } = await supabase
+      console.log('- Updated Invoice Data:', updatedInvoiceData);
+
+      // Update ONLY the fields that exist in the invoices table
+      // Payment info goes in invoice_data JSONB field
+      const { data, error } = await supabase
         .from('invoices')
         .update({
           invoice_data: updatedInvoiceData,
-          payment_amount: newTotalPaid,
-          payment_status: paymentForm.payment_status,
-          payment_method: paymentForm.payment_method,
-          payment_date: paymentForm.payment_date,
-          payment_notes: paymentForm.payment_notes,
-          status: paymentForm.payment_status === 'paid' ? 'paid' : activeInvoice.status,
+          status: paymentForm.payment_status === 'paid' ? 'paid' : paymentForm.payment_status,
         })
-        .eq('id', activeInvoice.id);
+        .eq('id', activeInvoice.id)
+        .select();
 
-      if (columnError) {
-        console.log('Payment columns not found, storing in invoice_data only');
-        // Fallback: only update invoice_data
-        const { error: fallbackError } = await supabase
-          .from('invoices')
-          .update({
-            invoice_data: updatedInvoiceData,
-            status: paymentForm.payment_status === 'paid' ? 'paid' : activeInvoice.status,
-          })
-          .eq('id', activeInvoice.id);
+      console.log('- Database Update Error:', error);
+      console.log('- Database Update Data:', data);
 
-        if (fallbackError) throw fallbackError;
+      if (error) {
+        console.error('❌ Database Update Failed:', error);
+        throw error;
       }
 
+      console.log('✅ Payment updated successfully, refreshing invoices...');
       await fetchInvoices();
-      alert('Payment information updated successfully!');
+      alert('✅ Payment updated successfully!');
 
       // Reset payment form
       setPaymentForm({
@@ -120,9 +133,15 @@ export function ItineraryInvoiceManager({ itineraryId, itinerary, booking }: Iti
         payment_date: new Date().toISOString().split('T')[0],
         payment_notes: '',
       });
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error updating payment:', error);
-      alert('Failed to update payment information');
+
+      // Handle auth errors by redirecting to login
+      if (handleAuthError(error)) {
+        return;
+      }
+
+      alert(`Failed to update payment information: ${error?.message || 'Unknown error'}`);
     } finally {
       setSaving(false);
     }
@@ -193,7 +212,7 @@ export function ItineraryInvoiceManager({ itineraryId, itinerary, booking }: Iti
                       {invoice.invoice_data?.package_name}
                     </p>
                     <div className="flex items-center gap-3 mt-2">
-                      {getStatusBadge(invoice.payment_status || 'pending')}
+                      {getStatusBadge(invoice.invoice_data?.payment_status || invoice.status || 'pending')}
                       <span className="text-xs text-gray-500">
                         {new Date(invoice.created_at).toLocaleDateString()}
                       </span>
@@ -236,14 +255,14 @@ export function ItineraryInvoiceManager({ itineraryId, itinerary, booking }: Iti
               <div className="p-4 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-950/20 dark:to-indigo-950/20 rounded-lg border border-blue-200 dark:border-blue-800">
                 <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">Amount Paid</p>
                 <p className="text-2xl font-bold text-blue-900 dark:text-blue-100">
-                  {activeInvoice.invoice_data?.currency_symbol || '₹'}{(activeInvoice.payment_amount || activeInvoice.invoice_data?.payment_amount || 0).toLocaleString('en-IN')}
+                  {activeInvoice.invoice_data?.currency_symbol || '₹'}{(activeInvoice.invoice_data?.payment_amount || 0).toLocaleString('en-IN')}
                 </p>
               </div>
 
               <div className="p-4 bg-gradient-to-r from-amber-50 to-orange-50 dark:from-amber-950/20 dark:to-orange-950/20 rounded-lg border border-amber-200 dark:border-orange-800">
                 <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">Balance Due</p>
                 <p className="text-2xl font-bold text-amber-900 dark:text-amber-100">
-                  {activeInvoice.invoice_data?.currency_symbol || '₹'}{Math.max(0, (activeInvoice.invoice_data?.total_amount || 0) - (activeInvoice.payment_amount || activeInvoice.invoice_data?.payment_amount || 0)).toLocaleString('en-IN')}
+                  {activeInvoice.invoice_data?.currency_symbol || '₹'}{Math.max(0, (activeInvoice.invoice_data?.total_amount || 0) - (activeInvoice.invoice_data?.payment_amount || 0)).toLocaleString('en-IN')}
                 </p>
               </div>
             </div>

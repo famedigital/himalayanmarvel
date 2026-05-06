@@ -14,5 +14,24 @@ export const createClient = () => {
     throw new Error('Missing Supabase environment variables');
   }
 
-  return createBrowserClient(supabaseUrl, supabaseKey);
+  const client = createBrowserClient(supabaseUrl, supabaseKey, {
+    auth: {
+      persistSession: true,
+      autoRefreshToken: true,
+      detectSessionInUrl: true,
+      storage: window.localStorage,
+      storageKey: 'himalayanmarvels-auth-token',
+    },
+  });
+
+  // Handle auth errors silently
+  client.auth.onAuthStateChange((event, session) => {
+    if (event === 'TOKEN_REFRESHED') {
+      console.log('Session refreshed successfully');
+    } else if (event === 'SIGNED_OUT') {
+      console.log('User signed out');
+    }
+  });
+
+  return client;
 };

@@ -1,8 +1,10 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { X, Download, Share2, Loader2, FileText, IndianRupee, Calendar, Users, MapPin, Sparkles, Eye } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { X, Download, Share2, Loader2, FileText, IndianRupee, Calendar, Users, MapPin, Sparkles, Eye, Check } from 'lucide-react';
 import { generateItineraryInvoiceHTML, generateInvoiceDataFromItinerary, ItineraryInvoiceData } from '@/lib/templates/invoice-html-generator';
+import { createClient } from '@/lib/supabase/client';
 
 interface InvoiceGeneratorModalProps {
   isOpen: boolean;
@@ -11,6 +13,7 @@ interface InvoiceGeneratorModalProps {
 }
 
 export function InvoiceGeneratorModal({ isOpen, onClose, itinerary }: InvoiceGeneratorModalProps) {
+  const router = useRouter();
   const [invoiceData, setInvoiceData] = useState<ItineraryInvoiceData | null>(null);
   const [generating, setGenerating] = useState(false);
   const [previewMode, setPreviewMode] = useState(false);
@@ -18,6 +21,7 @@ export function InvoiceGeneratorModal({ isOpen, onClose, itinerary }: InvoiceGen
   const [previewLoading, setPreviewLoading] = useState(false);
   const [shareLink, setShareLink] = useState<string | null>(null);
   const [generatingLink, setGeneratingLink] = useState(false);
+  const [savingInvoice, setSavingInvoice] = useState(false);
 
   useEffect(() => {
     if (isOpen && itinerary) {
@@ -66,6 +70,47 @@ export function InvoiceGeneratorModal({ isOpen, onClose, itinerary }: InvoiceGen
   const handleFieldChange = (field: keyof ItineraryInvoiceData, value: any) => {
     if (invoiceData) {
       setInvoiceData({ ...invoiceData, [field]: value });
+    }
+  };
+
+  const handleGenerateInvoice = async () => {
+    if (!invoiceData) return;
+
+    setSavingInvoice(true);
+    try {
+      const supabase = createClient();
+
+      // Generate share token
+      const shareToken = Math.random().toString(36).substring(2, 15) +
+                        Math.random().toString(36).substring(2, 15);
+
+      // Save invoice to database
+      const { data, error } = await supabase
+        .from('invoices')
+        .insert({
+          itinerary_id: itinerary.id,
+          invoice_number: invoiceData.invoice_number,
+          invoice_data: invoiceData,
+          share_token: shareToken,
+          status: 'sent',
+        })
+        .select('id')
+        .single();
+
+      if (error) throw error;
+
+      alert('Invoice generated successfully!');
+
+      // Close modal and navigate to invoices tab
+      onClose();
+
+      // Navigate to the same page to refresh the invoices tab
+      router.push(`/admin/itineraries/${itinerary.id}?tab=invoices`);
+    } catch (error) {
+      console.error('Error generating invoice:', error);
+      alert('Failed to generate invoice. Please try again.');
+    } finally {
+      setSavingInvoice(false);
     }
   };
 

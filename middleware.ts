@@ -22,7 +22,16 @@ export async function middleware(request: NextRequest) {
     },
   );
 
-  const { data } = await supabase.auth.getUser();
+  // Suppress auth errors in console
+  let data;
+  try {
+    const result = await supabase.auth.getUser();
+    data = result.data;
+  } catch (error) {
+    // Silently handle auth errors - session likely expired
+    console.warn('Auth session expired or invalid');
+    data = { user: null };
+  }
 
   // Protected admin routes - redirect to login if not authenticated
   const isAuthPage = request.nextUrl.pathname === '/admin/login';

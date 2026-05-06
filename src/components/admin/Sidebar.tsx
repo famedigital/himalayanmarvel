@@ -37,13 +37,12 @@ import {
 
 const navItems = [
   { name: 'Dashboard', href: '/admin/dashboard', icon: LayoutDashboard },
+  { name: 'Frontend', href: '/admin/frontend', icon: Globe },
   { name: 'Tours', href: '/admin/tours', icon: Map },
   { name: 'Categories', href: '/admin/tour-categories', icon: Layers },
   { name: 'Hero', href: '/admin/hero', icon: ImageIcon },
   { name: 'Blog', href: '/admin/blog', icon: FileText },
   { name: 'Itineraries', href: '/admin/itineraries', icon: BookOpen },
-  { name: 'Operations', href: '/admin/operations', icon: Briefcase },
-  { name: 'Invoices', href: '/admin/invoices', icon: Receipt },
 ];
 
 const COLLAPSED_STORAGE_KEY = 'admin-sidebar-collapsed';

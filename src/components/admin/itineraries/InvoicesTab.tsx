@@ -1,0 +1,584 @@
+'use client';
+
+import { useState, useEffect } from 'react';
+import { Receipt, CreditCard, Calendar, IndianRupee, Check, Clock, AlertCircle, Plus, Save, Mail, MessageCircle, Link as LinkIcon, Download, Copy } from 'lucide-react';
+import { createClient } from '@/lib/supabase/client';
+import { handleAuthError } from '@/lib/supabase/auth-utils';
+import Link from 'next/link';
+
+interface InvoicesTabProps {
+  itineraryId: string;
+  itinerary: any;
+}
+
+export function InvoicesTab({ itineraryId, itinerary }: InvoicesTabProps) {
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [invoices, setInvoices] = useState<any[]>([]);
+  const [activeInvoice, setActiveInvoice] = useState<any>(null);
+  const [sendingEmail, setSendingEmail] = useState(false);
+  const [copied, setCopied] = useState(false);
+
+  // Payment form state
+  const [paymentForm, setPaymentForm] = useState({
+    payment_status: 'pending',
+    payment_method: '',
+    payment_amount: 0,
+    payment_date: new Date().toISOString().split('T')[0],
+    payment_notes: '',
+  });
+
+  useEffect(() => {
+    fetchInvoices();
+  }, [itineraryId]);
+
+  const fetchInvoices = async () => {
+    try {
+      const supabase = createClient();
+      const { data, error } = await supabase
+        .from('invoices')
+        .select('*')
+        .eq('itinerary_id', itineraryId)
+        .order('created_at', { ascending: false });
+
+      if (error) {
+        if (handleAuthError(error)) {
+          return;
+        }
+        throw error;
+      }
+
+      setInvoices(data || []);
+      if (data && data.length > 0) {
+        setActiveInvoice(data[0]);
+      }
+    } catch (error) {
+      console.error('Error fetching invoices:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleUpdatePayment = async () => {
+    if (!activeInvoice) return;
+
+    setSaving(true);
+    try {
+      const supabase = createClient();
+
+      // Calculate new payment amount (add to existing)
+      const currentPaid = activeInvoice.invoice_data?.payment_amount || 0;
+      const additionalPayment = typeof paymentForm.payment_amount === 'string'
+        ? parseFloat(paymentForm.payment_amount)
+        : paymentForm.payment_amount || 0;
+      const newTotalPaid = currentPaid + additionalPayment;
+
+      console.log('💰 PAYMENT UPDATE DEBUG:');
+      console.log('- Invoice ID:', activeInvoice.id);
+      console.log('- Current Paid:', currentPaid);
+      console.log('- Additional Payment:', additionalPayment);
+      console.log('- New Total Paid:', newTotalPaid);
+      console.log('- Payment Status:', paymentForm.payment_status);
+
+      // Update invoice_data with payment information (store everything in JSONB)
+      const updatedInvoiceData = {
+        ...activeInvoice.invoice_data,
+        payment_amount: newTotalPaid,
+        payment_status: paymentForm.payment_status,
+        payment_method: paymentForm.payment_method,
+        payment_date: paymentForm.payment_date,
+        payment_notes: paymentForm.payment_notes,
+        payment_history: [
+          ...(activeInvoice.invoice_data?.payment_history || []),
+          {
+            amount: additionalPayment,
+            date: paymentForm.payment_date,
+            method: paymentForm.payment_method,
+            notes: paymentForm.payment_notes,
+            timestamp: new Date().toISOString(),
+          }
+        ]
+      };
+
+      console.log('- Updated Invoice Data:', updatedInvoiceData);
+
+      // Update ONLY the fields that exist in the invoices table
+      // Payment info goes in invoice_data JSONB field
+      const { data, error } = await supabase
+        .from('invoices')
+        .update({
+          invoice_data: updatedInvoiceData,
+          status: paymentForm.payment_status === 'paid' ? 'paid' : paymentForm.payment_status,
+        })
+        .eq('id', activeInvoice.id)
+        .select();
+
+      console.log('- Database Update Error:', error);
+      console.log('- Database Update Data:', data);
+
+      if (error) {
+        console.error('❌ Database Update Failed:', error);
+        throw error;
+      }
+
+      console.log('✅ Payment updated successfully, refreshing invoices...');
+      await fetchInvoices();
+      alert('✅ Payment updated successfully!');
+
+      // Reset payment form
+      setPaymentForm({
+        payment_status: 'pending',
+        payment_method: '',
+        payment_amount: 0,
+        payment_date: new Date().toISOString().split('T')[0],
+        payment_notes: '',
+      });
+    } catch (error: any) {
+      console.error('Error updating payment:', error);
+
+      // Handle auth errors by redirecting to login
+      if (handleAuthError(error)) {
+        return;
+      }
+
+      alert(`Failed to update payment information: ${error?.message || 'Unknown error'}`);
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const sendEmail = async () => {
+    if (!activeInvoice) return;
+
+    setSendingEmail(true);
+    try {
+      const response = await fetch('/api/emails/send-invoice', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          invoiceId: activeInvoice.id,
+          itineraryId,
+          recipientEmail: activeInvoice.invoice_data?.guest_email || itinerary?.guest_email,
+        }),
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.message || 'Failed to send email');
+      }
+
+      alert('✅ Invoice sent successfully via email!');
+    } catch (error: any) {
+      console.error('Error sending email:', error);
+      // Fallback to mailto link
+      const shareUrl = `${window.location.origin}/invoice/${activeInvoice.share_token}`;
+      const subject = encodeURIComponent(`Invoice ${activeInvoice.invoice_data?.invoice_number} from Himalayan Marvels`);
+      const body = encodeURIComponent(`Dear ${activeInvoice.invoice_data?.guest_name || 'Guest'},\n\nPlease find your invoice attached.\n\nYou can also view it online at: ${shareUrl}\n\nBest regards,\nHimalayan Marvels Team`);
+      window.open(`mailto:${activeInvoice.invoice_data?.guest_email || itinerary?.guest_email}?subject=${subject}&body=${body}`, '_blank');
+      alert('Opened email client. Please send the invoice manually.');
+    } finally {
+      setSendingEmail(false);
+    }
+  };
+
+  const sendWhatsApp = () => {
+    if (!activeInvoice) return;
+
+    const shareUrl = `${window.location.origin}/invoice/${activeInvoice.share_token}`;
+    const guestPhone = activeInvoice.invoice_data?.guest_phone || itinerary?.guest_phone;
+    const guestName = activeInvoice.invoice_data?.guest_name || itinerary?.guest_name || 'Guest';
+    const invoiceNumber = activeInvoice.invoice_data?.invoice_number;
+    const totalAmount = activeInvoice.invoice_data?.total_amount;
+    const currency = activeInvoice.invoice_data?.currency_symbol || '₹';
+
+    const message = encodeURIComponent(
+      `Dear ${guestName},%0A%0A` +
+      `Thank you for choosing Himalayan Marvels!%0A%0A` +
+      `Your Invoice #${invoiceNumber} is ready.%0A` +
+      `Total Amount: ${currency}${totalAmount}%0A%0A` +
+      `View your invoice here: ${shareUrl}%0A%0A` +
+      `If you have any questions, feel free to reach out.%0A%0A` +
+      `Best regards,%0A` +
+      `Himalayan Marvels Team`
+    );
+
+    window.open(`https://wa.me/${guestPhone?.replace(/[^0-9]/g, '')}?text=${message}`, '_blank');
+  };
+
+  const copyShareLink = () => {
+    if (!activeInvoice) return;
+
+    const shareUrl = `${window.location.origin}/invoice/${activeInvoice.share_token}`;
+    navigator.clipboard.writeText(shareUrl).then(() => {
+      setCopied(true);
+      alert('✅ Share link copied to clipboard!');
+      setTimeout(() => setCopied(false), 2000);
+    });
+  };
+
+  const downloadInvoice = async () => {
+    if (!activeInvoice) return;
+
+    try {
+      const response = await fetch(`/api/invoices/${activeInvoice.id}/html`);
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || 'Failed to generate HTML');
+      }
+      const html = await response.text();
+      const blob = new Blob([html], { type: 'text/html' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `invoice-${activeInvoice.invoice_data?.invoice_number || 'invoice'}.html`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error('Download failed:', error);
+      alert(`Failed to download invoice: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    }
+  };
+
+  const getStatusBadge = (status: string) => {
+    const styles = {
+      pending: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-400',
+      partial: 'bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400',
+      paid: 'bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400',
+      overdue: 'bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-400',
+      confirmed: 'bg-purple-100 text-purple-800 dark:bg-purple-900/20 dark:text-purple-400',
+    };
+
+    return (
+      <span className={`px-2 py-1 rounded-full text-xs font-semibold ${styles[status as keyof typeof styles] || styles.pending}`}>
+        {status.charAt(0).toUpperCase() + status.slice(1).replace('_', ' ')}
+      </span>
+    );
+  };
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center py-12">
+        <div className="text-gray-500">Loading invoices...</div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-6">
+      {/* Invoice List */}
+      <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-6">
+        <div className="flex items-center justify-between mb-4">
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Invoices</h3>
+          {invoices.length === 0 && (
+            <Link
+              href={`/admin/invoices/new/${itineraryId}`}
+              className="inline-flex items-center gap-2 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 text-sm font-semibold"
+            >
+              <Plus className="w-4 h-4" />
+              Generate Invoice
+            </Link>
+          )}
+        </div>
+
+        {invoices.length === 0 ? (
+          <div className="text-center py-8 bg-gray-50 dark:bg-gray-900/50 rounded-lg">
+            <Receipt className="w-12 h-12 text-gray-400 mx-auto mb-3" />
+            <p className="text-gray-600 dark:text-gray-400 mb-2">No invoices yet</p>
+            <p className="text-sm text-gray-500 dark:text-gray-500 mb-4">
+              Generate an invoice to start tracking payments
+            </p>
+          </div>
+        ) : (
+          <div className="space-y-3">
+            {invoices.map((invoice) => (
+              <div
+                key={invoice.id}
+                className={`p-4 rounded-lg border-2 cursor-pointer transition-all ${
+                  activeInvoice?.id === invoice.id
+                    ? 'border-purple-500 bg-purple-50 dark:bg-purple-950/20'
+                    : 'border-gray-200 dark:border-gray-700 hover:border-purple-300'
+                }`}
+                onClick={() => setActiveInvoice(invoice)}
+              >
+                <div className="flex items-start justify-between">
+                  <div>
+                    <p className="font-semibold text-gray-900 dark:text-gray-100">
+                      {invoice.invoice_data?.invoice_number}
+                    </p>
+                    <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+                      {invoice.invoice_data?.package_name}
+                    </p>
+                    <div className="flex items-center gap-3 mt-2">
+                      {getStatusBadge(invoice.invoice_data?.payment_status || invoice.status || 'pending')}
+                      <span className="text-xs text-gray-500">
+                        {new Date(invoice.created_at).toLocaleDateString()}
+                      </span>
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-lg font-bold text-gray-900 dark:text-gray-100">
+                      {invoice.invoice_data?.currency_symbol || '₹'}{invoice.invoice_data?.total_amount?.toLocaleString('en-IN') || '0'}
+                    </p>
+                    {(invoice.invoice_data?.payment_amount || 0) > 0 && (
+                      <p className="text-xs text-green-600">
+                        Paid: {invoice.invoice_data?.currency_symbol || '₹'}{(invoice.invoice_data?.payment_amount || 0).toLocaleString('en-IN')}
+                      </p>
+                    )}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* Payment Management & Client Communication */}
+      {activeInvoice && (
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {/* Payment Management */}
+          <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-6">
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">
+              Payment Management
+            </h3>
+
+            <div className="space-y-4 mb-6">
+              <div className="p-4 bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-950/20 dark:to-emerald-950/20 rounded-lg border border-green-200 dark:border-green-800">
+                <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">Total Amount</p>
+                <p className="text-2xl font-bold text-gray-900 dark:text-gray-100">
+                  {activeInvoice.invoice_data?.currency_symbol || '₹'}{activeInvoice.invoice_data?.total_amount?.toLocaleString('en-IN') || '0'}
+                </p>
+              </div>
+
+              <div className="p-4 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-950/20 dark:to-indigo-950/20 rounded-lg border border-blue-200 dark:border-blue-800">
+                <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">Amount Paid</p>
+                <p className="text-2xl font-bold text-blue-900 dark:text-blue-100">
+                  {activeInvoice.invoice_data?.currency_symbol || '₹'}{(activeInvoice.invoice_data?.payment_amount || 0).toLocaleString('en-IN')}
+                </p>
+              </div>
+
+              <div className="p-4 bg-gradient-to-r from-amber-50 to-orange-50 dark:from-amber-950/20 dark:to-orange-950/20 rounded-lg border border-amber-200 dark:border-orange-800">
+                <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">Balance Due</p>
+                <p className="text-2xl font-bold text-amber-900 dark:text-amber-100">
+                  {activeInvoice.invoice_data?.currency_symbol || '₹'}{Math.max(0, (activeInvoice.invoice_data?.total_amount || 0) - (activeInvoice.invoice_data?.payment_amount || 0)).toLocaleString('en-IN')}
+                </p>
+              </div>
+            </div>
+
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                  Payment Status
+                </label>
+                <select
+                  value={paymentForm.payment_status}
+                  onChange={(e) => setPaymentForm({ ...paymentForm, payment_status: e.target.value })}
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-white"
+                >
+                  <option value="pending">Pending</option>
+                  <option value="partial">Partial Payment</option>
+                  <option value="paid">Fully Paid</option>
+                  <option value="overdue">Overdue</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                  Payment Method
+                </label>
+                <input
+                  type="text"
+                  value={paymentForm.payment_method}
+                  onChange={(e) => setPaymentForm({ ...paymentForm, payment_method: e.target.value })}
+                  placeholder="Bank Transfer, UPI, Cash, etc."
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-white"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                  Additional Payment Amount
+                </label>
+                <div className="flex">
+                  <span className="inline-flex items-center px-3 border border-r-0 border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-800 text-gray-500 rounded-l-lg">
+                    <IndianRupee className="w-4 h-4" />
+                  </span>
+                  <input
+                    type="number"
+                    value={paymentForm.payment_amount}
+                    onChange={(e) => setPaymentForm({ ...paymentForm, payment_amount: parseFloat(e.target.value) || 0 })}
+                    className="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-r-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-white"
+                    placeholder="Enter amount to add"
+                  />
+                </div>
+                <p className="text-xs text-gray-500 mt-1">This will be added to the current paid amount</p>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                  Payment Date
+                </label>
+                <input
+                  type="date"
+                  value={paymentForm.payment_date}
+                  onChange={(e) => setPaymentForm({ ...paymentForm, payment_date: e.target.value })}
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-white"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                  Payment Notes
+                </label>
+                <textarea
+                  value={paymentForm.payment_notes}
+                  onChange={(e) => setPaymentForm({ ...paymentForm, payment_notes: e.target.value })}
+                  rows={2}
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-white text-sm"
+                  placeholder="Reference number, bank details, etc."
+                />
+              </div>
+
+              <button
+                onClick={handleUpdatePayment}
+                disabled={saving}
+                className="w-full inline-flex items-center justify-center gap-2 px-4 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:opacity-50 font-semibold"
+              >
+                {saving ? <Clock className="w-4 h-4 animate-spin" /> : <Check className="w-4 h-4" />}
+                {saving ? 'Saving...' : 'Update Payment'}
+              </button>
+            </div>
+          </div>
+
+          {/* Client Communication */}
+          <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-6">
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">
+              Client Communication
+            </h3>
+
+            <div className="space-y-4">
+              {/* Email */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  <Mail className="w-4 h-4 inline mr-1" />
+                  Send via Email
+                </label>
+                <div className="flex gap-2">
+                  <input
+                    type="email"
+                    value={activeInvoice.invoice_data?.guest_email || itinerary?.guest_email || ''}
+                    readOnly
+                    className="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white text-sm"
+                    placeholder="client@example.com"
+                  />
+                  <button
+                    onClick={sendEmail}
+                    disabled={sendingEmail}
+                    className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 font-semibold text-sm"
+                  >
+                    {sendingEmail ? <Clock className="w-4 h-4 animate-spin" /> : <Mail className="w-4 h-4" />}
+                    {sendingEmail ? 'Sending...' : 'Send'}
+                  </button>
+                </div>
+              </div>
+
+              {/* WhatsApp */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  <MessageCircle className="w-4 h-4 inline mr-1" />
+                  Send via WhatsApp
+                </label>
+                <div className="flex gap-2">
+                  <input
+                    type="tel"
+                    value={activeInvoice.invoice_data?.guest_phone || itinerary?.guest_phone || ''}
+                    readOnly
+                    className="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white text-sm"
+                    placeholder="+91 9876543210"
+                  />
+                  <button
+                    onClick={sendWhatsApp}
+                    className="inline-flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 font-semibold text-sm"
+                  >
+                    <MessageCircle className="w-4 h-4" />
+                    Open WhatsApp
+                  </button>
+                </div>
+              </div>
+
+              {/* Share Link */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  <LinkIcon className="w-4 h-4 inline mr-1" />
+                  Shareable Link
+                </label>
+                <div className="flex gap-2">
+                  <input
+                    type="text"
+                    value={`${window.location.origin}/invoice/${activeInvoice.share_token}`}
+                    readOnly
+                    className="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white text-sm font-mono"
+                  />
+                  <button
+                    onClick={copyShareLink}
+                    className="inline-flex items-center gap-2 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 font-semibold text-sm"
+                  >
+                    {copied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
+                    {copied ? 'Copied!' : 'Copy'}
+                  </button>
+                </div>
+                <p className="text-xs text-gray-500 mt-1">
+                  Share this link with client to view invoice online
+                </p>
+              </div>
+
+              {/* Download */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  <Download className="w-4 h-4 inline mr-1" />
+                  Download for Manual Sending
+                </label>
+                <button
+                  onClick={downloadInvoice}
+                  className="w-full inline-flex items-center justify-center gap-2 px-4 py-3 bg-gray-600 text-white rounded-lg hover:bg-gray-700 font-semibold text-sm"
+                >
+                  <Download className="w-4 h-4" />
+                  Download Invoice (HTML)
+                </button>
+                <p className="text-xs text-gray-500 mt-2">
+                  Open in browser and print/save as PDF
+                </p>
+              </div>
+
+              {/* Client Contact Info */}
+              <div className="pt-4 border-t border-gray-200 dark:border-gray-700">
+                <h4 className="text-sm font-semibold text-gray-900 dark:text-gray-100 mb-3">Client Contact Information</h4>
+                <div className="space-y-2 text-sm">
+                  <div className="flex justify-between">
+                    <span className="text-gray-600 dark:text-gray-400">Name:</span>
+                    <span className="text-gray-900 dark:text-gray-100 font-medium">
+                      {activeInvoice.invoice_data?.guest_name || itinerary?.guest_name || 'Not specified'}
+                    </span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-600 dark:text-gray-400">Email:</span>
+                    <span className="text-gray-900 dark:text-gray-100 font-medium">
+                      {activeInvoice.invoice_data?.guest_email || itinerary?.guest_email || 'Not specified'}
+                    </span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-600 dark:text-gray-400">Phone:</span>
+                    <span className="text-gray-900 dark:text-gray-100 font-medium">
+                      {activeInvoice.invoice_data?.guest_phone || itinerary?.guest_phone || 'Not specified'}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}

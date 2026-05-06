@@ -32,6 +32,7 @@
     "react-dom": "19.2.4",
     "react-dropzone": "^15.0.0",
     "react-hook-form": "^7.73.1",
+    "react-hot-toast": "^2.6.0",
     "react-remove-scroll": "^2.7.2",
     "react-remove-scroll-bar": "^2.3.8",
     "react-style-singleton": "^2.2.3",

@@ -67,7 +67,7 @@ const organizationSchema = {
 
 export default function Home() {
   return (
-    <main className="bg-alabaster dark:bg-dark-forest">
+    <main className="relative bg-alabaster dark:bg-dark-forest">
       {/* Organization Schema for homepage SEO */}
       <JsonLd data={organizationSchema} />
       <Navigation />

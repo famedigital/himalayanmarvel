@@ -1,0 +1,24 @@
+
+> himalayan-marvel@0.1.0 build
+> next build --webpack
+
+▲ Next.js 16.2.3 (webpack)
+- Environments: .env.local
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 41s
+  Running TypeScript ...
+Failed to type check.
+
+./src/components/admin/frontend/JourneyCardsEditor.tsx:131:25
+Type error: Property 'sectionTitle' does not exist on type '{ cards?: JourneyCard[] | undefined; } | { sectionTitle: string; sectionSubtitle: string; cards: { id: string; title: string; description: string; image: string; ctaText: string; }[]; }'.
+  Property 'sectionTitle' does not exist on type '{ cards?: JourneyCard[] | undefined; }'.
+
+  [90m129 |[0m           <input
+  [90m130 |[0m             [36mtype[0m=[32m"text"[0m
+[31m[1m>[0m [90m131 |[0m             value={data.sectionTitle}
+  [90m    |[0m                         [31m[1m^[0m
+  [90m132 |[0m             onChange={(e) => setData({ ...data, sectionTitle: e.target.value })}
+  [90m133 |[0m             className=[32m"w-full px-4 py-2 bg-white dark:bg-gray-800 border border-gray-300 ...[0m
+  [90m134 |[0m             placeholder=[32m"Curated Journeys"[0m
+Next.js build worker exited with code: 1 and signal: null

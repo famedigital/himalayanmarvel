@@ -128,7 +128,7 @@ export default function CloudinaryImagePicker({
   return createPortal(
     <div
       data-modal-overlay
-      className="fixed inset-0 bg-black/70 backdrop-blur-md flex items-center justify-center p-8 animate-in fade-in duration-200"
+      className="fixed inset-0 bg-white/60 backdrop-blur-3xl flex items-center justify-center animate-in fade-in duration-300"
       style={{
         position: 'fixed',
         top: '0',
@@ -146,191 +146,163 @@ export default function CloudinaryImagePicker({
       <div
         ref={modalRef}
         data-modal-content
-        className="bg-white dark:bg-gray-800 rounded-3xl shadow-2xl max-w-7xl w-full max-h-[85vh] overflow-hidden flex flex-col transform transition-all animate-in zoom-in duration-200"
+        className="bg-white/80 backdrop-blur-3xl rounded-3xl shadow-2xl max-w-[92vw] w-full max-h-[88vh] overflow-hidden flex flex-col transform transition-all animate-in zoom-in duration-300 border border-white/40"
         style={{
           zIndex: '1000000',
           isolation: 'isolate'
         }}
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Header */}
-        <div className="flex items-center justify-between p-8 border-b border-gray-200 dark:border-gray-700 bg-gradient-to-r from-white to-gray-50 dark:from-gray-800 dark:to-gray-900">
-          <div className="flex-1">
-            <h2 className="text-3xl font-bold text-gray-900 dark:text-white tracking-tight">
-              {viewMode === 'upload' ? 'Upload Image' : 'Media Library'}
+        {/* Header - Premium Light */}
+        <div className="flex items-center justify-between px-6 py-4 bg-white/50 backdrop-blur-3xl border-b border-gray-200/50">
+          <div className="flex items-center gap-3">
+            <h2 className="text-lg font-semibold text-gray-900 tracking-tight">
+              Media Library
             </h2>
-            <p className="text-base text-gray-600 dark:text-gray-400 mt-2 font-medium">
-              {viewMode === 'upload' ? 'Upload a new image to Cloudinary' : 'Choose an image or upload a new one'}
-            </p>
+            {viewMode === 'browse' && (
+              <span className="text-xs text-gray-500 font-medium bg-gray-100/80 px-2 py-1 rounded-full">
+                {filteredImages.length.toLocaleString()}
+              </span>
+            )}
           </div>
-          <button
-            type="button"
-            onClick={handleClose}
-            className="p-3 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-2xl transition-all hover:scale-105 active:scale-95"
-            aria-label="Close modal"
-          >
-            <X className="w-6 h-6 text-gray-600 dark:text-gray-400" />
-          </button>
+          <div className="flex items-center gap-2">
+            {viewMode === 'browse' && (
+              <button
+                type="button"
+                onClick={() => setViewMode('upload')}
+                className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-sm font-medium transition-all shadow-sm hover:shadow-md"
+              >
+                <Upload className="w-4 h-4" />
+                Upload
+              </button>
+            )}
+            <button
+              type="button"
+              onClick={handleClose}
+              className="p-2.5 hover:bg-gray-200/80 rounded-xl transition-colors group"
+              aria-label="Close modal"
+            >
+              <X className="w-5 h-5 text-gray-500 group-hover:text-gray-700" />
+            </button>
+          </div>
         </div>
 
-        {/* Body */}
-        <div className="flex-1 overflow-y-auto p-8 bg-gradient-to-br from-gray-50 to-white dark:from-gray-900 dark:to-gray-800" style={{ maxHeight: 'calc(85vh - 180px)' }}>
+        {/* Body - Premium Light Mode */}
+        <div className="flex-1 overflow-hidden bg-gradient-to-br from-gray-50 to-white relative" style={{ maxHeight: 'calc(88vh - 73px)' }}>
           {viewMode === 'browse' ? (
             <>
-              {/* Toolbar */}
-              <div className="flex flex-col xl:flex-row gap-6 mb-8">
-                {/* Folder Filter */}
-                <div className="flex-1">
-                  <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3 uppercase tracking-wide">
-                    Folders
-                  </label>
-                  <div className="flex flex-wrap gap-3">
-                    {folders.map(f => (
-                      <button
-                        type="button"
-                        key={f.id}
-                        onClick={() => {
-                          console.log('[CloudinaryPicker] Switching to folder:', f.id);
-                          setSelectedFolder(f.id);
-                        }}
-                        className={`px-5 py-3 text-sm rounded-xl transition-all font-medium shadow-sm ${
-                          selectedFolder === f.id
-                            ? 'bg-blue-600 text-white shadow-lg scale-105'
-                            : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:scale-105 border border-gray-200 dark:border-gray-600'
-                        }`}
+              {/* Floating Toolbar - Glass Morphism */}
+              <div className="absolute top-4 left-4 right-4 z-20">
+                <div className="bg-white/70 backdrop-blur-2xl border border-white/60 shadow-xl rounded-2xl p-3">
+                  <div className="flex items-center gap-3">
+                    {/* Folder Select - Minimal */}
+                    <div className="relative">
+                      <select
+                        value={selectedFolder}
+                        onChange={(e) => setSelectedFolder(e.target.value)}
+                        className="appearance-none pl-9 pr-8 py-2.5 text-sm bg-white/80 hover:bg-white border border-gray-200/60 rounded-xl text-gray-700 cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all shadow-sm"
                       >
-                        <FolderOpen className="w-4 h-4 inline mr-2" />
-                        {f.name}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Search */}
-                <div className="flex-1">
-                  <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3 uppercase tracking-wide">
-                    Search
-                  </label>
-                  <div className="relative">
-                    <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-                    <input
-                      type="text"
-                      value={search}
-                      onChange={(e) => setSearch(e.target.value)}
-                      placeholder="Search images by name..."
-                      className="w-full pl-12 pr-5 py-4 border-2 border-gray-200 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-900 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent text-lg shadow-sm"
-                    />
-                  </div>
-                </div>
-
-                {/* Refresh Button */}
-                <div className="flex items-end">
-                  <button
-                    type="button"
-                    onClick={() => {
-                      console.log('[CloudinaryPicker] Refreshing images');
-                      fetchImages();
-                    }}
-                    className="p-4 border-2 border-gray-200 dark:border-gray-600 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-all hover:scale-105 shadow-sm"
-                    title="Refresh images"
-                  >
-                    <RefreshCw className="w-5 h-5 text-gray-600 dark:text-gray-400" />
-                  </button>
-                </div>
-              </div>
-
-              {/* Upload Button */}
-              <div className="mb-8">
-                <button
-                  type="button"
-                  onClick={() => {
-                    console.log('[CloudinaryPicker] Switching to upload mode');
-                    setViewMode('upload');
-                  }}
-                  className="inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-xl hover:from-blue-700 hover:to-blue-800 transition-all shadow-lg hover:shadow-xl hover:scale-105 font-semibold text-lg"
-                >
-                  <Upload className="w-5 h-5" />
-                  Upload New Image
-                </button>
-              </div>
-
-              {/* Error Display */}
-              {error && (
-                <div className="mb-8 p-6 bg-red-50 dark:bg-red-900/20 border-2 border-red-200 dark:border-red-800 rounded-2xl">
-                  <div className="flex items-center gap-4">
-                    <AlertCircle className="w-6 h-6 text-red-600 dark:text-red-400 flex-shrink-0" />
-                    <div className="flex-1">
-                      <p className="text-base font-semibold text-red-800 dark:text-red-200">Error loading images</p>
-                      <p className="text-sm text-red-600 dark:text-red-400 mt-1">{error}</p>
+                        {folders.map(f => (
+                          <option key={f.id} value={f.id} className="bg-white">{f.name}</option>
+                        ))}
+                      </select>
+                      <FolderOpen className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
                     </div>
+
+                    {/* Search - Minimal */}
+                    <div className="flex-1 max-w-md relative">
+                      <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
+                      <input
+                        type="text"
+                        value={search}
+                        onChange={(e) => setSearch(e.target.value)}
+                        placeholder="Search images..."
+                        className="w-full pl-9 pr-3 py-2.5 text-sm bg-white/80 hover:bg-white border border-gray-200/60 rounded-xl text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-transparent transition-all shadow-sm"
+                      />
+                    </div>
+
+                    {/* Refresh Button - Icon Only */}
                     <button
                       type="button"
                       onClick={fetchImages}
-                      className="px-5 py-2.5 text-sm bg-red-600 text-white rounded-lg hover:bg-red-700 transition-all font-medium"
+                      className="p-2.5 hover:bg-gray-100/80 rounded-xl transition-colors"
+                      title="Refresh images"
                     >
-                      Retry
+                      <RefreshCw className="w-4 h-4 text-gray-500 hover:text-gray-700" />
                     </button>
+                  </div>
+                </div>
+              </div>
+
+              {/* Error Display - Floating */}
+              {error && (
+                <div className="absolute top-20 left-4 right-4 z-20">
+                  <div className="bg-red-50/80 backdrop-blur-2xl border border-red-200/60 rounded-xl p-4 shadow-lg">
+                    <div className="flex items-center gap-3">
+                      <AlertCircle className="w-5 h-5 text-red-500 flex-shrink-0" />
+                      <div className="flex-1">
+                        <p className="text-sm font-medium text-red-700">{error}</p>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={fetchImages}
+                        className="px-3 py-1.5 text-xs bg-red-500 hover:bg-red-600 text-white rounded-lg transition-colors shadow-sm"
+                      >
+                        Retry
+                      </button>
+                    </div>
                   </div>
                 </div>
               )}
 
-              {/* Images Grid */}
-              {loading ? (
-                <div className="flex flex-col items-center justify-center py-20">
-                  <Loader2 className="w-16 h-16 animate-spin text-blue-600 mb-6" />
-                  <p className="text-lg font-medium text-gray-600 dark:text-gray-400">Loading images...</p>
-                  <p className="text-sm text-gray-500 dark:text-gray-500 mt-2">This may take a moment</p>
-                </div>
-              ) : filteredImages.length === 0 ? (
-                <div className="text-center py-20 bg-white dark:bg-gray-800 rounded-3xl border-2 border-dashed border-gray-300 dark:border-gray-600">
-                  <ImageIcon className="w-20 h-20 mx-auto mb-6 text-gray-300 dark:text-gray-600" />
-                  <p className="text-xl font-semibold text-gray-600 dark:text-gray-400 mb-4">
-                    {search ? 'No images found matching your search' : 'No images in this folder'}
-                  </p>
-                  <button
-                    type="button"
-                    onClick={() => setViewMode('upload')}
-                    className="inline-flex items-center gap-3 px-8 py-4 bg-blue-600 text-white rounded-xl hover:bg-blue-700 font-semibold text-lg"
-                  >
-                    <Upload className="w-5 h-5" />
-                    Upload First Image
-                  </button>
-                </div>
-              ) : (
-                <>
-                  <div className="mb-6 flex items-center justify-between">
-                    <div className="text-lg font-semibold text-gray-700 dark:text-gray-300">
-                      Showing <span className="text-blue-600 dark:text-blue-400">{filteredImages.length}</span> of <span className="text-gray-500">{images.length}</span> images
-                    </div>
-                    <div className="text-sm text-gray-500 dark:text-gray-400">
-                      Folder: <span className="font-medium text-gray-700 dark:text-gray-300">{selectedFolder}</span>
-                    </div>
+              {/* Images Grid - Premium Masonry */}
+              <div className="h-full overflow-y-auto p-4 pt-20">
+                {loading ? (
+                  <div className="flex flex-col items-center justify-center h-64">
+                    <Loader2 className="w-10 h-10 animate-spin text-blue-500 mb-3" />
+                    <p className="text-sm text-gray-500">Loading images...</p>
                   </div>
-                  <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6">
+                ) : filteredImages.length === 0 ? (
+                  <div className="flex flex-col items-center justify-center h-64">
+                    <ImageIcon className="w-16 h-16 text-gray-200 mb-4" />
+                    <p className="text-base font-medium text-gray-500 mb-3">
+                      {search ? 'No images found' : 'No images in this folder'}
+                    </p>
+                    <button
+                      type="button"
+                      onClick={() => setViewMode('upload')}
+                      className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-medium text-sm transition-all shadow-sm hover:shadow-md"
+                    >
+                      <Upload className="w-4 h-4" />
+                      Upload Image
+                    </button>
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-3 md:grid-cols-5 lg:grid-cols-7 xl:grid-cols-9 gap-3 pb-4">
                     {filteredImages.map((image) => (
                       <button
                         type="button"
                         key={image.public_id}
                         onClick={() => handleImageSelect(image.secure_url)}
-                        className={`group relative aspect-square rounded-2xl overflow-hidden border-2 transition-all hover:shadow-2xl hover:scale-105 ${
+                        className={`group relative aspect-square rounded-xl overflow-hidden transition-all duration-300 shadow-md hover:shadow-xl ${
                           currentUrl === image.secure_url
-                            ? 'border-blue-600 ring-4 ring-blue-200 dark:ring-blue-800 scale-105 shadow-xl'
-                            : 'border-gray-200 dark:border-gray-700 hover:border-blue-400 shadow-md'
+                            ? 'ring-2 ring-blue-500 scale-105 shadow-xl'
+                            : 'hover:scale-105'
                         }`}
                       >
                         <Image
                           src={image.secure_url}
                           alt={image.public_id}
                           fill
-                          className="object-cover transition-transform group-hover:scale-110"
-                          sizes="(max-width: 768px) 50vw, (max-width: 1200px) 25vw, 20vw"
+                          className="object-cover transition-transform duration-300 group-hover:scale-110"
+                          sizes="(max-width: 768px) 33vw, (max-width: 1200px) 20vw, 12vw"
                         />
-                        {/* Overlay */}
-                        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-all" />
-                        {/* Selected Badge */}
+                        {/* Subtle Gradient Overlay */}
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                        {/* Selected Badge - Premium */}
                         {currentUrl === image.secure_url && (
-                          <div className="absolute top-3 right-3 w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center shadow-lg">
-                            <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <div className="absolute top-2 right-2 w-6 h-6 bg-blue-600 rounded-full flex items-center justify-center shadow-lg">
+                            <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
                             </svg>
                           </div>
@@ -338,55 +310,38 @@ export default function CloudinaryImagePicker({
                       </button>
                     ))}
                   </div>
-                </>
-              )}
+                )}
+              </div>
             </>
           ) : (
             <>
-              {/* Upload Mode */}
-              <div className="mb-6">
-                <button
-                  type="button"
-                  onClick={() => {
-                    console.log('[CloudinaryPicker] Switching back to browse mode');
-                    setViewMode('browse');
-                  }}
-                  className="inline-flex items-center gap-3 text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white font-semibold text-lg"
-                >
-                  ← Back to Browse
-                </button>
-              </div>
-              <div className="flex justify-center">
-                <CloudinaryUpload
-                  onUploadComplete={(url) => {
-                    console.log('[CloudinaryPicker] Upload complete:', url);
-                    handleImageSelect(url);
-                  }}
-                  label="Upload to Cloudinary"
-                  folder={selectedFolder}
-                  aspect="video"
-                  size="lg"
-                />
+              {/* Upload Mode - Premium Light */}
+              <div className="h-full overflow-y-auto p-8 pt-6">
+                <div className="mb-6">
+                  <button
+                    type="button"
+                    onClick={() => setViewMode('browse')}
+                    className="inline-flex items-center gap-2 text-sm text-gray-600 hover:text-gray-900 font-medium transition-colors"
+                  >
+                    ← Back to Browse
+                  </button>
+                </div>
+                <div className="flex justify-center max-w-2xl mx-auto">
+                  <CloudinaryUpload
+                    onUploadComplete={(url) => {
+                      handleImageSelect(url);
+                    }}
+                    label="Upload to Cloudinary"
+                    folder={selectedFolder}
+                    aspect="video"
+                    size="lg"
+                  />
+                </div>
               </div>
             </>
           )}
         </div>
 
-        {/* Footer */}
-        <div className="flex items-center justify-between p-8 border-t border-gray-200 dark:border-gray-700 bg-gradient-to-r from-gray-50 to-white dark:from-gray-900 dark:to-gray-800">
-          <div className="text-base font-medium text-gray-600 dark:text-gray-400">
-            {loading ? 'Loading...' : `${filteredImages.length} images in ${selectedFolder}`}
-          </div>
-          <div className="flex gap-3">
-            <button
-              type="button"
-              onClick={handleClose}
-              className="px-8 py-3 border-2 border-gray-300 dark:border-gray-600 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-700 transition-all font-semibold text-lg"
-            >
-              Cancel
-            </button>
-          </div>
-        </div>
       </div>
     </div>,
     document.body

@@ -3,10 +3,19 @@ import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: Promise<{ bookingId: string }> }
+  { params }: { params: Promise<{}> }
 ) {
   try {
-    const { bookingId } = await params;
+    const { searchParams } = new URL(request.url);
+    const bookingId = searchParams.get('bookingId');
+
+    if (!bookingId) {
+      return NextResponse.json(
+        { success: false, error: 'bookingId is required' },
+        { status: 400 }
+      );
+    }
+
     const supabase = await createClient();
 
     const { data, error } = await supabase
@@ -28,18 +37,26 @@ export async function GET(
 
 export async function POST(
   request: NextRequest,
-  { params }: { params: Promise<{ bookingId: string }> }
+  { params }: { params: Promise<{}> }
 ) {
   try {
-    const { bookingId } = await params;
     const body = await request.json();
+    const { bookingId, ...permitData } = body;
+
+    if (!bookingId) {
+      return NextResponse.json(
+        { success: false, error: 'bookingId is required' },
+        { status: 400 }
+      );
+    }
+
     const supabase = await createClient();
 
     const { data, error } = await supabase
       .from('operation_permits')
       .insert({
         booking_id: bookingId,
-        ...body,
+        ...permitData,
       })
       .select()
       .single();

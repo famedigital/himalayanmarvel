@@ -97,6 +97,10 @@ export default function CloudinaryUpload({
     multiple: false,
   });
 
+  const isCloudinaryImage = (url: string) => {
+    return url.includes('res.cloudinary.com') || url.includes('cloudinary.com');
+  };
+
   if (value) {
     return (
       <>
@@ -111,12 +115,20 @@ export default function CloudinaryUpload({
 
         <div className={`relative group ${sizeClasses[size]}`}>
           <div className={`relative ${aspectClasses[aspect]} rounded-xl overflow-hidden border border-gray-200`}>
-            <Image
-              src={value}
-              alt="Uploaded"
-              fill
-              className="object-cover"
-            />
+            {isCloudinaryImage(value) ? (
+              <Image
+                src={value}
+                alt="Uploaded"
+                fill
+                className="object-cover"
+              />
+            ) : (
+              <img
+                src={value}
+                alt="Uploaded"
+                className="w-full h-full object-cover"
+              />
+            )}
             {onRemove && (
               <button
                 onClick={onRemove}
