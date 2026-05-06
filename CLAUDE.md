@@ -24,6 +24,40 @@ Luxury Bhutan tour company website built with Next.js 16, Supabase, and Cloudina
 - Admin panel at `/admin` is fully functional with tour/booking/blog management
 - Public `/tours` and `/blog` pages are dynamic from Supabase
 
+## Critical Mistakes to Avoid
+
+### Syntax Errors from File Editing
+**NEVER leave extra closing braces when editing files.**
+
+When using the Edit tool to replace code blocks:
+1. **Match the exact structure** of the original code
+2. **Count braces carefully** - ensure opening `{` and closing `}` match
+3. **Remove ALL old closing braces** when replacing a section
+4. **Test immediately** after editing with `npm run dev`
+
+**Example of what NOT to do:**
+```typescript
+// WRONG - Leaves extra closing brace
+{tours.map((tour) => (
+  <div>...</div>
+))}
+)}  // ← This extra brace causes syntax errors!
+```
+
+**Correct approach:**
+```typescript
+// CORRECT - No extra braces
+{tours.map((tour) => (
+  <div>...</div>
+))}
+```
+
+**How to prevent this:**
+- Always read the file before editing
+- Check the complete structure around your edit
+- Verify brace counts: opening vs closing
+- If you see `})` or `)}` sequences, double-check they're intentional
+
 ## Development
 ```bash
 npm run dev  # Runs on port 3000 (or 3001 if occupied)

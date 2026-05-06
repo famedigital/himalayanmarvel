@@ -183,7 +183,6 @@ export default function BentoGrid() {
               </motion.div>
             );
           })}
-          )}
         </div>
       </div>
     </section>
