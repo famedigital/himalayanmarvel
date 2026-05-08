@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import CloudinaryUpload from './CloudinaryUpload';
 import { Plus, X, GripVertical, Image as ImageIcon, Video, Save, Loader2, Copy } from 'lucide-react';
+import { toast } from 'sonner';
 
 interface HeroSlide {
   id: string;
@@ -73,6 +74,8 @@ export default function HeroManager({ initialSlides, initialSettingId = null }: 
 
   const handleSave = async () => {
     setSaving(true);
+    const toastId = toast.loading('Saving hero slides...');
+
     try {
       const timestamp = new Date().toISOString();
 
@@ -103,10 +106,10 @@ export default function HeroManager({ initialSlides, initialSettingId = null }: 
         }
       }
 
-      alert('Hero slides saved successfully!');
+      toast.success('Hero slides saved successfully!', { id: toastId });
     } catch (error) {
       console.error('Save failed:', error);
-      alert('Failed to save. Please try again.');
+      toast.error('Failed to save. Please try again.', { id: toastId });
     } finally {
       setSaving(false);
     }

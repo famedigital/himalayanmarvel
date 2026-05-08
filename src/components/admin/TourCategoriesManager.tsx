@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import CloudinaryUpload from './CloudinaryUpload';
 import { Plus, X, GripVertical, Image as ImageIcon, Save, Loader2, Pencil } from 'lucide-react';
+import { toast } from 'sonner';
 
 interface TourCategory {
   id: string;
@@ -50,6 +51,8 @@ export default function TourCategoriesManager({ initialCategories }: TourCategor
 
   const handleSave = async () => {
     setSaving(true);
+    const toastId = toast.loading('Saving tour categories...');
+
     try {
       // First check if record exists
       const { data: existing } = await supabase
@@ -72,11 +75,11 @@ export default function TourCategoriesManager({ initialCategories }: TourCategor
 
         if (result.error) {
           console.error('Update error:', result.error);
-          alert(`Failed to save: ${result.error.message}`);
+          toast.error(`Failed to save: ${result.error.message}`, { id: toastId });
           return;
         }
 
-        alert('Tour categories updated successfully!');
+        toast.success('Tour categories updated successfully!', { id: toastId });
       } else {
         // Insert new record
         result = await supabase
@@ -88,16 +91,16 @@ export default function TourCategoriesManager({ initialCategories }: TourCategor
 
         if (result.error) {
           console.error('Insert error:', result.error);
-          alert(`Failed to save: ${result.error.message}`);
+          toast.error(`Failed to save: ${result.error.message}`, { id: toastId });
           return;
         }
 
-        alert('Tour categories created successfully!');
+        toast.success('Tour categories created successfully!', { id: toastId });
       }
     } catch (error) {
       console.error('Save failed:', error);
       const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
-      alert(`Failed to save: ${errorMessage}`);
+      toast.error(`Failed to save: ${errorMessage}`, { id: toastId });
     } finally {
       setSaving(false);
     }

@@ -44,42 +44,74 @@ export default function CloudinaryUpload({
   const [progress, setProgress] = useState(0);
   const [showPicker, setShowPicker] = useState(false);
 
-  const uploadToCloudinary = async (file: File) => {
+  const uploadToCloudinary = (file: File) => {
     console.log('[CloudinaryUpload] Starting upload for file:', file.name, 'Size:', file.size);
     setUploading(true);
     setProgress(0);
 
-    try {
-      const formData = new FormData();
-      formData.append('file', file);
-      formData.append('folder', folder);
-      formData.append('upload_preset', 'ml_default');
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('folder', folder);
+    formData.append('upload_preset', 'ml_default');
 
-      console.log('[CloudinaryUpload] Uploading to folder:', folder);
+    console.log('[CloudinaryUpload] Uploading to folder:', folder);
 
-      const response = await fetch('/api/upload', {
-        method: 'POST',
-        body: formData,
-      });
+    const xhr = new XMLHttpRequest();
 
-      console.log('[CloudinaryUpload] Upload response status:', response.status);
+    // Track upload progress
+    xhr.upload.addEventListener('progress', (e) => {
+      if (e.lengthComputable) {
+        const percentComplete = Math.round((e.loaded / e.total) * 100);
+        console.log('[CloudinaryUpload] Upload progress:', percentComplete + '%');
+        setProgress(percentComplete);
+      }
+    });
 
-      if (!response.ok) {
-        const error = await response.json();
-        console.error('[CloudinaryUpload] Upload failed:', error);
-        throw new Error(error.error || 'Upload failed');
+    // Handle upload completion
+    xhr.addEventListener('load', () => {
+      console.log('[CloudinaryUpload] Upload response status:', xhr.status);
+
+      if (xhr.status === 200) {
+        try {
+          const data = JSON.parse(xhr.responseText);
+          console.log('[CloudinaryUpload] Upload successful:', data.url);
+          onUploadComplete(data.url);
+        } catch (error) {
+          console.error('[CloudinaryUpload] Failed to parse response:', error);
+          alert('Upload failed: Invalid response from server');
+        }
+      } else {
+        console.error('[CloudinaryUpload] Upload failed with status:', xhr.status);
+        try {
+          const error = JSON.parse(xhr.responseText);
+          alert(`Upload failed: ${error.error || 'Unknown error'}`);
+        } catch {
+          alert(`Upload failed: Server returned ${xhr.status}`);
+        }
       }
 
-      const data = await response.json();
-      console.log('[CloudinaryUpload] Upload successful:', data.url);
-      onUploadComplete(data.url);
-    } catch (error) {
-      console.error('[CloudinaryUpload] Upload error:', error);
-      alert(`Upload failed: ${error instanceof Error ? error.message : 'Please try again.'}`);
-    } finally {
       setUploading(false);
       setProgress(0);
-    }
+    });
+
+    // Handle upload errors
+    xhr.addEventListener('error', () => {
+      console.error('[CloudinaryUpload] Network error during upload');
+      alert('Upload failed: Network error. Please check your connection.');
+      setUploading(false);
+      setProgress(0);
+    });
+
+    // Handle upload abort
+    xhr.addEventListener('abort', () => {
+      console.log('[CloudinaryUpload] Upload aborted');
+      setUploading(false);
+      setProgress(0);
+    });
+
+    // Start the upload
+    xhr.open('POST', '/api/upload');
+    xhr.send(formData);
   };
 
   const onDrop = useCallback((acceptedFiles: File[]) => {

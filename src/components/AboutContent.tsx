@@ -58,16 +58,16 @@ export default function AboutContent() {
 
       {/* Editorial Opening - No Hero */}
       <section className="relative min-h-screen bg-dark-forest">
-        {/* Full-screen founder photo as background */}
+        {/* Full-screen Bhutan landscape as background */}
         <div className="absolute inset-0">
           <Image
-            src="https://res.cloudinary.com/dxztrqjft/image/upload/w_1200,h_800,c_fill/v1776275660/founder-portrait_pbo8m4.jpg"
-            alt="Bivatsu Giri - Founder"
+            src="https://res.cloudinary.com/dxztrqjft/image/upload/v1776291879/tiger-nest-close_rm2bee"
+            alt="Taktsang Palphug Monastery (Tiger's Nest), Bhutan"
             fill
-            className="object-cover object-top opacity-30"
+            className="object-cover opacity-40"
             priority
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-dark-forest/80 via-dark-forest/60 to-dark-forest" />
+          <div className="absolute inset-0 bg-gradient-to-b from-dark-forest/90 via-dark-forest/70 to-dark-forest" />
         </div>
 
         {/* Editorial typography overlay */}

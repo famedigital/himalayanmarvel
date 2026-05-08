@@ -83,33 +83,6 @@ export default function BentoGrid() {
       className="py-12 md:py-16 px-4 md:px-6 bg-gradient-to-b from-slate-950 via-neutral-900 to-slate-950"
     >
       <div className="container-luxury max-w-6xl mx-auto">
-        {/* Compact header */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
-          className="text-center mb-8 md:mb-10"
-        >
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full mb-4 backdrop-blur-sm border border-amber-500/20 bg-amber-500/5">
-            <div className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse" />
-            <span className="text-amber-500 text-[10px] uppercase tracking-[0.2em] font-semibold">
-              Journeys
-            </span>
-          </div>
-
-          <h2 className="font-display text-2xl md:text-4xl lg:text-5xl font-bold text-white mb-2 md:mb-3">
-            Curated{' '}
-            <span className="bg-gradient-to-r from-amber-200 via-amber-400 to-amber-200 bg-clip-text text-transparent">
-              Destinations
-            </span>
-          </h2>
-
-          <p className="text-xs md:text-sm text-neutral-400 max-w-xl mx-auto">
-            Every path through the Kingdom is a story waiting to unfold.
-          </p>
-        </motion.div>
-
         {/* Compact bento grid */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4">
             {tours.map((tour, index) => {

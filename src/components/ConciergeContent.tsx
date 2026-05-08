@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
@@ -33,6 +34,53 @@ const serviceSchema = {
 export default function ConciergeContent() {
   // Auto-calculate years of service
   const yearsOfService = getYearsOfServiceString();
+
+  // Form state
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    phone: '',
+    message: ''
+  });
+  const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
+  const [error, setError] = useState('');
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    });
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    setError('');
+
+    try {
+      const response = await fetch('/api/concierge-inquiry', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(formData)
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to submit inquiry');
+      }
+
+      setSuccess(true);
+      setFormData({ name: '', email: '', phone: '', message: '' });
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Something went wrong');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <main className="min-h-screen bg-alabaster dark:bg-dark-forest">
@@ -113,11 +161,11 @@ export default function ConciergeContent() {
       </section>
 
       {/* Process Timeline - Sleek Apple Style */}
-      <section className="py-20 px-6 bg-neutral-950">
+      <section className="py-12 px-6 bg-neutral-950">
         <div className="max-w-5xl mx-auto">
           <RevealOnScroll>
             {/* Header */}
-            <div className="text-center mb-16">
+            <div className="text-center mb-12">
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
@@ -188,10 +236,10 @@ export default function ConciergeContent() {
       </section>
 
       {/* What Makes Us Different */}
-      <section className="py-24 px-4 bg-white dark:bg-dark-forest">
+      <section className="py-16 px-4 bg-white dark:bg-dark-forest">
         <div className="max-w-6xl mx-auto">
           <RevealOnScroll>
-            <div className="text-center mb-16">
+            <div className="text-center mb-12">
               <p className="text-champagne-gold text-sm tracking-[0.2em] uppercase mb-4">
                 Not Your Typical Travel Agency
               </p>
@@ -261,67 +309,11 @@ export default function ConciergeContent() {
         </div>
       </section>
 
-      {/* How It Works - Clean Minimal */}
-      <section className="py-20 px-6 bg-black">
-        <div className="max-w-5xl mx-auto">
-          <RevealOnScroll>
-            {/* Header */}
-            <div className="text-center mb-16">
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6 }}
-              >
-                <p className="text-champagne-gold text-xs tracking-[0.25em] uppercase font-medium mb-3">
-                  The Process
-                </p>
-                <h2 className="text-3xl md:text-4xl font-semibold text-white">
-                  How We Craft Your Journey
-                </h2>
-                <p className="text-neutral-400 mt-3 text-base">
-                  Four simple steps to your private Bhutan experience
-                </p>
-              </motion.div>
-            </div>
-
-            {/* Steps - Horizontal */}
-            <div className="grid md:grid-cols-4 gap-4">
-              {[
-                { num: '01', title: 'Share Your Vision' },
-                { num: '02', title: 'Consultation' },
-                { num: '03', title: 'Custom Itinerary' },
-                { num: '04', title: 'Experience' }
-              ].map((step, index) => (
-                <motion.div
-                  key={index}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.5, delay: index * 0.1 }}
-                  className="group"
-                >
-                  <div className="text-center p-6 rounded-2xl bg-neutral-900/30 border border-neutral-800 hover:bg-white hover:shadow-lg hover:-translate-y-1 transition-all duration-300 cursor-pointer">
-                    <div className="mb-3">
-                      <div className="text-5xl font-semibold text-white/20 group-hover:text-neutral-900/20 transition-colors">
-                        {step.num}
-                      </div>
-                    </div>
-                    <h3 className="text-base font-semibold text-white group-hover:text-neutral-900 transition-colors">
-                      {step.title}
-                    </h3>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-          </RevealOnScroll>
-        </div>
-      </section>
-
       {/* Example Journeys */}
-      <section className="py-24 px-4 bg-white dark:bg-dark-forest">
+      <section className="py-16 px-4 bg-white dark:bg-dark-forest">
         <div className="max-w-6xl mx-auto">
           <RevealOnScroll>
-            <div className="text-center mb-16">
+            <div className="text-center mb-12">
               <p className="text-champagne-gold text-sm tracking-[0.2em] uppercase mb-4">
                 Custom Journeys We've Crafted
               </p>
@@ -335,7 +327,14 @@ export default function ConciergeContent() {
 
             <div className="grid md:grid-cols-3 gap-8">
               <div className="bg-alabaster dark:bg-black rounded-2xl overflow-hidden">
-                <div className="h-48 bg-gradient-to-br from-amber-600 to-champagne-gold" />
+                <div className="relative h-48">
+                  <Image
+                    src="https://res.cloudinary.com/dxztrqjft/image/upload/v1776291879/tiger-nest-close_rm2bee"
+                    alt="Buddhist monastery"
+                    fill
+                    className="object-cover"
+                  />
+                </div>
                 <div className="p-6">
                   <p className="text-champagne-gold text-xs uppercase tracking-wider mb-2">
                     Spiritual Journey
@@ -354,7 +353,14 @@ export default function ConciergeContent() {
               </div>
 
               <div className="bg-alabaster dark:bg-black rounded-2xl overflow-hidden">
-                <div className="h-48 bg-gradient-to-br from-emerald-600 to-teal-500" />
+                <div className="relative h-48">
+                  <Image
+                    src="https://res.cloudinary.com/dxztrqjft/image/upload/v1776291877/dochula_r3uler"
+                    alt="Scenic Bhutan landscape"
+                    fill
+                    className="object-cover"
+                  />
+                </div>
                 <div className="p-6">
                   <p className="text-champagne-gold text-xs uppercase tracking-wider mb-2">
                     Family Journey
@@ -373,7 +379,14 @@ export default function ConciergeContent() {
               </div>
 
               <div className="bg-alabaster dark:bg-black rounded-2xl overflow-hidden">
-                <div className="h-48 bg-gradient-to-br from-purple-600 to-indigo-500" />
+                <div className="relative h-48">
+                  <Image
+                    src="https://res.cloudinary.com/dxztrqjft/image/upload/v1776291902/buddha-point-view_skbl41"
+                    alt="Bhutan scenic view"
+                    fill
+                    className="object-cover"
+                  />
+                </div>
                 <div className="p-6">
                   <p className="text-champagne-gold text-xs uppercase tracking-wider mb-2">
                     Celebration Journey
@@ -396,7 +409,7 @@ export default function ConciergeContent() {
       </section>
 
       {/* Service Guarantee */}
-      <section className="py-24 px-4 bg-gradient-to-b from-alabaster to-white dark:from-dark-forest dark:to-black">
+      <section className="py-16 px-4 bg-gradient-to-b from-alabaster to-white dark:from-dark-forest dark:to-black">
         <div className="max-w-4xl mx-auto">
           <RevealOnScroll>
             <div className="text-center mb-12">
@@ -481,7 +494,7 @@ export default function ConciergeContent() {
       </section>
 
       {/* CTA Section */}
-      <section id="inquiry" className="py-24 px-4 bg-dark-forest">
+      <section id="inquiry" className="py-16 px-4 bg-dark-forest">
         <div className="max-w-4xl mx-auto text-center">
           <RevealOnScroll>
             <h2 className="text-4xl font-light text-white mb-6">
@@ -491,33 +504,101 @@ export default function ConciergeContent() {
               Share your vision with our concierge. We'll craft something extraordinary.
             </p>
 
+            {/* Social Proof Badges */}
+            <div className="flex flex-wrap justify-center gap-4 mb-8">
+              <div className="flex items-center gap-2 px-4 py-2 bg-white/10 backdrop-blur-sm rounded-full border border-white/20">
+                <span className="text-champagne-gold">★★★★★</span>
+                <span className="text-white text-sm font-medium">4.9 rating</span>
+                <span className="text-gray-400 text-sm">from 150+ travelers</span>
+              </div>
+              <div className="flex items-center gap-2 px-4 py-2 bg-white/10 backdrop-blur-sm rounded-full border border-white/20">
+                <span className="text-champagne-gold">✓</span>
+                <span className="text-white text-sm font-medium">Licensed & Insured</span>
+                <span className="text-gray-400 text-sm">#20753</span>
+              </div>
+              <div className="flex items-center gap-2 px-4 py-2 bg-white/10 backdrop-blur-sm rounded-full border border-white/20">
+                <span className="text-champagne-gold">⏱</span>
+                <span className="text-white text-sm font-medium">4-hour response time</span>
+              </div>
+            </div>
+
             <div className="bg-white dark:bg-black rounded-2xl p-8 max-w-2xl mx-auto">
               <h3 className="text-2xl font-light text-dark-forest dark:text-alabaster mb-6">
                 Tell Us About Your Trip
               </h3>
-              <form className="space-y-4">
-                <input
-                  type="text"
-                  placeholder="Your Name"
-                  className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-transparent"
-                />
-                <input
-                  type="email"
-                  placeholder="Email Address"
-                  className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-transparent"
-                />
-                <textarea
-                  placeholder="Tell us about your dream Bhutan journey..."
-                  rows={4}
-                  className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-transparent"
-                />
-                <button
-                  type="submit"
-                  className="w-full px-8 py-4 bg-champagne-gold text-dark-forest rounded-lg font-medium hover:bg-amber-400 transition-colors"
-                >
-                  Speak With Our Travel Concierge
-                </button>
-              </form>
+
+              {success ? (
+                <div className="text-center py-8">
+                  <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center">
+                    <span className="text-3xl text-green-600 dark:text-green-400">✓</span>
+                  </div>
+                  <h4 className="text-xl font-medium text-dark-forest dark:text-alabaster mb-2">
+                    Thank You!
+                  </h4>
+                  <p className="text-gray-600 dark:text-gray-300 mb-6">
+                    Your inquiry has been received. Our concierge will contact you within 4 hours.
+                  </p>
+                  <button
+                    onClick={() => setSuccess(false)}
+                    className="px-6 py-2 border border-champagne-gold text-champagne-gold rounded-lg hover:bg-champagne-gold/10 transition-colors"
+                  >
+                    Send Another Message
+                  </button>
+                </div>
+              ) : (
+                <form onSubmit={handleSubmit} className="space-y-4">
+                  <input
+                    type="text"
+                    name="name"
+                    value={formData.name}
+                    onChange={handleChange}
+                    placeholder="Your Name"
+                    required
+                    className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-transparent text-dark-forest dark:text-alabaster placeholder:text-gray-400"
+                  />
+                  <input
+                    type="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    placeholder="Email Address"
+                    required
+                    className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-transparent text-dark-forest dark:text-alabaster placeholder:text-gray-400"
+                  />
+                  <input
+                    type="tel"
+                    name="phone"
+                    value={formData.phone}
+                    onChange={handleChange}
+                    placeholder="Phone Number (Optional)"
+                    className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-transparent text-dark-forest dark:text-alabaster placeholder:text-gray-400"
+                  />
+                  <textarea
+                    name="message"
+                    value={formData.message}
+                    onChange={handleChange}
+                    placeholder="Tell us about your dream Bhutan journey..."
+                    rows={4}
+                    required
+                    className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-transparent text-dark-forest dark:text-alabaster placeholder:text-gray-400 resize-none"
+                  />
+
+                  {error && (
+                    <div className="p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
+                      <p className="text-sm text-red-600 dark:text-red-400">{error}</p>
+                    </div>
+                  )}
+
+                  <button
+                    type="submit"
+                    disabled={loading}
+                    className="w-full px-8 py-4 bg-champagne-gold text-dark-forest rounded-lg font-medium hover:bg-amber-400 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    {loading ? 'Sending...' : 'Speak With Our Travel Concierge'}
+                  </button>
+                </form>
+              )}
+
               <p className="text-sm text-gray-500 mt-4">
                 Typically responds within 4 hours • Your information is held in strict confidence
               </p>

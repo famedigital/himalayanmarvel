@@ -5,7 +5,6 @@ import { TrustArchitectureElite } from '@/components/luxury/TrustArchitectureEli
 import { CinematicScrollSection } from '@/components/luxury/CinematicScrollSection';
 import { ConciergeInquiryElite } from '@/components/luxury/ConciergeInquiryElite';
 import JourneyCards from '@/components/JourneyCards';
-import BentoGrid from '@/components/BentoGrid';
 import FAQ from '@/components/FAQ';
 import { TripAdvisorVerified } from '@/components/TripAdvisorVerified';
 import Footer from '@/components/Footer';
@@ -77,7 +76,6 @@ export default function Home() {
       <TrustArchitectureElite />
       <TripAdvisorVerified />
       <JourneyCards />
-      <BentoGrid />
       <CinematicScrollSection />
       <FAQ />
       <ConciergeInquiryElite />

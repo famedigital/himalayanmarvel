@@ -28,6 +28,7 @@ export default function FrontendContentManager({
 
   const handleSave = async (key: string, value: any) => {
     const supabase = createClient();
+    const toastId = toast.loading('Saving changes...');
 
     try {
       // Check if key already exists
@@ -53,10 +54,10 @@ export default function FrontendContentManager({
         });
       }
 
-      toast.success('Changes saved successfully');
+      toast.success('Changes saved successfully', { id: toastId });
     } catch (error) {
       console.error('Error saving content:', error);
-      toast.error('Failed to save changes');
+      toast.error('Failed to save changes', { id: toastId });
     }
   };
 

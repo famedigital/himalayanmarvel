@@ -1,8 +1,6 @@
 import { createBrowserClient } from "@supabase/ssr";
 
 export const createClient = () => {
-  // Return a safe placeholder during SSR - this should never actually be called
-  // since 'use client' components with useEffect only run in browser
   if (typeof window === 'undefined') {
     return null as any;
   }
@@ -19,12 +17,28 @@ export const createClient = () => {
       persistSession: true,
       autoRefreshToken: true,
       detectSessionInUrl: true,
-      storage: window.localStorage,
-      storageKey: 'himalayanmarvels-auth-token',
+      // Use cookies instead of localStorage for SSR compatibility
+      storage: {
+        getItem: (key) => {
+          if (typeof window === 'undefined') return null;
+          return document.cookie
+            .split('; ')
+            .find((row) => row.startsWith(`${key}=`))
+            ?.split('=')[1] ?? null;
+        },
+        setItem: (key, value) => {
+          if (typeof window === 'undefined') return;
+          document.cookie = `${key}=${value}; path=/; max-age=31536000; SameSite=Lax`;
+        },
+        removeItem: (key) => {
+          if (typeof window === 'undefined') return;
+          document.cookie = `${key}=; path=/; max-age=0`;
+        },
+      },
     },
   });
 
-  // Handle auth errors silently
+  // Handle auth state changes
   client.auth.onAuthStateChange((event, session) => {
     if (event === 'TOKEN_REFRESHED') {
       console.log('Session refreshed successfully');
