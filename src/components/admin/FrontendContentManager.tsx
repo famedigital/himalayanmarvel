@@ -117,6 +117,7 @@ export default function FrontendContentManager({
                 homepage_founder: contentMap.homepage_founder,
                 homepage_trust: contentMap.homepage_trust,
                 homepage_reviews: contentMap.homepage_reviews,
+                homepage_bento: contentMap.homepage_bento,
                 homepage_journeys: contentMap.homepage_journeys,
                 homepage_cinematic: contentMap.homepage_cinematic,
                 homepage_faq: contentMap.homepage_faq,

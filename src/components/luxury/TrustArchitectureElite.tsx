@@ -182,10 +182,14 @@ function PremiumCard({
   );
 }
 
-export function TrustArchitectureElite() {
+interface TrustArchitectureEliteProps {
+  content?: TrustData;
+}
+
+export function TrustArchitectureElite({ content }: TrustArchitectureEliteProps) {
   const { theme, resolvedTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
-  const [data, setData] = useState<TrustData>({
+  const [data, setData] = useState<TrustData>(content || {
     badgeText: 'Spiritual Journeys',
     badgeIcon: 'Gem',
     sectionTitle: 'Curated by',

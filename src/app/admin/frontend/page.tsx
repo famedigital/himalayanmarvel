@@ -17,7 +17,7 @@ export default async function FrontendPage() {
     .from('settings')
     .select('*')
     .or(
-      'key.eq.homepage_hero,key.eq.homepage_founder,key.eq.homepage_trust,key.eq.homepage_reviews,key.eq.homepage_journeys,key.eq.homepage_cinematic,key.eq.homepage_faq,key.eq.homepage_concierge_form,key.eq.about_page,key.eq.concierge_page,key.eq.footer_content,key.eq.tours_page,key.eq.hero_slides,key.eq.tour_categories'
+      'key.eq.homepage_hero,key.eq.homepage_founder,key.eq.homepage_trust,key.eq.homepage_reviews,key.eq.homepage_bento,key.eq.homepage_journeys,key.eq.homepage_cinematic,key.eq.homepage_faq,key.eq.homepage_concierge_form,key.eq.about_page,key.eq.concierge_page,key.eq.footer_content,key.eq.tours_page,key.eq.hero_slides,key.eq.tour_categories'
     );
 
   return (

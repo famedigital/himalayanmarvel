@@ -16,7 +16,7 @@ export async function GET(
 ) {
   try {
     const { id } = await params;
-    const supabase = createClient();
+    const supabase = await createClient();
 
     const { data, error } = await supabase
       .from('invoices')
@@ -59,7 +59,7 @@ export async function PUT(
   try {
     const { id } = await params;
     const body = await request.json();
-    const supabase = createClient();
+    const supabase = await createClient();
 
     const updateData: any = {
       guest_name: body.guest_name,
@@ -138,7 +138,7 @@ export async function DELETE(
 ) {
   try {
     const { id } = await params;
-    const supabase = createClient();
+    const supabase = await createClient();
 
     const { error } = await supabase
       .from('invoices')

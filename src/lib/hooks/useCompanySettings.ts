@@ -74,7 +74,7 @@ export function useCompanySettings() {
       }
 
       try {
-        const supabase = createClient();
+        const supabase = await createClient();
         const { data } = await supabase
           .from('company_settings')
           .select('*')

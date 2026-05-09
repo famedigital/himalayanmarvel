@@ -80,11 +80,15 @@ const defaultChapters: Chapter[] = [
   },
 ];
 
-export function CinematicScrollSection() {
+interface CinematicScrollSectionProps {
+  content?: CinematicData;
+}
+
+export function CinematicScrollSection({ content }: CinematicScrollSectionProps) {
   const { theme, resolvedTheme } = useTheme();
   const isDark = resolvedTheme === 'dark' || theme === 'dark';
   const [activeChapter, setActiveChapter] = useState(0);
-  const [chapters, setChapters] = useState<Chapter[]>(defaultChapters);
+  const [chapters, setChapters] = useState<Chapter[]>(content?.chapters || defaultChapters);
 
   const supabase = createClient();
 

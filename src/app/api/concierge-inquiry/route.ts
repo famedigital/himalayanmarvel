@@ -23,7 +23,7 @@ export async function POST(request: Request) {
       );
     }
 
-    const supabase = createClient();
+    const supabase = await createClient();
 
     // Insert inquiry into database
     const { data, error } = await supabase

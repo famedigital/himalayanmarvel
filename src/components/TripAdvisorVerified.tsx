@@ -29,8 +29,12 @@ interface ReviewsData {
  * - Link to Google reviews
  * - Verified badge
  */
-export function TripAdvisorVerified() {
-  const [data, setData] = useState<ReviewsData>({
+interface TripAdvisorVerifiedProps {
+  content?: ReviewsData;
+}
+
+export function TripAdvisorVerified({ content }: TripAdvisorVerifiedProps) {
+  const [data, setData] = useState<ReviewsData>(content || {
     rating: 4.9,
     reviewCount: 0,
     reviewSource: 'Google',

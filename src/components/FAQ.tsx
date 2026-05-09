@@ -7,7 +7,16 @@ import { useTheme } from 'next-themes';
 import RevealOnScroll from './ui/RevealOnScroll';
 import JsonLd from './seo/JsonLd';
 
-const faqs = [
+interface FAQItem {
+  question: string;
+  answer: string;
+}
+
+interface FAQProps {
+  content?: FAQItem[];
+}
+
+const defaultFaqs: FAQItem[] = [
   {
     question: 'Do I need a visa to visit Bhutan?',
     answer: 'Yes, all international tourists require a visa to enter Bhutan. We handle all visa processing as part of our tour packages. The visa is pre-processed and you will receive a clearance letter before travel.',
@@ -31,21 +40,23 @@ const faqs = [
 ];
 
 // Generate FAQ schema for SEO
-const faqSchema = {
-  '@context': 'https://schema.org',
-  '@type': 'FAQPage',
-  mainEntity: faqs.map((faq) => ({
-    '@type': 'Question',
-    name: faq.question,
-    acceptedAnswer: {
-      '@type': 'Answer',
-      text: faq.answer,
-    },
-  })),
+const generateFaqSchema = (faqs: FAQItem[]) => {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: faqs.map((faq) => ({
+      '@type': 'Question',
+      name: faq.question,
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: faq.answer,
+      },
+    })),
+  };
 };
 
 // Individual FAQ Item with hover-to-expand
-function FAQItem({
+function FAQItemComponent({
   faq,
   index,
   isOpen,
@@ -193,7 +204,8 @@ function FAQItem({
   );
 }
 
-export default function FAQ() {
+export default function FAQ({ content }: FAQProps) {
+  const faqs = content || defaultFaqs;
   const [openIndex, setOpenIndex] = useState<number | null>(null);
   const [mounted, setMounted] = useState(false);
   const { theme, resolvedTheme } = useTheme();
@@ -203,6 +215,7 @@ export default function FAQ() {
   }, []);
 
   const isDark = mounted ? (resolvedTheme === 'dark' || theme === 'dark') : true;
+  const faqSchema = generateFaqSchema(faqs);
 
   return (
     <section
@@ -318,7 +331,7 @@ export default function FAQ() {
         {/* FAQ Items */}
         <div className="max-w-3xl mx-auto">
           {faqs.map((faq, index) => (
-            <FAQItem
+            <FAQItemComponent
               key={index}
               faq={faq}
               index={index}

@@ -19,7 +19,12 @@ import { getYearsOfServiceString } from '@/lib/utils/years-of-service';
  * - Quote emphasizing transformation over tours
  * - Luxury brand background (Ritz-Carlton, Hyatt, Kempinski)
  */
-export function FounderHero() {
+interface FounderHeroProps {
+  content?: any;
+}
+
+export type { FounderHeroProps };
+export function FounderHero({ content }: FounderHeroProps) {
   const { theme, resolvedTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
 

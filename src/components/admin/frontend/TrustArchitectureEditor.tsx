@@ -56,14 +56,14 @@ export default function TrustArchitectureEditor({
     }
     setData({
       ...data,
-      inclusions: (data.inclusions || []).filter((_, i) => i !== index),
+      inclusions: (data.inclusions || []).filter((_x: any, i: number) => i !== index),
     });
   };
 
   const updateInclusion = (index: number, value: string) => {
     setData({
       ...data,
-      inclusions: (data.inclusions || []).map((item, i) =>
+      inclusions: (data.inclusions || []).map((item: any, i: number) =>
         i === index ? { ...item, text: value } : item
       ),
     });
@@ -79,14 +79,14 @@ export default function TrustArchitectureEditor({
   const removeStat = (index: number) => {
     setData({
       ...data,
-      stats: (data.stats || []).filter((_, i) => i !== index),
+      stats: (data.stats || []).filter((_x: any, i: number) => i !== index),
     });
   };
 
   const updateStat = (index: number, field: string, value: any) => {
     setData({
       ...data,
-      stats: (data.stats || []).map((stat, i) =>
+      stats: (data.stats || []).map((stat: any, i: number) =>
         i === index ? { ...stat, [field]: value } : stat
       ),
     });
@@ -105,14 +105,14 @@ export default function TrustArchitectureEditor({
   const removeJourneyPackage = (index: number) => {
     setData({
       ...data,
-      journeyPackages: (data.journeyPackages || []).filter((_, i) => i !== index),
+      journeyPackages: (data.journeyPackages || []).filter((_x: any, i: number) => i !== index),
     });
   };
 
   const updateJourneyPackage = (index: number, field: string, value: string) => {
     setData({
       ...data,
-      journeyPackages: (data.journeyPackages || []).map((pkg, i) =>
+      journeyPackages: (data.journeyPackages || []).map((pkg: any, i: number) =>
         i === index ? { ...pkg, [field]: value } : pkg
       ),
     });
@@ -131,14 +131,14 @@ export default function TrustArchitectureEditor({
   const removeSocialLink = (index: number) => {
     setData({
       ...data,
-      socialLinks: (data.socialLinks || []).filter((_, i) => i !== index),
+      socialLinks: (data.socialLinks || []).filter((_x: any, i: number) => i !== index),
     });
   };
 
   const updateSocialLink = (index: number, field: string, value: string) => {
     setData({
       ...data,
-      socialLinks: (data.socialLinks || []).map((link, i) =>
+      socialLinks: (data.socialLinks || []).map((link: any, i: number) =>
         i === index ? { ...link, [field]: value } : link
       ),
     });
@@ -208,7 +208,7 @@ export default function TrustArchitectureEditor({
           </button>
         </div>
         <div className="space-y-2">
-          {(data.inclusions || []).map((item, index) => (
+          {(data.inclusions || []).map((item: any, index: number) => (
             <div key={index} className="flex gap-2">
               <input
                 type="text"
@@ -241,7 +241,7 @@ export default function TrustArchitectureEditor({
           </button>
         </div>
         <div className="space-y-2">
-          {(data.stats || []).map((stat, index) => (
+          {(data.stats || []).map((stat: any, index: number) => (
             <div key={index} className="flex gap-2 items-center">
               <input
                 type="number"
@@ -288,7 +288,7 @@ export default function TrustArchitectureEditor({
           </button>
         </div>
         <div className="space-y-3">
-          {(data.journeyPackages || []).map((pkg, index) => (
+          {(data.journeyPackages || []).map((pkg: any, index: number) => (
             <div key={index} className="border border-gray-200 dark:border-gray-700 rounded p-3 space-y-2">
               <div className="flex justify-between items-center">
                 <span className="text-xs font-medium text-gray-500">Package {index + 1}</span>
@@ -347,7 +347,7 @@ export default function TrustArchitectureEditor({
           </button>
         </div>
         <div className="space-y-2">
-          {(data.socialLinks || []).map((link, index) => (
+          {(data.socialLinks || []).map((link: any, index: number) => (
             <div key={index} className="flex gap-2 items-center">
               <input
                 type="text"

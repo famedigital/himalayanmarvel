@@ -57,7 +57,7 @@ export async function POST(request: NextRequest) {
     if (body.utm_campaign) formattedData.utm_campaign = body.utm_campaign;
 
     // Create Supabase client
-    const supabase = createClient();
+    const supabase = await createClient();
 
     // Insert lead into database
     const { data, error } = await supabase
@@ -139,7 +139,7 @@ export async function GET(request: NextRequest) {
     const offset = parseInt(searchParams.get('offset') || '0');
 
     // Create Supabase client
-    const supabase = createClient();
+    const supabase = await createClient();
 
     // Build query
     let query = supabase

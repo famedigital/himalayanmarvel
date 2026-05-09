@@ -7,6 +7,7 @@ import {
   Shield,
   Star,
   Map,
+  Grid3X3,
   Film,
   HelpCircle,
   Mail,
@@ -15,10 +16,11 @@ import { cn } from '@/lib/utils';
 import FAQEditor from './FAQEditor';
 import FounderHeroEditor from './FounderHeroEditor';
 import TrustArchitectureEditor from './TrustArchitectureEditor';
-import TripAdvisorReviewsEditor from './TripAdvisorReviewsEditor';
+import GoogleReviewsEditor from './GoogleReviewsEditor';
 import JourneyCardsEditor from './JourneyCardsEditor';
 import CinematicScrollEditor from './CinematicScrollEditor';
 import ConciergeInquiryEditor from './ConciergeInquiryEditor';
+import BentoEditor from './BentoEditor';
 import PlaceholderEditor from './PlaceholderEditor';
 
 interface Section {
@@ -57,15 +59,23 @@ const HOMEPAGE_SECTIONS: Section[] = [
   },
   {
     id: 'reviews',
-    name: 'TripAdvisor Reviews',
+    name: 'Google Reviews',
     icon: Star,
-    description: 'Customer reviews and ratings',
+    description: 'Google reviews and ratings',
     contentKey: 'homepage_reviews',
-    editor: 'reviews',
+    editor: 'google-reviews',
   },
   {
-    id: 'journeys',
-    name: 'Journey Cards',
+    id: 'bento',
+    name: 'Bento Grid',
+    icon: Grid3X3,
+    description: 'Tour categories bento grid',
+    contentKey: 'homepage_bento',
+    editor: 'bento',
+  },
+  {
+    id: 'tour-category',
+    name: 'Tour Category',
     icon: Map,
     description: 'Tour category showcase',
     contentKey: 'homepage_journeys',
@@ -225,6 +235,12 @@ export default function HomepageEditor({
                 {selectedSection.id === 'reviews' && (
                   <Star className="w-5 h-5 lg:w-6 lg:h-6 text-amber-500" />
                 )}
+                {selectedSection.id === 'bento' && (
+                  <Grid3X3 className="w-5 h-5 lg:w-6 lg:h-6 text-amber-500" />
+                )}
+                {selectedSection.id === 'tour-category' && (
+                  <Map className="w-5 h-5 lg:w-6 lg:h-6 text-amber-500" />
+                )}
                 {selectedSection.id === 'journeys' && (
                   <Map className="w-5 h-5 lg:w-6 lg:h-6 text-amber-500" />
                 )}
@@ -267,8 +283,14 @@ export default function HomepageEditor({
                 onSave={handleSave}
               />
             )}
-            {selectedSection.editor === 'reviews' && (
-              <TripAdvisorReviewsEditor
+            {selectedSection.editor === 'google-reviews' && (
+              <GoogleReviewsEditor
+                initialData={initialData[selectedSection.contentKey]}
+                onSave={handleSave}
+              />
+            )}
+            {selectedSection.editor === 'bento' && (
+              <BentoEditor
                 initialData={initialData[selectedSection.contentKey]}
                 onSave={handleSave}
               />

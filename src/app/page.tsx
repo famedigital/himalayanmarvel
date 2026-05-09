@@ -10,6 +10,7 @@ import { TripAdvisorVerified } from '@/components/TripAdvisorVerified';
 import Footer from '@/components/Footer';
 import WhatsAppConcierge from '@/components/WhatsAppConcierge';
 import JsonLd from '@/components/seo/JsonLd';
+import { createClient } from '@/lib/supabase/server';
 
 /**
  * Homepage — Luxury transformation (CURATED TO 8 SECTIONS)
@@ -65,20 +66,36 @@ const organizationSchema = {
   knowsAbout: ['Luxury Travel', 'Private Tours', 'Cultural Tourism', 'Spiritual Journeys', 'Trekking Expeditions'],
 };
 
-export default function Home() {
+export default async function Home() {
+  const supabase = await createClient();
+
+  // Fetch all homepage content from settings
+  const { data: homepageContent } = await supabase
+    .from('settings')
+    .select('key, value')
+    .or(
+      'key.eq.homepage_founder,key.eq.homepage_trust,key.eq.homepage_reviews,key.eq.homepage_journeys,key.eq.homepage_cinematic,key.eq.homepage_faq,key.eq.homepage_concierge_form,key.eq.homepage_bento'
+    );
+
+  // Convert array to key-value object
+  const contentMap: Record<string, any> = {};
+  homepageContent?.forEach((item) => {
+    contentMap[item.key] = item.value;
+  });
+
   return (
     <main className="relative bg-alabaster dark:bg-dark-forest">
       {/* Organization Schema for homepage SEO */}
       <JsonLd data={organizationSchema} />
       <Navigation />
       <HeroLuxury />
-      <FounderHero />
-      <TrustArchitectureElite />
-      <TripAdvisorVerified />
-      <JourneyCards />
-      <CinematicScrollSection />
-      <FAQ />
-      <ConciergeInquiryElite />
+      <FounderHero content={contentMap.homepage_founder} />
+      <TrustArchitectureElite content={contentMap.homepage_trust} />
+      <TripAdvisorVerified content={contentMap.homepage_reviews} />
+      <JourneyCards content={contentMap.homepage_journeys} />
+      <CinematicScrollSection content={contentMap.homepage_cinematic} />
+      <FAQ content={contentMap.homepage_faq} />
+      <ConciergeInquiryElite content={contentMap.homepage_concierge_form} />
       <Footer />
       <WhatsAppConcierge />
     </main>

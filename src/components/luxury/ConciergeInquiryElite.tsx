@@ -34,11 +34,15 @@ interface ConciergeFormData {
  * "Contact Us" → "Speak With Our Travel Concierge"
  * Reduced to 3 fields for higher conversion
  */
-export function ConciergeInquiryElite() {
+interface ConciergeInquiryEliteProps {
+  content?: ConciergeFormData;
+}
+
+export function ConciergeInquiryElite({ content }: ConciergeInquiryEliteProps) {
   const { theme, resolvedTheme } = useTheme();
   const isDark = resolvedTheme === 'dark' || theme === 'dark';
 
-  const [data, setData] = useState<ConciergeFormData>({
+  const [data, setData] = useState<ConciergeFormData>(content || {
     title: 'Speak With Our',
     description: 'Every journey begins with a conversation, not a form. Share your vision, and we\'ll craft a journey that\'s exclusively yours.',
     contactInfo: {

@@ -78,13 +78,23 @@ const defaultTours: TourCategory[] = [
  * JourneyCards — Luxury journey showcase
  * Replaces TourPackages with editorial, magazine-style presentation
  */
-export default function JourneyCards() {
-  const [tours, setTours] = useState<TourCategory[]>(defaultTours);
-  const [loading, setLoading] = useState(true);
+interface JourneyCardsProps {
+  content?: TourCategory[];
+}
+
+export default function JourneyCards({ content }: JourneyCardsProps) {
+  const [tours, setTours] = useState<TourCategory[]>(content || defaultTours);
+  const [loading, setLoading] = useState(!content);
 
   useEffect(() => {
+    if (content) {
+      setTours(content);
+      setLoading(false);
+      return;
+    }
+
     const fetchCategories = async () => {
-      const supabase = createClient();
+      const supabase = await createClient();
       const { data } = await supabase
         .from('settings')
         .select('value')
@@ -98,7 +108,7 @@ export default function JourneyCards() {
     };
 
     fetchCategories();
-  }, []);
+  }, [content]);
 
   return (
     <section id="journeys" className="section-luxury dark:bg-black bg-neutral-50 relative overflow-hidden">
