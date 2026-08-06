@@ -1,6 +1,7 @@
 # Project Memory Index
 
 ## Codebase & Architecture
+- [Admin Production Audit](memory/admin_production_audit.md) - Full admin feature map, lifecycle, fixed loopholes (Aug 2026)
 - [Admin Panel Integration](memory/admin_integration.md) - Admin panel merged into main project at `/admin`
 - [Bank Details System](memory/bank_details_system.md) - Editable bank details for wire transfers (flexible format for non-standard banking)
 - [Supabase Configuration](memory/supabase_setup.md) - SSR setup, middleware, and environment variables

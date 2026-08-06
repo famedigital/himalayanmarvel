@@ -38,11 +38,11 @@ export default async function DashboardPage() {
       href: '/admin/tours',
     },
     {
-      title: 'Total Operations',
+      title: 'Operations',
       value: stats.bookings,
       icon: Calendar,
       color: 'from-pink-500 to-rose-500',
-      href: '/admin/bookings',
+      href: '/admin/operations',
     },
     {
       title: 'Blog Posts',
@@ -90,7 +90,7 @@ export default async function DashboardPage() {
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100">Recent Operations</h2>
           <Link
-            href="/admin/bookings"
+            href="/admin/operations"
             className="text-orange-500 hover:text-orange-400 text-sm font-medium"
           >
             View all →
