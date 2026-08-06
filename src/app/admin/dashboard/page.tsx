@@ -145,7 +145,16 @@ export default async function DashboardPage() {
       </div>
 
       {/* Quick Actions */}
-      <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="mt-8 grid grid-cols-1 md:grid-cols-4 gap-4">
+        <Link
+          href="/admin/itineraries/new"
+          className="group relative bg-gradient-to-br from-amber-500/20 to-orange-500/20 border border-amber-500/30 rounded-2xl p-6 hover:border-amber-500/50 transition-all"
+        >
+          <FileText className="w-8 h-8 text-amber-600 mb-4" />
+          <h3 className="text-gray-900 dark:text-gray-100 font-semibold mb-1">New Itinerary</h3>
+          <p className="text-gray-500 dark:text-gray-400 text-sm">Start guest journey package</p>
+        </Link>
+
         <Link
           href="/admin/tours/new"
           className="group relative bg-gradient-to-br from-orange-500/20 to-pink-500/20 border border-orange-500/30 rounded-2xl p-6 hover:border-orange-500/50 transition-all"
@@ -156,12 +165,12 @@ export default async function DashboardPage() {
         </Link>
 
         <Link
-          href="/admin/bookings/new"
+          href="/admin/operations"
           className="group relative bg-gradient-to-br from-pink-500/20 to-purple-500/20 border border-pink-500/30 rounded-2xl p-6 hover:border-pink-500/50 transition-all"
         >
           <Calendar className="w-8 h-8 text-pink-500 mb-4" />
-          <h3 className="text-gray-900 dark:text-gray-100 font-semibold mb-1">New Operation</h3>
-          <p className="text-gray-500 dark:text-gray-400 text-sm">Add a client booking</p>
+          <h3 className="text-gray-900 dark:text-gray-100 font-semibold mb-1">Operations</h3>
+          <p className="text-gray-500 dark:text-gray-400 text-sm">Assign guides & hotels</p>
         </Link>
 
         <Link
