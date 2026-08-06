@@ -4,7 +4,54 @@ import { motion } from 'framer-motion';
 import { Mail, Phone, MapPin, ArrowUpRight } from 'lucide-react';
 import RevealOnScroll from './ui/RevealOnScroll';
 
-const footerLinks = {
+export type FooterContent = {
+  companyName?: string;
+  tagline?: string;
+  copyright?: string;
+  contact?: {
+    email?: string;
+    phone?: string;
+    address?: string;
+  };
+  socialLinks?: Array<{ platform?: string; name?: string; url?: string; href?: string }>;
+  quickLinks?: Array<{ label?: string; name?: string; href: string }>;
+  ctaEyebrow?: string;
+  ctaTitle?: string;
+  ctaBody?: string;
+  ctaQuote?: string;
+  ctaEmail?: string;
+};
+
+const DEFAULT_FOOTER: Required<
+  Pick<
+    FooterContent,
+    | 'companyName'
+    | 'tagline'
+    | 'copyright'
+    | 'ctaEyebrow'
+    | 'ctaTitle'
+    | 'ctaBody'
+    | 'ctaQuote'
+  >
+> & {
+  contact: { email: string; phone: string; address: string };
+  socialLinks: Array<{ name: string; href: string }>;
+  explore: Array<{ name: string; href: string }>;
+  company: Array<{ name: string; href: string }>;
+  legal: Array<{ name: string; href: string }>;
+} = {
+  companyName: 'Himalayan Marvels',
+  tagline: 'Crafting transformative journeys through the mystical Kingdom of Bhutan since 2014.',
+  copyright: `© ${new Date().getFullYear()} Himalayan Marvels. Thimphu, Bhutan.`,
+  contact: {
+    email: 'info@himalayanmarvels.com',
+    phone: '+975 77270465',
+    address: 'Changbangdu, Thimphu 11001',
+  },
+  socialLinks: [
+    { name: 'Instagram', href: 'https://www.instagram.com/himalayanmarvels.travel/' },
+    { name: 'Facebook', href: 'https://www.facebook.com/himalayanmarvels/' },
+  ],
   explore: [
     { name: 'Cultural Journeys', href: '/tours?type=cultural' },
     { name: 'Spiritual Journeys', href: '/tours?type=spiritual' },
@@ -19,21 +66,55 @@ const footerLinks = {
     { name: 'Privacy Policy', href: '/privacy' },
     { name: 'Terms of Service', href: '/terms' },
   ],
+  ctaEyebrow: 'Design Your Journey',
+  ctaTitle: 'Let us craft your Bhutan story',
+  ctaBody:
+    "Every journey begins with a conversation. Share your vision, and we'll design an experience tailored to your intentions.",
+  ctaQuote: '"Happiness is a place" — Bhutanese proverb',
 };
 
-const socialLinks = [
-  { name: 'Instagram', href: 'https://www.instagram.com/himalayanmarvels.travel/' },
-  { name: 'Facebook', href: 'https://www.facebook.com/himalayanmarvels/' },
-];
+interface FooterProps {
+  content?: FooterContent | null;
+}
 
-export default function Footer() {
+export default function Footer({ content }: FooterProps) {
+  const companyName = content?.companyName || DEFAULT_FOOTER.companyName;
+  const tagline = content?.tagline || DEFAULT_FOOTER.tagline;
+  const copyright = content?.copyright || DEFAULT_FOOTER.copyright;
+  const contact = {
+    email: content?.contact?.email || DEFAULT_FOOTER.contact.email,
+    phone: content?.contact?.phone || DEFAULT_FOOTER.contact.phone,
+    address: content?.contact?.address || DEFAULT_FOOTER.contact.address,
+  };
+  const socialLinks =
+    content?.socialLinks?.map((s) => ({
+      name: s.name || s.platform || 'Social',
+      href: s.href || s.url || '#',
+    })) || DEFAULT_FOOTER.socialLinks;
+
+  const quickFromCms = content?.quickLinks?.map((l) => ({
+    name: l.label || l.name || 'Link',
+    href: l.href,
+  }));
+
+  const footerLinks = {
+    explore: DEFAULT_FOOTER.explore,
+    company: quickFromCms?.length ? quickFromCms : DEFAULT_FOOTER.company,
+    legal: DEFAULT_FOOTER.legal,
+  };
+
+  const ctaEyebrow = content?.ctaEyebrow || DEFAULT_FOOTER.ctaEyebrow;
+  const ctaTitle = content?.ctaTitle || DEFAULT_FOOTER.ctaTitle;
+  const ctaBody = content?.ctaBody || DEFAULT_FOOTER.ctaBody;
+  const ctaQuote = content?.ctaQuote || DEFAULT_FOOTER.ctaQuote;
+  const ctaEmail = content?.ctaEmail || contact.email;
+
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   return (
     <footer className="relative overflow-hidden" style={{ backgroundColor: '#0A120A' }}>
-      {/* Subtle texture */}
       <div
         className="absolute inset-0 opacity-[0.02]"
         style={{
@@ -42,9 +123,7 @@ export default function Footer() {
         }}
       />
 
-      {/* Main Content */}
       <div className="relative z-10">
-        {/* CTA Section */}
         <div className="container-premium py-32">
           <RevealOnScroll className="max-w-3xl mx-auto text-center">
             <div className="w-16 h-px mx-auto mb-8" style={{ backgroundColor: 'rgba(212, 175, 55, 0.3)' }} />
@@ -52,25 +131,25 @@ export default function Footer() {
               className="text-xs uppercase tracking-[0.3em] mb-6"
               style={{ color: '#D4AF37' }}
             >
-              Design Your Journey
+              {ctaEyebrow}
             </p>
             <h3
               className="text-4xl md:text-5xl font-light text-white mb-6 tracking-tight"
               style={{ fontFamily: 'var(--font-playfair)' }}
             >
-              Let us craft your Bhutan story
+              {ctaTitle}
             </h3>
             <p className="text-stone-300 text-xl leading-relaxed mb-4 max-w-xl mx-auto">
-              Every journey begins with a conversation. Share your vision, and we&apos;ll design an experience tailored to your intentions.
+              {ctaBody}
             </p>
             <p
               className="text-sm italic mb-10"
               style={{ color: 'rgba(212, 175, 55, 0.35)', fontFamily: 'var(--font-playfair)' }}
             >
-              &ldquo;Happiness is a place&rdquo; &mdash; Bhutanese proverb
+              {ctaQuote}
             </p>
             <motion.a
-              href="mailto:info@himalayanmarvels.com"
+              href={`mailto:${ctaEmail}`}
               whileHover={{ y: -2, borderColor: 'rgba(212, 175, 55, 0.5)', backgroundColor: 'rgba(0, 104, 56, 0.15)' }}
               whileTap={{ scale: 0.98 }}
               className="inline-flex items-center gap-3 px-10 py-4 rounded-full text-white text-base font-medium tracking-wide transition-all"
@@ -82,19 +161,17 @@ export default function Footer() {
           </RevealOnScroll>
         </div>
 
-        {/* Links Section */}
         <div className="container-premium py-20" style={{ borderTop: '1px solid rgba(212, 175, 55, 0.08)' }}>
           <div className="grid grid-cols-2 md:grid-cols-5 gap-12">
-            {/* Brand Column */}
             <RevealOnScroll className="col-span-2">
               <p
                 className="text-xl font-light text-white mb-4 tracking-tight"
                 style={{ fontFamily: 'var(--font-playfair)' }}
               >
-                Himalayan Marvels
+                {companyName}
               </p>
               <p className="text-stone-400 text-base mb-6 leading-relaxed max-w-xs">
-                Crafting transformative journeys through the mystical Kingdom of Bhutan since 2014.
+                {tagline}
               </p>
               <div className="flex items-center gap-4">
                 {socialLinks.map((social) => (
@@ -113,7 +190,6 @@ export default function Footer() {
               </div>
             </RevealOnScroll>
 
-            {/* Links Columns */}
             {Object.entries(footerLinks).map(([title, links], index) => (
               <RevealOnScroll key={title} delay={index * 0.1}>
                 <p className="text-white font-medium mb-5 capitalize text-sm tracking-wide">
@@ -137,13 +213,12 @@ export default function Footer() {
           </div>
         </div>
 
-        {/* Contact Info */}
         <div className="container-premium py-16" style={{ borderTop: '1px solid rgba(212, 175, 55, 0.08)' }}>
           <div className="grid md:grid-cols-3 gap-8">
             {[
-              { icon: Phone, text: '+975 77270465', label: 'Phone', href: 'tel:+97577270465' },
-              { icon: Mail, text: 'info@himalayanmarvels.com', label: 'Email', href: 'mailto:info@himalayanmarvels.com' },
-              { icon: MapPin, text: 'Changbangdu, Thimphu 11001', label: 'Location', href: '#' },
+              { icon: Phone, text: contact.phone, label: 'Phone', href: `tel:${contact.phone.replace(/\s/g, '')}` },
+              { icon: Mail, text: contact.email, label: 'Email', href: `mailto:${contact.email}` },
+              { icon: MapPin, text: contact.address, label: 'Location', href: '#' },
             ].map((item, index) => {
               const Icon = item.icon;
               return (
@@ -165,12 +240,9 @@ export default function Footer() {
           </div>
         </div>
 
-        {/* Bottom Bar */}
         <div className="container-premium py-8" style={{ borderTop: '1px solid rgba(212, 175, 55, 0.08)' }}>
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-            <p className="text-stone-400 text-sm">
-              &copy; 2026 Himalayan Marvels. Thimphu, Bhutan.
-            </p>
+            <p className="text-stone-400 text-sm">{copyright}</p>
             <motion.a
               href="https://famedigital.netlify.app"
               target="_blank"
@@ -192,7 +264,6 @@ export default function Footer() {
         </div>
       </div>
 
-      {/* Gold accent line */}
       <div className="h-px" style={{ background: 'linear-gradient(to right, transparent, rgba(212, 175, 55, 0.2), transparent)' }} />
     </footer>
   );

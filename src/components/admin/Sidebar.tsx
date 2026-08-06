@@ -6,7 +6,6 @@ import { usePathname, useRouter } from 'next/navigation';
 import {
   LayoutDashboard,
   Map,
-  Briefcase,
   FileText,
   LogOut,
   Menu,
@@ -14,10 +13,11 @@ import {
   BookOpen,
   Image as ImageIcon,
   Layers,
-  Building2,
   ChevronLeft,
   ChevronRight,
   Receipt,
+  Briefcase,
+  Settings,
 } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 import { cn } from '@/lib/utils';
@@ -35,15 +35,40 @@ import {
   SheetTrigger,
 } from '@/components/ui/sheet';
 
-const navItems = [
-  { name: 'Dashboard', href: '/admin/dashboard', icon: LayoutDashboard },
-  { name: 'Frontend', href: '/admin/frontend', icon: Globe },
-  { name: 'Tours', href: '/admin/tours', icon: Map },
-  { name: 'Categories', href: '/admin/tour-categories', icon: Layers },
-  { name: 'Hero', href: '/admin/hero', icon: ImageIcon },
-  { name: 'Blog', href: '/admin/blog', icon: FileText },
-  { name: 'Itineraries', href: '/admin/itineraries', icon: BookOpen },
+const navSections = [
+  {
+    label: 'Overview',
+    items: [
+      { name: 'Dashboard', href: '/admin/dashboard', icon: LayoutDashboard },
+    ],
+  },
+  {
+    label: 'Website',
+    items: [
+      { name: 'Frontend', href: '/admin/frontend', icon: Globe },
+      { name: 'Hero', href: '/admin/hero', icon: ImageIcon },
+      { name: 'Tours', href: '/admin/tours', icon: Map },
+      { name: 'Categories', href: '/admin/tour-categories', icon: Layers },
+      { name: 'Blog', href: '/admin/blog', icon: FileText },
+    ],
+  },
+  {
+    label: 'Operations',
+    items: [
+      { name: 'Itineraries', href: '/admin/itineraries', icon: BookOpen },
+      { name: 'Invoices', href: '/admin/invoices', icon: Receipt },
+      { name: 'Operations', href: '/admin/operations', icon: Briefcase },
+    ],
+  },
+  {
+    label: 'System',
+    items: [
+      { name: 'Settings', href: '/admin/settings', icon: Settings },
+    ],
+  },
 ];
+
+const navItems = navSections.flatMap((s) => s.items);
 
 const COLLAPSED_STORAGE_KEY = 'admin-sidebar-collapsed';
 
@@ -120,7 +145,7 @@ function NavContent({ collapsed, pathname, onLogout, onMobileClose }: NavContent
     <div className="flex h-full flex-col">
       {/* Logo Section */}
       <div className="flex h-16 items-center justify-center border-b border-stone-200/50 bg-white px-4">
-        <Link href="/admin" className="flex items-center gap-3 transition-transform hover:scale-105">
+        <Link href="/admin/dashboard" className="flex items-center gap-3 transition-transform hover:scale-105">
           <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-amber-500 to-amber-600 text-white shadow-lg shadow-amber-500/30">
             <span className="text-base font-bold">HM</span>
           </div>
@@ -135,19 +160,30 @@ function NavContent({ collapsed, pathname, onLogout, onMobileClose }: NavContent
 
       {/* Navigation */}
       <ScrollArea className="flex-1 px-3 py-4">
-        <nav className="space-y-1">
-          {navItems.map((item) => {
-            const isActive = pathname?.startsWith(item.href) && pathname !== item.href + '/new' && pathname !== item.href + '/edit';
-            return (
-              <NavItem
-                key={item.name}
-                item={item}
-                isActive={isActive || false}
-                collapsed={collapsed}
-                onClick={onMobileClose}
-              />
-            );
-          })}
+        <nav className="space-y-4">
+          {navSections.map((section) => (
+            <div key={section.label} className="space-y-1">
+              {!collapsed && (
+                <p className="px-3 pb-1 text-[10px] font-semibold uppercase tracking-wider text-stone-400">
+                  {section.label}
+                </p>
+              )}
+              {section.items.map((item) => {
+                const isActive =
+                  pathname === item.href ||
+                  (pathname?.startsWith(item.href + '/') ?? false);
+                return (
+                  <NavItem
+                    key={item.name}
+                    item={item}
+                    isActive={isActive}
+                    collapsed={collapsed}
+                    onClick={onMobileClose}
+                  />
+                );
+              })}
+            </div>
+          ))}
         </nav>
       </ScrollArea>
 

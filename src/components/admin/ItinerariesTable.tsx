@@ -361,7 +361,7 @@ export function ItinerariesTable({ itineraries, bookings = [], invoices = [] }: 
                     id={itinerary.id}
                     title={itinerary.title}
                     viewHref={`/admin/itineraries/${itinerary.id}`}
-                    editHref={`/admin/itineraries/${itinerary.id}`}
+                    editHref={`/admin/itineraries/${itinerary.id}/edit`}
                     invoiceHref={`/admin/invoices/new/${itinerary.id}`}
                     onPreview={() => handlePreviewHTML(itinerary.id)}
                     onDownload={() => handleGenerateHTML(itinerary.id)}

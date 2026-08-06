@@ -31,9 +31,22 @@ const serviceSchema = {
   },
 };
 
-export default function ConciergeContent() {
+export default function ConciergeContent({
+  hero,
+  footerContent,
+}: {
+  hero?: { title?: string; subtitle?: string; image?: string } | null;
+  footerContent?: import('@/components/Footer').FooterContent | null;
+}) {
   // Auto-calculate years of service
   const yearsOfService = getYearsOfServiceString();
+  const heroTitle = hero?.title;
+  const heroSubtitle =
+    hero?.subtitle ||
+    `Experience the luxury of having every detail curated by insiders who've spent ${yearsOfService} years crafting journeys in the Last Shangri-La.`;
+  const heroImage =
+    hero?.image ||
+    'https://res.cloudinary.com/dxztrqjft/image/upload/w_1920,h_1080,c_fill,q_80/v1776291879/tiger-nest-close_rm2bee';
 
   // Form state
   const [formData, setFormData] = useState({
@@ -92,7 +105,7 @@ export default function ConciergeContent() {
         {/* Background Image */}
         <div className="absolute inset-0">
           <Image
-            src="https://res.cloudinary.com/dxztrqjft/image/upload/w_1920,h_1080,c_fill,q_80/v1776291879/tiger-nest-close_rm2bee"
+            src={heroImage}
             alt="Bhutan landscape"
             fill
             className="object-cover"
@@ -113,12 +126,18 @@ export default function ConciergeContent() {
                 <p className="text-champagne-gold text-sm tracking-[0.3em] uppercase mb-6">
                   Bespoke Service
                 </p>
-                <h1 className="text-5xl md:text-7xl lg:text-8xl font-serif text-white mb-8 leading-none">
-                  Your Private<br />
-                  <em className="text-champagne-gold">Concierge</em>
-                </h1>
+                {heroTitle ? (
+                  <h1 className="text-5xl md:text-7xl lg:text-8xl font-serif text-white mb-8 leading-none">
+                    {heroTitle}
+                  </h1>
+                ) : (
+                  <h1 className="text-5xl md:text-7xl lg:text-8xl font-serif text-white mb-8 leading-none">
+                    Your Private<br />
+                    <em className="text-champagne-gold">Concierge</em>
+                  </h1>
+                )}
                 <p className="text-xl md:text-2xl text-gray-300 leading-relaxed font-light max-w-2xl mb-12">
-                  Experience the luxury of having every detail curated by insiders who've spent {yearsOfService} years crafting journeys in the Last Shangri-La.
+                  {heroSubtitle}
                 </p>
                 <div className="flex flex-col sm:flex-row gap-4">
                   <motion.a
@@ -623,7 +642,7 @@ export default function ConciergeContent() {
           </RevealOnScroll>
         </div>
       </section>
-      <Footer />
+      <Footer content={footerContent} />
     </main>
   );
 }

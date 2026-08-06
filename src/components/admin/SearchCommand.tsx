@@ -14,16 +14,19 @@ interface SearchResult {
 
 const searchItems: SearchResult[] = [
   { title: 'Dashboard', href: '/admin/dashboard', icon: LayoutDashboard, category: 'Main' },
-  { title: 'Tours', href: '/admin/tours', icon: Map, category: 'Main' },
-  { title: 'Operations', href: '/admin/bookings', icon: Briefcase, category: 'Main' },
-  { title: 'Itineraries', href: '/admin/itineraries', icon: BookOpen, category: 'Content' },
-  { title: 'New Itinerary', href: '/admin/itineraries/new', icon: BookOpen, category: 'Content' },
-  { title: 'Tour Categories', href: '/admin/tour-categories', icon: Layers, category: 'Content' },
-  { title: 'Hero Slider', href: '/admin/hero', icon: ImageIcon, category: 'Content' },
-  { title: 'Blog Posts', href: '/admin/blog', icon: FileText, category: 'Content' },
-  { title: 'New Blog Post', href: '/admin/blog/new', icon: FileText, category: 'Content' },
-  { title: 'Bank Details', href: '/admin/bank-details', icon: Building2, category: 'Settings' },
+  { title: 'Frontend CMS', href: '/admin/frontend', icon: Globe, category: 'Website' },
+  { title: 'Tours', href: '/admin/tours', icon: Map, category: 'Website' },
+  { title: 'Tour Categories', href: '/admin/tour-categories', icon: Layers, category: 'Website' },
+  { title: 'Hero Slider', href: '/admin/hero', icon: ImageIcon, category: 'Website' },
+  { title: 'Blog Posts', href: '/admin/blog', icon: FileText, category: 'Website' },
+  { title: 'New Blog Post', href: '/admin/blog/new', icon: FileText, category: 'Website' },
+  { title: 'Itineraries', href: '/admin/itineraries', icon: BookOpen, category: 'Operations' },
+  { title: 'New Itinerary', href: '/admin/itineraries/new', icon: BookOpen, category: 'Operations' },
+  { title: 'Invoices', href: '/admin/invoices', icon: Briefcase, category: 'Operations' },
+  { title: 'Operations Desk', href: '/admin/operations', icon: Briefcase, category: 'Operations' },
+  { title: 'Bank Details', href: '/admin/settings?tab=company', icon: Building2, category: 'Settings' },
   { title: 'Settings', href: '/admin/settings', icon: Globe, category: 'Settings' },
+  { title: 'Theme Colors', href: '/admin/settings?tab=theme', icon: Globe, category: 'Settings' },
 ];
 
 export function SearchCommand() {

@@ -5,56 +5,71 @@ export async function middleware(request: NextRequest) {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
   const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
 
-  const supabase = createServerClient(
-    supabaseUrl,
-    supabaseKey,
-    {
-      cookies: {
-        getAll() {
-          return request.cookies.getAll()
-        },
-        setAll(cookiesToSet) {
-          cookiesToSet.forEach(({ name, value, options }) => {
-            request.cookies.set(name, value)
-          })
-        },
-      },
-    },
-  );
-
-  // Suppress auth errors in console
-  let data;
-  try {
-    const result = await supabase.auth.getUser();
-    data = result.data;
-  } catch (error) {
-    // Silently handle auth errors - session likely expired
-    console.warn('Auth session expired or invalid');
-    data = { user: null };
-  }
-
-  // Protected admin routes - redirect to login if not authenticated
-  const isAuthPage = request.nextUrl.pathname === '/admin/login';
-  const isAdminRoute = request.nextUrl.pathname.startsWith('/admin');
-
-  if (isAdminRoute && !isAuthPage && !data.user) {
-    return NextResponse.redirect(new URL('/admin/login', request.url));
-  }
-
-  // If on login page and already authenticated, redirect to dashboard
-  if (isAuthPage && data.user) {
-    return NextResponse.redirect(new URL('/admin/dashboard', request.url));
-  }
-
-  const response = NextResponse.next({
+  let supabaseResponse = NextResponse.next({
     request,
   });
 
-  return response;
+  const supabase = createServerClient(supabaseUrl, supabaseKey, {
+    cookies: {
+      getAll() {
+        return request.cookies.getAll();
+      },
+      setAll(cookiesToSet) {
+        cookiesToSet.forEach(({ name, value }) => {
+          request.cookies.set(name, value);
+        });
+        supabaseResponse = NextResponse.next({
+          request,
+        });
+        cookiesToSet.forEach(({ name, value, options }) => {
+          supabaseResponse.cookies.set(name, value, options);
+        });
+      },
+    },
+  });
+
+  let data: { user: { id: string } | null };
+  try {
+    const result = await supabase.auth.getUser();
+    data = result.data;
+  } catch {
+    data = { user: null };
+  }
+
+  const pathname = request.nextUrl.pathname;
+  const isAuthPage = pathname === "/admin/login";
+  const isAdminRoute = pathname.startsWith("/admin");
+
+  if (isAdminRoute && !isAuthPage && !data.user) {
+    const redirect = NextResponse.redirect(new URL("/admin/login", request.url));
+    supabaseResponse.cookies.getAll().forEach((cookie) => {
+      redirect.cookies.set(cookie.name, cookie.value);
+    });
+    return redirect;
+  }
+
+  if (isAuthPage && data.user) {
+    const redirect = NextResponse.redirect(new URL("/admin/dashboard", request.url));
+    supabaseResponse.cookies.getAll().forEach((cookie) => {
+      redirect.cookies.set(cookie.name, cookie.value);
+    });
+    return redirect;
+  }
+
+  // Canonical /admin → dashboard
+  if (pathname === "/admin" || pathname === "/admin/") {
+    const redirect = NextResponse.redirect(new URL("/admin/dashboard", request.url));
+    supabaseResponse.cookies.getAll().forEach((cookie) => {
+      redirect.cookies.set(cookie.name, cookie.value);
+    });
+    return redirect;
+  }
+
+  return supabaseResponse;
 }
 
 export const config = {
   matcher: [
-    '/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
+    "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
   ],
 };

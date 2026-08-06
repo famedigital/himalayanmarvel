@@ -68,6 +68,9 @@ Run `node scripts/setup-db.js` to recreate tables if needed.
 
 ## Recent Updates
 
+### August 2026 — Admin production maturity
+- [Admin Production Audit](memory/admin_production_audit.md) — Feature map, broken-flow fixes, CMS wiring, TipTap blog, theme tokens
+
 ### April 23, 2026
 - **Hero Slider System** (`/admin/hero`): Fully editable hero with duplicate slides & primary toggle. All fields editable (title, subtitle, description, keywords, CTA text).
 

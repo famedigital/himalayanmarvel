@@ -6,6 +6,7 @@ import { ThemeToggle } from './ThemeToggle';
 import { useTheme } from 'next-themes';
 import { Menu, X, ChevronDown } from 'lucide-react';
 import Link from 'next/link';
+import type { NavContent } from '@/components/admin/frontend/NavigationEditor';
 
 const navItems = [
   { name: 'Home', href: '/' },
@@ -24,17 +25,43 @@ const navItems = [
   { name: 'Concierge', href: '/concierge' },
 ];
 
-export default function Navigation() {
+export default function Navigation({ content }: { content?: NavContent | null }) {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
   const [mounted, setMounted] = useState(false);
+  const [cmsNav, setCmsNav] = useState<NavContent | null>(content || null);
   const { theme, resolvedTheme } = useTheme();
   const dropdownRef = useRef<HTMLDivElement>(null);
 
+  const ctaLabel = cmsNav?.ctaLabel || 'Inquire';
+  const ctaHref =
+    cmsNav?.ctaHref ||
+    (cmsNav?.email ? `mailto:${cmsNav.email}` : 'mailto:info@himalayanmarvels.com');
+  const inquireEmail = cmsNav?.email || 'info@himalayanmarvels.com';
+
   useEffect(() => {
     setMounted(true);
-  }, []);
+    if (content) {
+      setCmsNav(content);
+      return;
+    }
+    // Load nav CMS when not passed from server
+    (async () => {
+      try {
+        const { createClient } = await import('@/lib/supabase/client');
+        const supabase = createClient();
+        const { data } = await supabase
+          .from('settings')
+          .select('value')
+          .eq('key', 'nav_content')
+          .maybeSingle();
+        if (data?.value) setCmsNav(data.value as NavContent);
+      } catch {
+        // keep defaults
+      }
+    })();
+  }, [content]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -249,14 +276,22 @@ export default function Navigation() {
             <motion.a
               whileHover={{ y: -1, boxShadow: '0 4px 16px rgba(0, 104, 56, 0.3)' }}
               whileTap={{ scale: 0.97 }}
-              href="mailto:info@himalayanmarvels.com"
+              href={
+                ctaHref.startsWith('/')
+                  ? ctaHref
+                  : ctaHref.startsWith('mailto:')
+                    ? ctaHref
+                    : ctaHref.includes('@')
+                      ? `mailto:${ctaHref}`
+                      : `mailto:${inquireEmail}`
+              }
               className="px-5 py-2 text-[0.65rem] font-semibold tracking-[0.15em] uppercase hidden md:block rounded-full transition-all"
               style={{
                 color: '#FFFFFF',
                 backgroundColor: '#006838',
               }}
             >
-              Inquire
+              {ctaLabel}
             </motion.a>
 
             {/* Mobile Menu Button */}
