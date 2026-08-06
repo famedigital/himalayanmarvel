@@ -7,7 +7,7 @@ import { ConciergeInquiryElite } from '@/components/luxury/ConciergeInquiryElite
 import JourneyCards from '@/components/JourneyCards';
 import FAQ from '@/components/FAQ';
 import { TripAdvisorVerified } from '@/components/TripAdvisorVerified';
-import Footer from '@/components/Footer';
+import Footer from '@/components/SiteFooter';
 import WhatsAppConcierge from '@/components/WhatsAppConcierge';
 import JsonLd from '@/components/seo/JsonLd';
 import { createClient } from '@/lib/supabase/server';

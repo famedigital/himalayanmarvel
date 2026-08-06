@@ -47,9 +47,22 @@ const organizationSchema = {
   areaServed: ['Bhutan', 'Nepal', 'Tibet'],
 };
 
-export default function AboutContent() {
+export default function AboutContent({
+  story,
+  footerContent,
+}: {
+  story?: { title?: string; content?: string; portraitImage?: string } | null;
+  footerContent?: import('@/components/Footer').FooterContent | null;
+}) {
   // Auto-calculate years of service
   const yearsOfService = getYearsOfServiceString();
+  const storyTitle = story?.title || 'The Story';
+  const storyContent =
+    story?.content ||
+    'In 2014, after working in global luxury hospitality, Bivatsu chose to return home to Bhutan, not to build a larger company, but a more meaningful one. Himalayan Marvels was created with a simple idea: that travel here should feel personal, unhurried, and quietly transformative.';
+  const portraitImage =
+    story?.portraitImage ||
+    'https://res.cloudinary.com/dxztrqjft/image/upload/v1776291879/tiger-nest-close_rm2bee';
 
   return (
     <main className="min-h-screen bg-alabaster dark:bg-dark-forest">
@@ -61,7 +74,7 @@ export default function AboutContent() {
         {/* Full-screen Bhutan landscape as background */}
         <div className="absolute inset-0">
           <Image
-            src="https://res.cloudinary.com/dxztrqjft/image/upload/v1776291879/tiger-nest-close_rm2bee"
+            src={portraitImage}
             alt="Taktsang Palphug Monastery (Tiger's Nest), Bhutan"
             fill
             className="object-cover opacity-40"
@@ -79,10 +92,10 @@ export default function AboutContent() {
                 The Story
               </p>
               <h1 className="text-5xl md:text-7xl lg:text-8xl font-serif text-white mb-8 leading-none">
-                The Story
+                {storyTitle}
               </h1>
               <p className="text-xl md:text-2xl text-gray-300 leading-relaxed font-light max-w-3xl">
-                In 2014, after working in global luxury hospitality, Bivatsu chose to return home to Bhutan, not to build a larger company, but a more meaningful one. Himalayan Marvels was created with a simple idea: that travel here should feel personal, unhurried, and quietly transformative.
+                {storyContent}
               </p>
             </RevealOnScroll>
           </div>
@@ -386,7 +399,7 @@ export default function AboutContent() {
           </RevealOnScroll>
         </div>
       </section>
-      <Footer />
+      <Footer content={footerContent} />
     </main>
   );
 }

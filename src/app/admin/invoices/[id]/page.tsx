@@ -1,6 +1,6 @@
 /**
- * Admin Invoice Edit/Create Page
- * Form for creating and editing invoices
+ * Invoice detail / payment status editor
+ * Uses invoice_data JSONB schema (canonical).
  */
 
 'use client';
@@ -8,593 +8,308 @@
 import { use, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { ArrowLeft, Save, Eye, Loader2 } from 'lucide-react';
-import { generateInvoiceHTML } from '@/lib/templates/invoice-template';
-import CloudinaryUpload from '@/components/admin/CloudinaryUpload';
+import {
+  ArrowLeft,
+  Save,
+  Eye,
+  Loader2,
+  ExternalLink,
+  BookOpen,
+  Copy,
+  Check,
+} from 'lucide-react';
+import { createClient } from '@/lib/supabase/client';
+import { generateItineraryInvoiceHTML } from '@/lib/templates/invoice-html-generator';
+import { InvoiceStatusBadge } from '@/components/admin/InvoiceStatusBadge';
+import { Button, buttonVariants } from '@/components/ui/button';
+import { toast } from 'sonner';
 
-interface InvoiceData {
-  id?: string;
-  invoice_number?: string;
-  guest_name: string;
-  guest_email?: string;
-  guest_phone?: string;
-  package_name: string;
-  package_duration?: string;
-  travel_dates?: string;
-  destination?: string;
-  subtotal: number;
-  tax_amount: number;
-  discount_amount: number;
-  total_amount: number;
-  advance_payment: number;
-  balance_due: number;
-  payment_status: string;
-  payment_method?: string;
-  payment_due_date?: string;
-  qr_code_url?: string;
-  terms?: string;
-  status: string;
-  notes?: string;
-  internal_notes?: string;
-}
+const STATUS_OPTIONS = [
+  'draft',
+  'pending',
+  'confirmed',
+  'partial_payment',
+  'paid',
+  'cancelled',
+  'refund',
+] as const;
 
-export default function InvoiceFormPage({ params }: { params?: Promise<{ id?: string | string[] }> }) {
+export default function InvoiceDetailPage({
+  params,
+}: {
+  params?: Promise<{ id?: string | string[] }>;
+}) {
   const router = useRouter();
   const resolvedParams = use(params ?? Promise.resolve<{ id?: string | string[] }>({}));
   const rawId = Array.isArray(resolvedParams.id) ? resolvedParams.id[0] : resolvedParams.id;
-  const isNew = rawId === 'new' || !rawId;
-  const invoiceId = isNew ? undefined : rawId;
+  const invoiceId = rawId;
 
-  const [loading, setLoading] = useState(!isNew);
+  const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
-  const [previewMode, setPreviewMode] = useState(false);
-  const [previewHtml, setPreviewHtml] = useState<string>('');
-  const [loadingPreview, setLoadingPreview] = useState(false);
-  const [invoice, setInvoice] = useState<InvoiceData>({
-    guest_name: '',
-    package_name: '',
-    package_duration: '',
-    travel_dates: '',
-    destination: 'Bhutan',
-    subtotal: 0,
-    tax_amount: 0,
-    discount_amount: 0,
-    total_amount: 0,
-    advance_payment: 0,
-    balance_due: 0,
-    payment_status: 'pending',
-    status: 'draft',
-  });
+  const [invoice, setInvoice] = useState<any>(null);
+  const [status, setStatus] = useState('draft');
+  const [invoiceData, setInvoiceData] = useState<any>(null);
+  const [copied, setCopied] = useState(false);
+  const [previewHtml, setPreviewHtml] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!isNew && invoiceId) {
-      fetchInvoice(invoiceId);
-    } else {
-      // Auto-generate invoice number for new invoices
-      generateInvoiceNumber();
+    if (!invoiceId || invoiceId === 'new') {
+      router.replace('/admin/itineraries');
+      return;
     }
-  }, [isNew, invoiceId]);
+    fetchInvoice(invoiceId);
+  }, [invoiceId, router]);
 
   const fetchInvoice = async (id: string) => {
     try {
       const response = await fetch(`/api/admin/invoices/${id}`);
       const result = await response.json();
-
-      if (result.success) {
+      if (result.success && result.data) {
         setInvoice(result.data);
+        setStatus(result.data.status || 'draft');
+        setInvoiceData(result.data.invoice_data || {});
+      } else {
+        toast.error(result.error || 'Invoice not found');
+        router.push('/admin/invoices');
       }
     } catch (error) {
       console.error('Error fetching invoice:', error);
+      toast.error('Failed to load invoice');
     } finally {
       setLoading(false);
     }
   };
 
-  const generateInvoiceNumber = async () => {
-    try {
-      const year = new Date().getFullYear();
-      const response = await fetch(`/api/admin/invoices/generate-number?year=${year}`);
-      if (response.ok) {
-        const result = await response.json();
-        setInvoice(prev => ({ ...prev, invoice_number: result.invoice_number }));
-      }
-    } catch (error) {
-      // Fallback to simple format
-      const year = new Date().getFullYear();
-      const invoiceNum = `HMM/${year}/0001`;
-      setInvoice(prev => ({ ...prev, invoice_number: invoiceNum }));
-    }
-  };
-
-  const calculateTotals = () => {
-    const subtotal = invoice.subtotal || 0;
-    const tax = invoice.tax_amount || 0;
-    const discount = invoice.discount_amount || 0;
-    const total = subtotal + tax - discount;
-    const advance = invoice.advance_payment || 0;
-    const balance = total - advance;
-
-    setInvoice(prev => ({
-      ...prev,
-      total_amount: total,
-      balance_due: balance > 0 ? balance : 0,
-    }));
-  };
-
   const handleSave = async () => {
+    if (!invoiceId) return;
+    setSaving(true);
     try {
-      setSaving(true);
-
-      // Generate HTML template
-      const invoiceTemplate = await generateInvoiceHTML({
-        invoice_number: invoice.invoice_number || '',
-        guest_name: invoice.guest_name,
-        guest_email: invoice.guest_email,
-        guest_phone: invoice.guest_phone,
-        package_name: invoice.package_name,
-        package_duration: invoice.package_duration,
-        travel_dates: invoice.travel_dates,
-        destination: invoice.destination,
-        subtotal: invoice.subtotal,
-        tax_amount: invoice.tax_amount,
-        discount_amount: invoice.discount_amount,
-        total_amount: invoice.total_amount,
-        advance_payment: invoice.advance_payment,
-        balance_due: invoice.balance_due,
-        payment_due_date: invoice.payment_due_date,
-        qr_code_url: invoice.qr_code_url,
-        terms: invoice.terms,
-      });
-
-      const payload = {
-        ...invoice,
-        invoice_template: invoiceTemplate,
-      };
-
-      const url = isNew ? '/api/admin/invoices' : `/api/admin/invoices/${invoiceId}`;
-      const method = isNew ? 'POST' : 'PUT';
-
-      const response = await fetch(url, {
-        method,
+      const response = await fetch(`/api/admin/invoices/${invoiceId}`, {
+        method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
+        body: JSON.stringify({
+          status,
+          invoice_data: invoiceData,
+          invoice_number: invoiceData?.invoice_number,
+        }),
       });
-
-      if (response.ok) {
-        const result = await response.json();
-        router.push(`/admin/invoices/${result.data.id || invoiceId}`);
+      const result = await response.json();
+      if (result.success) {
+        setInvoice(result.data);
+        toast.success('Invoice updated');
       } else {
-        const error = await response.json();
-        alert(error.error || 'Failed to save invoice');
+        toast.error(result.error || 'Failed to save');
       }
-    } catch (error) {
-      console.error('Error saving invoice:', error);
-      alert('Failed to save invoice');
+    } catch {
+      toast.error('Failed to save invoice');
     } finally {
       setSaving(false);
     }
   };
 
   const handlePreview = async () => {
-    setLoadingPreview(true);
-    try {
-      // Ensure invoice_number is set for preview
-      const invoiceForPreview = {
-        ...invoice,
-        invoice_number: invoice.invoice_number || 'DRAFT',
-      };
-      const html = await generateInvoiceHTML(invoiceForPreview);
-      setPreviewHtml(html);
-      setPreviewMode(true);
-    } catch (error) {
-      console.error('Error generating preview:', error);
-      alert('Failed to generate preview');
-    } finally {
-      setLoadingPreview(false);
-    }
+    if (!invoiceData) return;
+    const html = await generateItineraryInvoiceHTML(invoiceData);
+    setPreviewHtml(html);
+  };
+
+  const copyShareLink = async () => {
+    if (!invoice?.share_token) return;
+    const url = `${window.location.origin}/invoice/${invoice.share_token}`;
+    await navigator.clipboard.writeText(url);
+    setCopied(true);
+    toast.success('Share link copied');
+    setTimeout(() => setCopied(false), 2000);
   };
 
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <Loader2 className="w-8 h-8 animate-spin text-gray-400" />
+        <Loader2 className="w-8 h-8 animate-spin text-muted-foreground" />
       </div>
     );
   }
 
-  if (previewMode) {
-    return (
-      <div className="space-y-4">
-        <div className="flex items-center justify-between">
-          <button
-            onClick={() => setPreviewMode(false)}
-            className="inline-flex items-center gap-2 px-4 py-2 text-gray-700 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white"
-          >
-            <ArrowLeft className="w-4 h-4" />
-            Back to Edit
-          </button>
-          <div className="flex gap-2">
-            <button
-              onClick={handleSave}
-              disabled={saving}
-              className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50"
-            >
-              {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
-              {saving ? 'Saving...' : 'Save Changes'}
-            </button>
-          </div>
-        </div>
-        {loadingPreview ? (
-          <div className="flex items-center justify-center h-64">
-            <Loader2 className="w-8 h-8 animate-spin text-gray-400" />
-          </div>
-        ) : (
-          <div
-            dangerouslySetInnerHTML={{
-              __html: previewHtml
-            }}
-            className="bg-white p-8 rounded-lg shadow"
-          />
-        )}
-      </div>
-    );
+  if (!invoice || !invoiceData) {
+    return null;
   }
+
+  const itineraryId = invoice.itinerary_id;
 
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-4">
+    <div className="space-y-6 max-w-4xl">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div className="flex items-center gap-3">
           <Link
             href="/admin/invoices"
-            className="inline-flex items-center gap-2 text-gray-700 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white"
+            className={buttonVariants({ variant: 'ghost', size: 'sm' })}
           >
-            <ArrowLeft className="w-4 h-4" />
-            Back to Invoices
+            <ArrowLeft className="w-4 h-4 mr-1" />
+            Invoices
           </Link>
           <div>
-            <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
-              {isNew ? 'Create New Invoice' : `Edit Invoice ${invoice.invoice_number}`}
+            <h1 className="text-lg font-semibold text-foreground font-mono">
+              {invoice.invoice_number}
             </h1>
-            <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">
-              {isNew ? 'Create a new invoice for your guest' : 'Update invoice details'}
+            <p className="text-xs text-muted-foreground">
+              {invoiceData.guest_name} · {invoiceData.package_name}
             </p>
           </div>
+          <InvoiceStatusBadge status={status} />
         </div>
-        <div className="flex gap-2">
-          <button
-            onClick={handlePreview}
-            disabled={loadingPreview}
-            className="inline-flex items-center gap-2 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50"
-          >
-            {loadingPreview ? <Loader2 className="w-4 h-4 animate-spin" /> : <Eye className="w-4 h-4" />}
+        <div className="flex flex-wrap items-center gap-2">
+          {itineraryId && (
+            <Link
+              href={`/admin/invoices/new/${itineraryId}`}
+              className={buttonVariants({ variant: 'outline', size: 'sm' })}
+            >
+              <BookOpen className="w-3.5 h-3.5 mr-1" />
+              Full editor
+            </Link>
+          )}
+          <Button variant="outline" size="sm" onClick={handlePreview}>
+            <Eye className="w-3.5 h-3.5 mr-1" />
             Preview
-          </button>
-          <button
+          </Button>
+          {invoice.share_token && (
+            <Button variant="outline" size="sm" onClick={copyShareLink}>
+              {copied ? (
+                <Check className="w-3.5 h-3.5 mr-1" />
+              ) : (
+                <Copy className="w-3.5 h-3.5 mr-1" />
+              )}
+              Share
+            </Button>
+          )}
+          <Button
+            size="sm"
             onClick={handleSave}
             disabled={saving}
-            className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50"
+            className="bg-amber-600 hover:bg-amber-700 text-white"
           >
-            {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
-            {saving ? 'Saving...' : 'Save Invoice'}
-          </button>
+            {saving ? (
+              <Loader2 className="w-3.5 h-3.5 mr-1 animate-spin" />
+            ) : (
+              <Save className="w-3.5 h-3.5 mr-1" />
+            )}
+            Save
+          </Button>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Main Form */}
-        <div className="lg:col-span-2 space-y-6">
-          {/* Guest Information */}
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-            <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
-              Guest Information
-            </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                  Guest Name *
-                </label>
-                <input
-                  type="text"
-                  value={invoice.guest_name}
-                  onChange={(e) => setInvoice({ ...invoice, guest_name: e.target.value })}
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-white"
-                  required
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                  Email
-                </label>
-                <input
-                  type="email"
-                  value={invoice.guest_email || ''}
-                  onChange={(e) => setInvoice({ ...invoice, guest_email: e.target.value })}
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-white"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                  Phone
-                </label>
-                <input
-                  type="text"
-                  value={invoice.guest_phone || ''}
-                  onChange={(e) => setInvoice({ ...invoice, guest_phone: e.target.value })}
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-white"
-                />
-              </div>
-            </div>
+      {/* Workflow */}
+      <div className="rounded-lg border border-border bg-muted/30 p-3 text-xs text-muted-foreground">
+        <strong className="text-foreground">Flow:</strong> Itinerary → Invoice (set status to
+        confirmed/partial/paid) → Operations assignments unlock on the itinerary detail page.
+      </div>
+
+      <div className="grid gap-6 md:grid-cols-2">
+        <div className="space-y-4 rounded-lg border border-border bg-card p-4">
+          <h2 className="text-sm font-semibold">Payment status</h2>
+          <div>
+            <label className="text-xs text-muted-foreground mb-1 block">Status</label>
+            <select
+              value={status}
+              onChange={(e) => setStatus(e.target.value)}
+              className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm"
+            >
+              {STATUS_OPTIONS.map((s) => (
+                <option key={s} value={s}>
+                  {s.replace(/_/g, ' ')}
+                </option>
+              ))}
+            </select>
           </div>
-
-          {/* Package Information */}
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-            <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
-              Package Information
-            </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                  Package Name *
-                </label>
-                <input
-                  type="text"
-                  value={invoice.package_name}
-                  onChange={(e) => setInvoice({ ...invoice, package_name: e.target.value })}
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-white"
-                  required
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                  Duration
-                </label>
-                <input
-                  type="text"
-                  value={invoice.package_duration || ''}
-                  onChange={(e) => setInvoice({ ...invoice, package_duration: e.target.value })}
-                  placeholder="e.g., 7 Days / 6 Nights"
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-white"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                  Travel Dates
-                </label>
-                <input
-                  type="text"
-                  value={invoice.travel_dates || ''}
-                  onChange={(e) => setInvoice({ ...invoice, travel_dates: e.target.value })}
-                  placeholder="e.g., May 16-22, 2026"
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-white"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                  Destination
-                </label>
-                <input
-                  type="text"
-                  value={invoice.destination || ''}
-                  onChange={(e) => setInvoice({ ...invoice, destination: e.target.value })}
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-white"
-                />
-              </div>
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label className="text-xs text-muted-foreground mb-1 block">Total</label>
+              <input
+                type="number"
+                value={invoiceData.total_amount ?? 0}
+                onChange={(e) =>
+                  setInvoiceData({
+                    ...invoiceData,
+                    total_amount: parseFloat(e.target.value) || 0,
+                  })
+                }
+                className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm"
+              />
             </div>
-          </div>
-
-          {/* Pricing */}
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-            <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
-              Pricing Details
-            </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                  Subtotal (₹)
-                </label>
-                <input
-                  type="number"
-                  value={invoice.subtotal}
-                  onChange={(e) => {
-                    setInvoice({ ...invoice, subtotal: parseFloat(e.target.value) || 0 });
-                    calculateTotals();
-                  }}
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-white"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                  Tax Amount (₹)
-                </label>
-                <input
-                  type="number"
-                  value={invoice.tax_amount}
-                  onChange={(e) => {
-                    setInvoice({ ...invoice, tax_amount: parseFloat(e.target.value) || 0 });
-                    calculateTotals();
-                  }}
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-white"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                  Discount (₹)
-                </label>
-                <input
-                  type="number"
-                  value={invoice.discount_amount}
-                  onChange={(e) => {
-                    setInvoice({ ...invoice, discount_amount: parseFloat(e.target.value) || 0 });
-                    calculateTotals();
-                  }}
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-white"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                  Advance Payment (₹)
-                </label>
-                <input
-                  type="number"
-                  value={invoice.advance_payment}
-                  onChange={(e) => {
-                    setInvoice({ ...invoice, advance_payment: parseFloat(e.target.value) || 0 });
-                    calculateTotals();
-                  }}
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-white"
-                />
-              </div>
-            </div>
-
-            {/* Calculated Totals */}
-            <div className="mt-6 p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
-              <div className="flex justify-between items-center mb-2">
-                <span className="text-sm text-gray-600 dark:text-gray-400">Total Amount:</span>
-                <span className="text-lg font-bold text-gray-900 dark:text-white">
-                  ₹{invoice.total_amount.toLocaleString('en-IN')}
-                </span>
-              </div>
-              <div className="flex justify-between items-center">
-                <span className="text-sm text-gray-600 dark:text-gray-400">Balance Due:</span>
-                <span className="text-lg font-bold text-green-600">
-                  ₹{invoice.balance_due.toLocaleString('en-IN')}
-                </span>
-              </div>
-            </div>
-          </div>
-
-          {/* Terms */}
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-            <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
-              Terms & Conditions
-            </h2>
-            <textarea
-              value={invoice.terms || ''}
-              onChange={(e) => setInvoice({ ...invoice, terms: e.target.value })}
-              rows={6}
-              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-white"
-              placeholder="Enter terms and conditions..."
-            />
-          </div>
-        </div>
-
-        {/* Sidebar */}
-        <div className="space-y-6">
-          {/* Invoice Details */}
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-            <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
-              Invoice Details
-            </h2>
-            <div className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                  Invoice Number
-                </label>
-                <input
-                  type="text"
-                  value={invoice.invoice_number || ''}
-                  onChange={(e) => setInvoice({ ...invoice, invoice_number: e.target.value })}
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-white"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                  Status
-                </label>
-                <select
-                  value={invoice.status}
-                  onChange={(e) => setInvoice({ ...invoice, status: e.target.value })}
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-white"
-                >
-                  <option value="draft">Draft</option>
-                  <option value="sent">Sent</option>
-                  <option value="viewed">Viewed</option>
-                  <option value="paid">Paid</option>
-                  <option value="cancelled">Cancelled</option>
-                </select>
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                  Payment Status
-                </label>
-                <select
-                  value={invoice.payment_status}
-                  onChange={(e) => setInvoice({ ...invoice, payment_status: e.target.value })}
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-white"
-                >
-                  <option value="pending">Pending</option>
-                  <option value="partial">Partial</option>
-                  <option value="paid">Paid</option>
-                  <option value="overdue">Overdue</option>
-                </select>
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                  Payment Method
-                </label>
-                <input
-                  type="text"
-                  value={invoice.payment_method || ''}
-                  onChange={(e) => setInvoice({ ...invoice, payment_method: e.target.value })}
-                  placeholder="e.g., Bank Transfer, G-Pay"
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-white"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                  Payment Due Date
-                </label>
-                <input
-                  type="date"
-                  value={invoice.payment_due_date || ''}
-                  onChange={(e) => setInvoice({ ...invoice, payment_due_date: e.target.value })}
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-white"
-                />
-              </div>
-            </div>
-          </div>
-
-          {/* QR Code */}
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-            <h2 className="text-sm font-semibold text-gray-900 dark:text-white mb-3">
-              QR Code for Payment
-            </h2>
-            <div className="flex justify-center">
-              <CloudinaryUpload
-                onUploadComplete={(url) => setInvoice({ ...invoice, qr_code_url: url })}
-                onRemove={() => setInvoice({ ...invoice, qr_code_url: undefined })}
-                value={invoice.qr_code_url}
-                label="Upload QR Code"
-                folder="himalayanmarvel/qr-codes"
-                aspect="square"
-                size="sm"
+            <div>
+              <label className="text-xs text-muted-foreground mb-1 block">Advance paid</label>
+              <input
+                type="number"
+                value={invoiceData.advance_payment ?? 0}
+                onChange={(e) =>
+                  setInvoiceData({
+                    ...invoiceData,
+                    advance_payment: parseFloat(e.target.value) || 0,
+                  })
+                }
+                className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm"
               />
             </div>
           </div>
+          {invoice.share_token && (
+            <a
+              href={`/invoice/${invoice.share_token}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1 text-xs text-amber-700 hover:underline"
+            >
+              Open guest link <ExternalLink className="w-3 h-3" />
+            </a>
+          )}
+        </div>
 
-          {/* Notes */}
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-            <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
-              Notes
-            </h2>
-            <textarea
-              value={invoice.notes || ''}
-              onChange={(e) => setInvoice({ ...invoice, notes: e.target.value })}
-              rows={3}
-              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-white text-sm"
-              placeholder="Notes for guest..."
-            />
-            <textarea
-              value={invoice.internal_notes || ''}
-              onChange={(e) => setInvoice({ ...invoice, internal_notes: e.target.value })}
-              rows={3}
-              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-white text-sm mt-2"
-              placeholder="Internal notes..."
+        <div className="space-y-4 rounded-lg border border-border bg-card p-4">
+          <h2 className="text-sm font-semibold">Guest & package</h2>
+          <div>
+            <label className="text-xs text-muted-foreground mb-1 block">Guest name</label>
+            <input
+              value={invoiceData.guest_name || ''}
+              onChange={(e) => setInvoiceData({ ...invoiceData, guest_name: e.target.value })}
+              className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm"
             />
           </div>
+          <div>
+            <label className="text-xs text-muted-foreground mb-1 block">Package</label>
+            <input
+              value={invoiceData.package_name || ''}
+              onChange={(e) => setInvoiceData({ ...invoiceData, package_name: e.target.value })}
+              className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm"
+            />
+          </div>
+          <div>
+            <label className="text-xs text-muted-foreground mb-1 block">Email</label>
+            <input
+              value={invoiceData.guest_email || ''}
+              onChange={(e) => setInvoiceData({ ...invoiceData, guest_email: e.target.value })}
+              className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm"
+            />
+          </div>
+          {itineraryId && (
+            <Link
+              href={`/admin/itineraries/${itineraryId}`}
+              className="inline-flex items-center gap-1 text-xs text-amber-700 hover:underline"
+            >
+              Open itinerary <ExternalLink className="w-3 h-3" />
+            </Link>
+          )}
         </div>
       </div>
+
+      {previewHtml && (
+        <div className="rounded-lg border border-border overflow-hidden">
+          <div className="flex items-center justify-between bg-muted px-3 py-2">
+            <span className="text-xs font-medium">Preview</span>
+            <Button variant="ghost" size="sm" onClick={() => setPreviewHtml(null)}>
+              Close
+            </Button>
+          </div>
+          <iframe title="Invoice preview" srcDoc={previewHtml} className="w-full h-[70vh] bg-white" />
+        </div>
+      )}
     </div>
   );
 }

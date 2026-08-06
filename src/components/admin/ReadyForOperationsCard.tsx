@@ -8,7 +8,7 @@ interface ReadyForOperationsCardProps {
 
 export function ReadyForOperationsCard({ itineraryId }: ReadyForOperationsCardProps) {
   const handleGenerateInvoice = () => {
-    window.location.href = `/admin/itineraries/${itineraryId}`;
+    window.location.href = `/admin/invoices/new/${itineraryId}`;
   };
 
   return (

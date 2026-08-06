@@ -7,6 +7,7 @@ import AboutPageEditor from './frontend/AboutPageEditor';
 import ConciergePageEditor from './frontend/ConciergePageEditor';
 import ToursPageEditor from './frontend/ToursPageEditor';
 import FooterEditor from './frontend/FooterEditor';
+import NavigationEditor from './frontend/NavigationEditor';
 import { createClient } from '@/lib/supabase/client';
 import { toast } from 'sonner';
 import { ArrowRight } from 'lucide-react';
@@ -96,6 +97,12 @@ export default function FrontendContentManager({
             Footer
           </TabsTrigger>
           <TabsTrigger
+            value="navigation"
+            className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-amber-500 data-[state=active]:to-amber-600 data-[state=active]:text-white data-[state=active]:shadow-md transition-all duration-200"
+          >
+            Navigation
+          </TabsTrigger>
+          <TabsTrigger
             value="hero"
             className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-amber-500 data-[state=active]:to-amber-600 data-[state=active]:text-white data-[state=active]:shadow-md transition-all duration-200"
           >
@@ -155,6 +162,13 @@ export default function FrontendContentManager({
                 onSave={(data) => handleSave('footer_content', data)}
               />
             </div>
+          </TabsContent>
+
+          <TabsContent value="navigation" className="mt-0">
+            <NavigationEditor
+              initialData={contentMap.nav_content}
+              onSave={(data) => handleSave('nav_content', data)}
+            />
           </TabsContent>
 
           <TabsContent value="hero" className="mt-0">

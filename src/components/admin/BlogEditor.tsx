@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
 import CloudinaryUpload from './CloudinaryUpload';
 import GalleryManager from './GalleryManager';
+import { BlogRichEditor } from './BlogRichEditor';
 import { FileText, Tag, Calendar, User, Save, X, Plus, Loader2 } from 'lucide-react';
 import { Blog } from '@/lib/supabase/types';
 
@@ -123,27 +124,6 @@ export default function BlogEditor({ blog, isEdit = false }: BlogEditorProps) {
 
   const removeTag = (tagToRemove: string) => {
     setTags(tags.filter(tag => tag !== tagToRemove));
-  };
-
-  // Insert markdown helpers
-  const insertMarkdown = (before: string, after: string = '') => {
-    const textarea = document.getElementById('blog-content') as HTMLTextAreaElement;
-    if (!textarea) return;
-
-    const start = textarea.selectionStart;
-    const end = textarea.selectionEnd;
-    const text = content;
-    const selection = text.substring(start, end);
-
-    const newText =
-      text.substring(0, start) + before + selection + after + text.substring(end);
-    setContent(newText);
-
-    textarea.focus();
-    textarea.setSelectionRange(
-      start + before.length,
-      start + before.length + selection.length
-    );
   };
 
   return (
@@ -295,108 +275,13 @@ export default function BlogEditor({ blog, isEdit = false }: BlogEditorProps) {
         />
       </div>
 
-      {/* Content Editor */}
+      {/* Content Editor — Google Docs style */}
       <div className="bg-white backdrop-blur-xl border border-gray-200 rounded-2xl p-6">
-        <h2 className="text-xl font-semibold text-gray-900 mb-6">Content</h2>
-
-        {/* Markdown Toolbar */}
-        <div className="flex flex-wrap gap-2 mb-4 p-3 bg-gray-50 rounded-xl">
-          <button
-            type="button"
-            onClick={() => insertMarkdown('# ', '')}
-            className="px-3 py-1 bg-gray-100 hover:bg-gray-200 text-gray-900 rounded-lg text-sm font-bold transition-colors"
-            title="Heading 1"
-          >
-            H1
-          </button>
-          <button
-            type="button"
-            onClick={() => insertMarkdown('## ', '')}
-            className="px-3 py-1 bg-gray-100 hover:bg-gray-200 text-gray-900 rounded-lg text-sm font-bold transition-colors"
-            title="Heading 2"
-          >
-            H2
-          </button>
-          <button
-            type="button"
-            onClick={() => insertMarkdown('**', '**')}
-            className="px-3 py-1 bg-gray-100 hover:bg-gray-200 text-gray-900 rounded-lg text-sm font-bold transition-colors"
-            title="Bold"
-          >
-            B
-          </button>
-          <button
-            type="button"
-            onClick={() => insertMarkdown('*', '*')}
-            className="px-3 py-1 bg-gray-100 hover:bg-gray-200 text-gray-900 rounded-lg text-sm italic transition-colors"
-            title="Italic"
-          >
-            I
-          </button>
-          <button
-            type="button"
-            onClick={() => insertMarkdown('[', '](url)')}
-            className="px-3 py-1 bg-gray-100 hover:bg-gray-200 text-gray-900 rounded-lg text-sm transition-colors"
-            title="Link"
-          >
-            Link
-          </button>
-          <button
-            type="button"
-            onClick={() => insertMarkdown('\n> ', '')}
-            className="px-3 py-1 bg-gray-100 hover:bg-gray-200 text-gray-900 rounded-lg text-sm transition-colors"
-            title="Quote"
-          >
-            Quote
-          </button>
-          <button
-            type="button"
-            onClick={() => insertMarkdown('- ', '')}
-            className="px-3 py-1 bg-gray-100 hover:bg-gray-200 text-gray-900 rounded-lg text-sm transition-colors"
-            title="List"
-          >
-            List
-          </button>
-          <button
-            type="button"
-            onClick={() => insertMarkdown('`', '`')}
-            className="px-3 py-1 bg-gray-100 hover:bg-gray-200 text-gray-900 rounded-lg text-sm font-mono transition-colors"
-            title="Code"
-          >
-            &lt;/&gt;
-          </button>
-          <button
-            type="button"
-            onClick={() => insertMarkdown('\n![alt](', ')')}
-            className="px-3 py-1 bg-gray-100 hover:bg-gray-200 text-gray-900 rounded-lg text-sm transition-colors"
-            title="Image"
-          >
-            📷
-          </button>
-          <button
-            type="button"
-            onClick={() => insertMarkdown('\n---\n', '')}
-            className="px-3 py-1 bg-gray-100 hover:bg-gray-200 text-gray-900 rounded-lg text-sm transition-colors"
-            title="Horizontal Rule"
-          >
-            ―
-          </button>
-        </div>
-
-        {/* Content Textarea */}
-        <textarea
-          id="blog-content"
-          value={content}
-          onChange={(e) => setContent(e.target.value)}
-          rows={20}
-          className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 placeholder:text-gray-900/30 focus:outline-none focus:ring-2 focus:ring-orange-500/50 focus:border-transparent transition-all resize-y font-mono text-sm"
-          placeholder="Write your blog content here... (Markdown supported)"
-          required
-        />
-
-        <p className="mt-3 text-gray-900/50 text-sm">
-          Tip: You can use Markdown syntax for formatting. Use the toolbar above to quickly insert formatting.
+        <h2 className="text-xl font-semibold text-gray-900 mb-2">Content</h2>
+        <p className="text-sm text-gray-500 mb-4">
+          Docs-style rich text editor. Content is saved as HTML for the public blog.
         </p>
+        <BlogRichEditor value={content} onChange={setContent} />
       </div>
 
       {/* Gallery Images */}

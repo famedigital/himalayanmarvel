@@ -37,9 +37,9 @@ const HOMEPAGE_SECTIONS: Section[] = [
     id: 'hero',
     name: 'Hero Section',
     icon: ImageIcon,
-    description: 'Main hero with video/image background',
-    contentKey: 'homepage_hero',
-    editor: 'placeholder',
+    description: 'Managed in Hero Manager',
+    contentKey: 'hero_slides',
+    editor: 'hero-link',
   },
   {
     id: 'founder',
@@ -312,6 +312,24 @@ export default function HomepageEditor({
                 initialData={initialData[selectedSection.contentKey]}
                 onSave={handleSave}
               />
+            )}
+            {selectedSection.editor === 'hero-link' && (
+              <div className="flex flex-col items-center justify-center min-h-[320px] text-center p-8">
+                <ImageIcon className="w-12 h-12 text-amber-500 mb-4" />
+                <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
+                  Hero Slider
+                </h3>
+                <p className="text-sm text-gray-500 mb-6 max-w-md">
+                  Homepage hero slides (images, video, titles, CTAs) are managed in the dedicated
+                  Hero Manager — not this placeholder.
+                </p>
+                <a
+                  href="/admin/hero"
+                  className="inline-flex items-center gap-2 px-6 py-3 bg-amber-500 text-white rounded-lg hover:bg-amber-600 font-medium"
+                >
+                  Open Hero Manager
+                </a>
+              </div>
             )}
             {selectedSection.editor === 'placeholder' && (
               <PlaceholderEditor

@@ -29,11 +29,11 @@ export function OperationsAssignmentPanel({ bookingId }: { bookingId: string }) 
     setLoading(true);
     try {
       const [guidesRes, transportRes, hotelsRes, passportsRes, permitsRes] = await Promise.all([
-        fetch(`/api/operations/guides/${bookingId}`),
-        fetch(`/api/operations/transport/${bookingId}`),
-        fetch(`/api/operations/hotels/${bookingId}`),
-        fetch(`/api/operations/passports/${bookingId}`),
-        fetch(`/api/operations/permits/${bookingId}`),
+        fetch(`/api/operations/guides?bookingId=${bookingId}`),
+        fetch(`/api/operations/transport?bookingId=${bookingId}`),
+        fetch(`/api/operations/hotels?bookingId=${bookingId}`),
+        fetch(`/api/operations/passports?bookingId=${bookingId}`),
+        fetch(`/api/operations/permits?bookingId=${bookingId}`),
       ]);
 
       const [guidesData, transportData, hotelsData, passportsData, permitsData] = await Promise.all([

@@ -349,7 +349,7 @@ export function ItineraryEditForm({ itineraryId, initialData }: ItineraryEditFor
         header_footer: null,
       };
 
-      const response = await fetch(`/admin/api/itineraries/${itineraryId}`, {
+      const response = await fetch(`/api/admin/itineraries/${itineraryId}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),

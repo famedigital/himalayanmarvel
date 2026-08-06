@@ -8,6 +8,8 @@ import { NuqsAdapter } from 'nuqs/adapters/next/app';
 import { Toaster } from 'react-hot-toast';
 import { cn } from "@/lib/utils";
 import JsonLd from '@/components/seo/JsonLd';
+import { BrandThemeApplier } from '@/components/BrandThemeApplier';
+import { getSetting, type ThemeTokens } from '@/lib/cms/settings';
 
 // Luxury Display Font (Bold, Elegant)
 const cormorant = Cormorant_Garamond({
@@ -64,14 +66,17 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const themeTokens = await getSetting<ThemeTokens>('theme_tokens');
+
   return (
     <html lang="en" suppressHydrationWarning className={cn("antialiased", cormorant.variable, playfair.variable, inter.variable)}>
       <body className="font-sans bg-background text-foreground antialiased">
+        <BrandThemeApplier tokens={themeTokens} />
         <ThemeProvider
           attribute="class"
           defaultTheme="dark"
