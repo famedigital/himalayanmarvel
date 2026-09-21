@@ -70,7 +70,7 @@ export default function Footer() {
               &ldquo;Happiness is a place&rdquo; &mdash; Bhutanese proverb
             </p>
             <motion.a
-              href="mailto:info@himalayanmarvels.com"
+              href="mailto:info.himalayanmarvels@gmail.com"
               whileHover={{ y: -2, borderColor: 'rgba(212, 175, 55, 0.5)', backgroundColor: 'rgba(0, 104, 56, 0.15)' }}
               whileTap={{ scale: 0.98 }}
               className="inline-flex items-center gap-3 px-10 py-4 rounded-full text-white text-base font-medium tracking-wide transition-all"
@@ -142,7 +142,7 @@ export default function Footer() {
           <div className="grid md:grid-cols-3 gap-8">
             {[
               { icon: Phone, text: '+975 77270465', label: 'Phone', href: 'tel:+97577270465' },
-              { icon: Mail, text: 'info@himalayanmarvels.com', label: 'Email', href: 'mailto:info@himalayanmarvels.com' },
+              { icon: Mail, text: 'info.himalayanmarvels@gmail.com', label: 'Email', href: 'mailto:info.himalayanmarvels@gmail.com' },
               { icon: MapPin, text: 'Changbangdu, Thimphu 11001', label: 'Location', href: '#' },
             ].map((item, index) => {
               const Icon = item.icon;

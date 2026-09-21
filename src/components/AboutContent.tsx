@@ -30,7 +30,7 @@ const organizationSchema = {
     '@type': 'ContactPoint',
     contactType: 'Customer Service',
     telephone: '+975-77270465',
-    email: 'info@himalayanmarvels.com',
+    email: 'info.himalayanmarvels@gmail.com',
     availableLanguage: ['English', 'Dzongkha'],
   },
   sameAs: [

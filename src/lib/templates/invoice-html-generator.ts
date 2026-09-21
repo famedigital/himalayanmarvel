@@ -107,7 +107,7 @@ export async function generateItineraryInvoiceHTML(data: ItineraryInvoiceData): 
     company_name = settings?.company_name || 'HIMALAYAN MARVELS',
     company_location = settings?.address || 'Thimphu, Bhutan',
     company_phone = settings?.mobile || '+975 17111111',
-    company_email = settings?.email || 'info@himalayanmarvels.com',
+    company_email = settings?.email || 'info.himalayanmarvels@gmail.com',
     company_website = settings?.website || 'www.himalayanmarvels.com',
     guest_name,
     package_name,

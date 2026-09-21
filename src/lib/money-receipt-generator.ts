@@ -146,7 +146,7 @@ export function generateMoneyReceiptPDF(data: MoneyReceiptData): jsPDF {
   pdf.setTextColor(100, 100, 100);
   const terms = [
     'This is a computer-generated receipt.',
-    'For any queries, please contact us at info@himalayanmarvels.com',
+    'For any queries, please contact us at info.himalayanmarvels@gmail.com',
     'Thank you for your payment!',
   ];
 
@@ -168,7 +168,7 @@ export function generateMoneyReceiptPDF(data: MoneyReceiptData): jsPDF {
   pdf.setFontSize(8);
   pdf.setTextColor(150, 150, 150);
   pdf.text(
-    'Himalayan Marvels | Thimphu, Bhutan | +975 77 270 465 | info@himalayanmarvels.com',
+    'Himalayan Marvels | Thimphu, Bhutan | +975 77 270 465 | info.himalayanmarvels@gmail.com',
     pageWidth / 2,
     pageHeight - 10,
     { align: 'center' }

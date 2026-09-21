@@ -46,7 +46,7 @@ export function ConciergeInquiryElite({ content }: ConciergeInquiryEliteProps) {
     title: 'Speak With Our',
     description: 'Every journey begins with a conversation, not a form. Share your vision, and we\'ll craft a journey that\'s exclusively yours.',
     contactInfo: {
-      email: 'info@himalayanmarvels.com',
+      email: 'info.himalayanmarvels@gmail.com',
       phone: '+975-77270465',
       whatsapp: '+975-77270465',
       responseTime: 'Within 24 hours',
@@ -205,7 +205,7 @@ export function ConciergeInquiryElite({ content }: ConciergeInquiryEliteProps) {
               </a>
 
               <a
-                href="mailto:info@himalayanmarvels.com"
+                href="mailto:info.himalayanmarvels@gmail.com"
                 className="flex items-center gap-4 p-4 rounded-xl transition-all group"
                 style={{
                   backgroundColor: 'transparent',
@@ -228,7 +228,7 @@ export function ConciergeInquiryElite({ content }: ConciergeInquiryEliteProps) {
                     Email Concierge
                   </p>
                   <p className="font-semibold" style={{ color: isDark ? '#F7F7F2' : '#1A1A1A' }}>
-                    info@himalayanmarvels.com
+                    info.himalayanmarvels@gmail.com
                   </p>
                 </div>
               </a>

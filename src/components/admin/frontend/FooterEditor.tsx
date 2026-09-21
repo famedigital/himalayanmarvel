@@ -21,7 +21,7 @@ export default function FooterEditor({
       companyName: 'Himalayan Marvels',
       tagline: 'Bhutan\'s Premier Luxury Travel Concierge',
       contact: {
-        email: 'info@himalayanmarvels.com',
+        email: 'info.himalayanmarvels@gmail.com',
         phone: '+975-77270465',
         address: 'Thimphu, Bhutan',
       },
@@ -122,7 +122,7 @@ export default function FooterEditor({
               value={data.contact.email}
               onChange={(e) => setData({ ...data, contact: { ...data.contact, email: e.target.value } })}
               className="w-full px-4 py-2 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent outline-none"
-              placeholder="info@himalayanmarvels.com"
+              placeholder="info.himalayanmarvels@gmail.com"
             />
           </div>
 

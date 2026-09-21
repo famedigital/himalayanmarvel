@@ -8,7 +8,13 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Switch } from '@/components/ui/switch';
 import { toast } from 'sonner';
+import {
+  DOMAIN_EMAIL,
+  GMAIL_CONTACT_EMAIL,
+  PRIMARY_CONTACT_EMAIL,
+} from '@/lib/contact-email';
 
 interface BankDetails {
   bank_name: string;
@@ -44,7 +50,7 @@ const defaultSettings: CompanySettings = {
   company_name: 'Himalayan Marvels Travels',
   license_number: '',
   mobile: '',
-  email: 'info@himalayanmarvels.com',
+  email: PRIMARY_CONTACT_EMAIL,
   website: 'https://www.himalayanmarvels.com',
   address: '',
   logo_url: '',
@@ -205,15 +211,39 @@ export function CompanySettingsForm() {
             />
           </div>
 
-          <div className="space-y-1">
-            <Label htmlFor="email" className="text-[10px]">Email Address</Label>
+          <div className="space-y-1 md:col-span-2">
+            <Label htmlFor="email" className="text-[10px]">Active contact email</Label>
             <Input
               id="email"
               type="email"
               value={settings.email}
               onChange={(e) => setSettings({ ...settings, email: e.target.value })}
               className="h-8 text-xs"
+              placeholder={GMAIL_CONTACT_EMAIL}
             />
+            <div className="mt-3 flex items-start justify-between gap-4 rounded-lg border border-border bg-muted/40 p-3">
+              <div className="min-w-0">
+                <p className="text-xs font-medium text-foreground">Use domain mailbox</p>
+                <p className="text-[10px] text-muted-foreground mt-0.5">
+                  Off: {GMAIL_CONTACT_EMAIL} (active). On: {DOMAIN_EMAIL} (not receiving mail).
+                </p>
+              </div>
+              <Switch
+                checked={settings.email === DOMAIN_EMAIL}
+                onCheckedChange={(checked) => {
+                  setSettings({
+                    ...settings,
+                    email: checked ? DOMAIN_EMAIL : GMAIL_CONTACT_EMAIL,
+                  });
+                  toast.message(
+                    checked
+                      ? `Switched to ${DOMAIN_EMAIL}`
+                      : `Switched to ${GMAIL_CONTACT_EMAIL}`
+                  );
+                }}
+                aria-label="Toggle domain email"
+              />
+            </div>
           </div>
 
           <div className="md:col-span-2 space-y-1">

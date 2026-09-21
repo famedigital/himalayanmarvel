@@ -37,7 +37,7 @@ const defaultSettings: CompanySettings = {
   company_name: 'Himalayan Marvels Travels',
   license_number: '',
   mobile: '',
-  email: 'info@himalayanmarvels.com',
+  email: 'info.himalayanmarvels@gmail.com',
   website: 'https://www.himalayanmarvels.com',
   address: '',
   logo_url: '',

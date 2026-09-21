@@ -627,8 +627,8 @@ export default function BookingDetail() {
         <div className="pt-6 mt-6 border-t border-gray-200 dark:border-gray-700">
           <p className="text-sm text-gray-500 text-center">
             For any questions, contact us at{' '}
-            <a href="mailto:info@himalayanmarvels.com" className="text-orange-500 hover:text-orange-600">
-              info@himalayanmarvels.com
+            <a href="mailto:info.himalayanmarvels@gmail.com" className="text-orange-500 hover:text-orange-600">
+              info.himalayanmarvels@gmail.com
             </a>
             {' '}or WhatsApp at{' '}
             <a href="https://wa.me/97577270465" className="text-orange-500 hover:text-orange-600">

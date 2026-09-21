@@ -137,7 +137,7 @@ export default function HeroLuxury() {
 
   // EMOTIONAL, CINEMATIC COPY — Not functional description
   const heroSubtitle = currentSlide?.subtitle || 'Private cultural journeys, festival experiences, and Himalayan adventures — designed around your travel style by the team who\'s hosted 2,500+ guests since 2014.';
-  const heroLink = currentSlide?.link || 'mailto:info@himalayanmarvels.com';
+  const heroLink = currentSlide?.link || 'mailto:info.himalayanmarvels@gmail.com';
   const heroMediaUrl = currentSlide?.url || 'https://res.cloudinary.com/dxztrqjft/video/upload/v1776271223/tashichodzong_ddin28.mp4';
   const heroMediaType = currentSlide?.type || 'video';
   const heroCtaText = currentSlide?.ctaText || 'Design Your Custom Journey';
