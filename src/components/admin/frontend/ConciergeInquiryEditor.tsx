@@ -46,7 +46,7 @@ export default function ConciergeInquiryEditor({
         { name: 'whatsapp', label: 'WhatsApp Number', type: 'tel', placeholder: '+1 234 567 8900', required: false },
       ],
       contactInfo: {
-        email: 'info@himalayanmarvels.com',
+        email: 'info.himalayanmarvels@gmail.com',
         phone: '+975-77270465',
         whatsapp: '+975-77270465',
         responseTime: 'Within 24 hours',
@@ -249,7 +249,7 @@ export default function ConciergeInquiryEditor({
               value={data.contactInfo?.email || ''}
               onChange={(e) => setData({ ...data, contactInfo: { ...data.contactInfo, email: e.target.value } })}
               className="flex-1 px-3 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent outline-none text-sm"
-              placeholder="info@himalayanmarvels.com"
+              placeholder="info.himalayanmarvels@gmail.com"
             />
           </div>
 

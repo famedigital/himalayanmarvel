@@ -358,7 +358,7 @@ Booking confirmed upon receipt of advance payment. Travel insurance recommended.
                 <h1>${settings?.company_name || 'HIMALAYAN MARVELS'}</h1>
                 <p>Tours & Treks</p>
                 <p style="font-size: 9px; color: #999; margin-top: 4px;">${settings?.address || 'Thimphu, Bhutan'}</p>
-                <p style="font-size: 9px; color: #999;">${settings?.mobile || '+975 17111111'} | ${settings?.email || 'info@himalayanmarvels.com'}</p>
+                <p style="font-size: 9px; color: #999;">${settings?.mobile || '+975 17111111'} | ${settings?.email || 'info.himalayanmarvels@gmail.com'}</p>
             </div>
             <div class="invoice-details">
                 <div class="invoice-title">INVOICE</div>
@@ -444,7 +444,7 @@ Booking confirmed upon receipt of advance payment. Travel insurance recommended.
         <!-- Footer -->
         <div class="footer">
             <p><strong>${settings?.company_name || 'HIMALAYAN MARVELS'} Tours & Treks</strong> | ${settings?.address || 'Thimphu, Bhutan'}</p>
-            <p>${settings?.mobile || '+975 17111111'} | ${settings?.email || 'info@himalayanmarvels.com'} | ${settings?.website || 'www.himalayanmarvels.com'}</p>
+            <p>${settings?.mobile || '+975 17111111'} | ${settings?.email || 'info.himalayanmarvels@gmail.com'} | ${settings?.website || 'www.himalayanmarvels.com'}</p>
         </div>
     </div>
 

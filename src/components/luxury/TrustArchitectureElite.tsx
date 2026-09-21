@@ -511,7 +511,7 @@ export function TrustArchitectureElite({ content }: TrustArchitectureEliteProps)
 
           {/* CENTER STAGE - Cultural Journey (HERO) */}
           <PremiumCard delay={0.15} featured className="md:col-span-2 p-0 group/journey">
-            <a href="mailto:info@himalayanmarvels.com" className="block relative aspect-[4/3] md:aspect-[3/2] rounded-3xl overflow-hidden bg-neutral-900">
+            <a href="mailto:info.himalayanmarvels@gmail.com" className="block relative aspect-[4/3] md:aspect-[3/2] rounded-3xl overflow-hidden bg-neutral-900">
               <div className="absolute inset-0">
                 <Image
                   src="https://res.cloudinary.com/dxztrqjft/image/upload/v1776291877/dochula_r3uler.jpg"
@@ -567,7 +567,7 @@ export function TrustArchitectureElite({ content }: TrustArchitectureEliteProps)
 
           {/* CENTER STAGE - Spiritual Journey (HERO) */}
           <PremiumCard delay={0.2} featured className="md:col-span-2 p-0 group/journey">
-            <a href="mailto:info@himalayanmarvels.com" className="block relative aspect-[4/3] md:aspect-[3/2] rounded-3xl overflow-hidden bg-neutral-900">
+            <a href="mailto:info.himalayanmarvels@gmail.com" className="block relative aspect-[4/3] md:aspect-[3/2] rounded-3xl overflow-hidden bg-neutral-900">
               <div className="absolute inset-0">
                 <Image
                   src="https://res.cloudinary.com/dxztrqjft/image/upload/v1776291879/tiger-nest-close_rm2bee.jpg"

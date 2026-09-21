@@ -14,7 +14,7 @@ const socialLinks = [
   { icon: MessageCircle, href: '#', label: 'LinkedIn' },
   { icon: MessageCircle, href: '#', label: 'YouTube' },
   { icon: MessageCircle, href: '#', label: 'WhatsApp' },
-  { icon: Send, href: 'mailto:info@himalayanmarvels.com', label: 'Email' },
+  { icon: Send, href: 'mailto:info.himalayanmarvels@gmail.com', label: 'Email' },
   { icon: Phone, href: 'tel:+97577270465', label: 'Call' },
   { icon: Globe, href: '#', label: 'Website' },
   { icon: MapPin, href: '#', label: 'Location' },

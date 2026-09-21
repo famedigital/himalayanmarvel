@@ -103,7 +103,7 @@ export function generateItineraryHTML(data: ItineraryData, companySettings?: Com
     logo_url: '',
     license_number: '',
     mobile: '+975 17111111',
-    email: 'info@himalayanmarvels.com',
+    email: 'info.himalayanmarvels@gmail.com',
     website: 'www.himalayanmarvels.com',
     address: 'Thimphu, Bhutan'
   };
@@ -130,7 +130,7 @@ export function generateItineraryHTML(data: ItineraryData, companySettings?: Com
   const companyLogo = settings.logo_url || '';
   const companyLicense = settings.license_number || '';
   const companyPhone = settings.mobile || data.contact_phone || '+975 17111111';
-  const companyEmail = settings.email || data.contact_email || 'info@himalayanmarvels.com';
+  const companyEmail = settings.email || data.contact_email || 'info.himalayanmarvels@gmail.com';
   const companyWebsite = settings.website || data.contact_website || 'www.himalayanmarvels.com';
   const companyAddress = settings.address || 'Thimphu, Bhutan';
   const companyTagline = 'Tours & Treks';

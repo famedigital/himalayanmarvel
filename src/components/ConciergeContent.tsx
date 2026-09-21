@@ -18,7 +18,7 @@ const serviceSchema = {
   description: 'Luxury travel concierge service for custom Bhutan journeys. Private consultations, custom itinerary design, and anticipatory service throughout your journey.',
   url: 'https://himalayanmarvel.vercel.app/concierge',
   telephone: '+975-77270465',
-  email: 'info@himalayanmarvels.com',
+  email: 'info.himalayanmarvels@gmail.com',
   areaServed: {
     '@type': 'Country',
     name: 'Bhutan',

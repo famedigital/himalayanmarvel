@@ -12,7 +12,7 @@ export async function generateItineraryHTML(data: any): Promise<string> {
   const companyName = settings?.company_name || 'Himalayan Marvels';
   const companyLogo = settings?.logo_url || '';
   const companyPhone = settings?.mobile || '+975 17111111';
-  const companyEmail = settings?.email || 'info@himalayanmarvels.com';
+  const companyEmail = settings?.email || 'info.himalayanmarvels@gmail.com';
   const companyWebsite = settings?.website || 'www.himalayanmarvels.com';
   const companyAddress = settings?.address || 'Bhutan';
 

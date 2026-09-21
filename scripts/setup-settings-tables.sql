@@ -126,7 +126,7 @@ INSERT INTO company_settings (
 )
 SELECT
   'Himalayan Marvels Travels',
-  'info@himalayanmarvels.com',
+  'info.himalayanmarvels@gmail.com',
   'https://www.himalayanmarvels.com',
   '+975 2 322489',
   '20309000207',

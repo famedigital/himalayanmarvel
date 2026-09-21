@@ -99,7 +99,7 @@ export const CMS_COMPONENT_DEFINITIONS: CmsPageComponentMap = {
       description: 'Footer section with links and info',
       fields: [
         { key: 'tagline', label: 'Tagline', type: 'text', placeholder: 'Your Gateway to Himalayan Wonder' },
-        { key: 'contact_email', label: 'Contact Email', type: 'text', placeholder: 'info@himalayanmarvels.com' },
+        { key: 'contact_email', label: 'Contact Email', type: 'text', placeholder: 'info.himalayanmarvels@gmail.com' },
         { key: 'contact_phone', label: 'Contact Phone', type: 'text', placeholder: '+975 17 00 00 00' },
         { key: 'address', label: 'Address', type: 'textarea', rows: 2, placeholder: 'Thimphu, Bhutan' },
         { key: 'social_facebook', label: 'Facebook URL', type: 'link' },
@@ -254,7 +254,7 @@ export const CMS_COMPONENT_DEFINITIONS: CmsPageComponentMap = {
       icon: 'Phone',
       description: 'Contact details',
       fields: [
-        { key: 'email', label: 'Email', type: 'text', placeholder: 'info@himalayanmarvels.com' },
+        { key: 'email', label: 'Email', type: 'text', placeholder: 'info.himalayanmarvels@gmail.com' },
         { key: 'phone', label: 'Phone', type: 'text', placeholder: '+975 17 00 00 00' },
         { key: 'whatsapp', label: 'WhatsApp', type: 'text', placeholder: '+975 17 00 00 00' },
         { key: 'address', label: 'Address', type: 'textarea', rows: 3 },

@@ -36,7 +36,7 @@ const defaultTours: TourCategory[] = [
       'Traditional hot stone bath',
     ],
     availability: 'Only 2 spots for October departure',
-    link: 'mailto:info@himalayanmarvels.com',
+    link: 'mailto:info.himalayanmarvels@gmail.com',
   },
   {
     id: '2',
@@ -53,7 +53,7 @@ const defaultTours: TourCategory[] = [
       'Wellness consultations',
     ],
     availability: 'Limited to 6 journeys annually',
-    link: 'mailto:info@himalayanmarvels.com',
+    link: 'mailto:info.himalayanmarvels@gmail.com',
   },
   {
     id: '3',
@@ -70,7 +70,7 @@ const defaultTours: TourCategory[] = [
       'Altitude preparation',
     ],
     availability: 'Book early for permits',
-    link: 'mailto:info@himalayanmarvels.com',
+    link: 'mailto:info.himalayanmarvels@gmail.com',
   },
 ];
 

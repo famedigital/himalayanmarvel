@@ -108,8 +108,8 @@ export default async function InvoicePage({ params }: InvoicePageProps) {
           </p>
           <p className="mt-1">
             Questions? Contact us at{' '}
-            <a href={`mailto:${invoice.invoice_data?.company_email || 'info@himalayanmarvels.com'}`} className="text-blue-600 hover:underline">
-              {invoice.invoice_data?.company_email || 'info@himalayanmarvels.com'}
+            <a href={`mailto:${invoice.invoice_data?.company_email || 'info.himalayanmarvels@gmail.com'}`} className="text-blue-600 hover:underline">
+              {invoice.invoice_data?.company_email || 'info.himalayanmarvels@gmail.com'}
             </a>
           </p>
         </div>

@@ -42,9 +42,9 @@ export default function Contact() {
     },
     {
       icon: Mail,
-      text: 'info@himalayanmarvels.com',
+      text: 'info.himalayanmarvels@gmail.com',
       label: 'Send us an email',
-      href: 'mailto:info@himalayanmarvels.com',
+      href: 'mailto:info.himalayanmarvels@gmail.com',
     },
     {
       icon: MapPin,

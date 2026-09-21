@@ -103,7 +103,7 @@ const homepageContent = {
       { name: 'vision', label: 'Tell us your vision', type: 'textarea', placeholder: 'Share your travel vision...', required: false }
     ],
     contactInfo: {
-      email: 'info@himalayanmarvels.com',
+      email: 'info.himalayanmarvels@gmail.com',
       phone: '+975-77270465',
       whatsapp: '+975-77270465',
       responseTime: 'Within 24 hours'

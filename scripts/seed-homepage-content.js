@@ -126,7 +126,7 @@ const homepageContent = {
       { name: 'vision', label: 'Tell us about your dream journey', type: 'textarea', placeholder: 'Share your travel vision...', required: false }
     ],
     contactInfo: {
-      email: 'info@himalayanmarvels.com',
+      email: 'info.himalayanmarvels@gmail.com',
       phone: '+975-77270465',
       whatsapp: '+975-77270465',
       responseTime: 'Within 24 hours'
@@ -160,7 +160,7 @@ const homepageContent = {
   // Footer Content
   footer_content: {
     description: 'Bhutan\'s premier luxury travel concierge. Private journeys curated by insiders, not tours designed for tourists.',
-    contactEmail: 'info@himalayanmarvels.com',
+    contactEmail: 'info.himalayanmarvels@gmail.com',
     contactPhone: '+975-77270465',
     socialLinks: [
       { platform: 'Instagram', url: 'https://www.instagram.com/himalayanmarvels.travel/' },
